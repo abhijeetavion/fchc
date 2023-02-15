@@ -20,13 +20,13 @@
 
 // ** Database settings - You can get this info from your web host ** //
 /** The name of the database for WordPress */
-define( 'DB_NAME', 'fchc' );
+define( 'DB_NAME', 'KC2023F' );
 
 /** Database username */
-define( 'DB_USER', 'fchcuser' );
+define( 'DB_USER', 'kcuser1' );
 
 /** Database password */
-define( 'DB_PASSWORD', '17J8JfE8)%&0' );
+define( 'DB_PASSWORD', 'kcuser4242*' );
 
 /** Database hostname */
 define( 'DB_HOST', 'localhost' );
@@ -36,10 +36,6 @@ define( 'DB_CHARSET', 'utf8mb4' );
 
 /** The database collate type. Don't change this if in doubt. */
 define( 'DB_COLLATE', '' );
-
-define( 'WP_MEMORY_LIMIT', '8096M' );
-define( 'WP_MAX_MEMORY_LIMIT', '8096M' );
-define( 'WP_AUTO_UPDATE_CORE', false );
 
 /**#@+
  * Authentication unique keys and salts.
@@ -52,14 +48,14 @@ define( 'WP_AUTO_UPDATE_CORE', false );
  *
  * @since 2.6.0
  */
-define( 'AUTH_KEY',         'vV5IVQB.qT&}MRf@N-[5x_XK^X7Mcg`BtC!mor,.&-J23EFnJ3/`y{2T/#iX}s(R' );
-define( 'SECURE_AUTH_KEY',  '-BSyRY;5^%49s2es/K?N./;*=I1n>>GVqxOz7~9<?9F2ND71LYJ~l,+@gN62[^+*' );
-define( 'LOGGED_IN_KEY',    'R!xLCtLQ7H7Z=z@adZ,LKgq1<&(ixs(Wpn81Ky* t9V>Yj*`k`*$u|k/ uj_y)q[' );
-define( 'NONCE_KEY',        '?H+vB3p55[+cxG_.hz|t34!1S;c2Rq+9VP+OF>8A)veBU?l:`DpTRr>]hE2+=pL,' );
-define( 'AUTH_SALT',        'q8J7{Mf$wE;nSTaj}*@beC{MxNy_f!f$R}>>~(5Yw4++)/,<D,rW]B! .H[gi)$p' );
-define( 'SECURE_AUTH_SALT', 'ziwgA)y:^48EU*`v_cdObA[;Na_Y?JDb!^l_wH|7sD}M#IllldePv[AB!?mpd}au' );
-define( 'LOGGED_IN_SALT',   '_LrFLVX#,1qNd-0IT{Bt$YQAR_qv[q12ye=C,(1h>:P{HlI7 M<5_^yI4<Hsen!X' );
-define( 'NONCE_SALT',       'a4THT;V_[8x@NI.3A6Kf?#sgRAd/^Frg3k!gx|j2nC*nE}A3o!a.4<*}Y;*1((~Z' );
+define( 'AUTH_KEY',         'l,,zq(]JQ6wp.f(*$r1oxAw7sm%c.IMC+kQ_P71k@7ZIA#:}%sK+Eq%$>1VuCaz}' );
+define( 'SECURE_AUTH_KEY',  '^JY{?TSJzNx6-8 0uW66S7;2$vN.z>hyVhNvIXQe3PhC^WiP.G|Xw+ 43jM#pwrh' );
+define( 'LOGGED_IN_KEY',    '(xI-TV&&U*iMtXW%^P6W~`.U0u`0Dw7zrqIe%@yO~<B:})~F-ZtasKyJao^sgyWC' );
+define( 'NONCE_KEY',        'y^vKQITJaN!>LgT5?7Y<`cxK,za&CfDPiWol@/b/,8~6`lY@0l5>lIq<|X(qj]M=' );
+define( 'AUTH_SALT',        '0eaY#k=&eD+Ps8dzZ6hH;]Dwu[<+z):mWc)]aDqMaQty:F(3mdnBY^V-<KtPk~!s' );
+define( 'SECURE_AUTH_SALT', 'tu.W(#a3M]DuO#/dH6/[y%IgLCtjM2fr/yf!Cx_pyB!}?Nhl-R7L5ta#w%mVm]gh' );
+define( 'LOGGED_IN_SALT',   'YgRq`.*7;zIj<#S%IG,g:&4.EWq8;`we1_X9s-NJCn.bd!AiP,ON>eyjx,<+E^`*' );
+define( 'NONCE_SALT',       '2e:`D.LS{QXAH9_g(;7cLkL8D$(q`r#fm6!|co%p^K=TT=ghS.(4$#tu=Z K}D?E' );
 
 /**#@-*/
 
@@ -98,3 +94,11 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 /** Sets up WordPress vars and included files. */
 require_once ABSPATH . 'wp-settings.php';
+
+define( 'WP_SITEURL', 'https://kcphotography.com/' );
+define( 'WP_HOME', 'https://kcphotography.com/' );
+
+
+if ( ! defined( 'WCS_FORCE_EMAIL' ) ) {
+define( 'WCS_FORCE_EMAIL', true );
+}
