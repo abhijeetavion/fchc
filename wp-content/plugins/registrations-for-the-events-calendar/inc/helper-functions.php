@@ -692,6 +692,7 @@ function rtec_generate_unregister_link( $event_id, $action_key, $email, $unregis
 }
 
 function rtec_generate_unregister_button( $event_id, $action_key, $email ) {
+	global $rtec_options;
 	$permalink      = get_permalink( $event_id );
 	$unregister_url = add_query_arg( 'action', 'unregister', $permalink );
 	$unregister_url = add_query_arg( 'token', $action_key, $unregister_url );

@@ -504,35 +504,6 @@ class RTEC_Admin
 		    'legend' => false
 	    ));
 
-	    $this->create_settings_field( array(
-		    'option' => 'rtec_options',
-		    'name' => 'success_send_message',
-		    'title' => '<label for="rtec_success_send_message">' . __( 'Successful Unregister Send Text', 'registrations-for-the-events-calendar' ) . '</label>',
-		    'example' => '',
-		    'description' => '',
-		    'callback'  => 'default_text',
-		    'class' => 'rtec-visitor-can-edit',
-		    'input_class' => 'regular-text',
-		    'page' => 'rtec_form_visitors_messages',
-		    'section' => 'rtec_form_visitors_messages',
-		    'type' => 'text',
-		    'default' => __( 'Check your email inbox for an unregister link.', 'registrations-for-the-events-calendar' ),
-	    ));
-
-	    $this->create_settings_field( array(
-		    'option' => 'rtec_options',
-		    'name' => 'email_error_message',
-		    'title' => '<label for="rtec_email_error_message">' . __( 'Email Error Text', 'registrations-for-the-events-calendar' ) . '</label>',
-		    'example' => '',
-		    'description' => '',
-		    'callback'  => 'default_text',
-		    'class' => 'rtec-visitor-can-edit',
-		    'input_class' => 'regular-text',
-		    'page' => 'rtec_form_visitors_messages',
-		    'section' => 'rtec_form_visitors_messages',
-		    'type' => 'text',
-		    'default' => __( 'Please enter the email you registered with.', 'registrations-for-the-events-calendar' ),
-	    ));
 
 	    add_settings_section(
 		    'rtec_form_visitors_options',
@@ -613,7 +584,38 @@ class RTEC_Admin
 		    'default' => __( 'Send unregister link', 'registrations-for-the-events-calendar' ),
 	    ));
 
-	    /* Logged-in Users */
+		$this->create_settings_field( array(
+			'option' => 'rtec_options',
+			'name' => 'success_send_message',
+			'title' => '<label for="rtec_success_send_message">' . __( 'Successful Unregister Send Text', 'registrations-for-the-events-calendar' ) . '</label>',
+			'example' => '',
+			'description' => '',
+			'callback'  => 'default_text',
+			'class' => 'large-text',
+			'input_class' => 'regular-text',
+			'page' => 'rtec_form_visitors_options',
+			'section' => 'rtec_form_visitors_options',
+			'type' => 'text',
+			'default' => __( 'Check your email inbox for an unregister link.', 'registrations-for-the-events-calendar' ),
+		));
+
+		$this->create_settings_field( array(
+			'option' => 'rtec_options',
+			'name' => 'email_error_message',
+			'title' => '<label for="rtec_email_error_message">' . __( 'Email Error Text', 'registrations-for-the-events-calendar' ) . '</label>',
+			'example' => '',
+			'description' => '',
+			'callback'  => 'default_text',
+			'class' => 'large-text',
+			'input_class' => 'regular-text',
+			'page' => 'rtec_form_visitors_options',
+			'section' => 'rtec_form_visitors_options',
+			'type' => 'text',
+			'default' => __( 'Please enter the email you registered with.', 'registrations-for-the-events-calendar' ),
+		));
+
+
+		/* Logged-in Users */
 	    add_settings_section(
 		    'rtec_form_users_options',
 		    'Logged-In Users',

@@ -35,6 +35,7 @@ class Social {
 	 *
 	 * @return void
 	 */
+	
 	public function response() {
 		$count = absint( $_REQUEST['id'] );
 		$html  = null;

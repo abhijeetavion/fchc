@@ -68,59 +68,91 @@ class FilterHooks {
 	 * @return array
 	 */
 	public function gridLayouts( $layouts ) {
-		$status = ! rttlp_team()->has_pro();
 
-		$layouts['layout-el-4'] = [
-			'title'  => esc_html__( 'Layout 3', 'tlp-team' ),
-			'url'    => rttlp_team()->assets_url() . 'images/layouts/layout4.png',
-			'is_pro' => $status,
-		];
+		$status = rttlp_team()->has_pro();
+        Fns::el_pro_grid_layouts();
 
-		$layouts['layout-el-6'] = [
-			'title'  => esc_html__( 'Layout 4', 'tlp-team' ),
-			'url'    => rttlp_team()->assets_url() . 'images/layouts/layout6.png',
-			'is_pro' => $status,
-		];
+        if( ! $status ) {
+            $pro_layouts=Fns::el_pro_grid_layouts(); //show pro layouts on free plugin
+            foreach ($pro_layouts as $key =>$pro_layout) {
+               $layouts[$key]=$pro_layout;
+            }
+            return $layouts;
+        }
+        $new_layouts = [
+            'layout1' => [
+                'title' => esc_html__( 'Layout 1', 'tlp-team' ),
+                'url'   => rttlp_team()->assets_url() . 'images/layouts/layout1.png',
+            ],
+            'layout3' => [
+                'title' => esc_html__( 'Layout 2', 'tlp-team' ),
+                'url'   => rttlp_team()->assets_url() . 'images/layouts/layout3.png',
+            ],
+            'layout-el-4' => [
+                'title' => esc_html__( 'Layout 3', 'tlp-team' ),
+                'url'   => rttlp_team()->assets_url() . 'images/layouts/layout4.png',
+            ],
+            'layout-el-6' => [
+                'title' => esc_html__( 'Layout 4', 'tlp-team' ),
+                'url'   => rttlp_team()->assets_url() . 'images/layouts/layout6.png',
+            ],
+            'layout7' => [
+                'title'  => esc_html__( 'Layout 5', 'tlp-team' ),
+                'url'    => rttlp_team()->assets_url() . 'images/layouts/layout7.png',
+            ],
+            'layout-el-8' => [
+                'title'  => esc_html__( 'Layout 6', 'tlp-team' ),
+                'url'    => rttlp_team()->assets_url() . 'images/layouts/layout8.png',
+            ],
+            'layout9'   =>[
+                'title'  => esc_html__( 'Layout 7', 'tlp-team' ),
+                'url'    => rttlp_team()->assets_url() . 'images/layouts/layout9.png',
+            ],
+            'layout-el-10' =>[
+                'title'  => esc_html__( 'Layout 8', 'tlp-team' ),
+                'url'    => rttlp_team()->assets_url() . 'images/layouts/layout10.png',
+            ],
+            'layout11'   =>[
+                'title'  => esc_html__( 'Layout 9', 'tlp-team' ),
+                'url'    => rttlp_team()->assets_url() . 'images/layouts/layout11.png',
+            ],
+            'layout12'   =>[
+                'title'  => esc_html__( 'Layout 10', 'tlp-team' ),
+                'url'    => rttlp_team()->assets_url() . 'images/layouts/layout12.png',
+            ],
+            'layout13'   =>[
+                'title'  => esc_html__( 'Layout 11', 'tlp-team' ),
+                'url'    => rttlp_team()->assets_url() . 'images/layouts/layout13.png',
+            ],
+            'layout14'   =>[
+                'title'  => esc_html__( 'Layout 12', 'tlp-team' ),
+                'url'    => rttlp_team()->assets_url() . 'images/layouts/layout14.png',
+            ],
+            'layout15'   =>[
+                'title'  => esc_html__( 'Layout 13', 'tlp-team' ),
+                'url'    => rttlp_team()->assets_url() . 'images/layouts/layout15.png',
+            ],
+            'layout16' => [
+                'title' => esc_html__( 'Layout 14', 'tlp-team' ),
+                'url'   => rttlp_team()->assets_url() . 'images/layouts/layout3.png',
+            ],
+            'layout17' => [
+                'title' => esc_html__( 'Layout 15', 'tlp-team' ),
+                'url'   => rttlp_team()->assets_url() . 'images/layouts/layout3.png',
+            ],
+            'layout18' => [
+                'title' => esc_html__( 'Layout 16', 'tlp-team' ),
+                'url'   => rttlp_team()->assets_url() . 'images/layouts/layout3.png',
+            ],
+            'special01'  =>[
+                'title'  => esc_html__( 'Special 01', 'tlp-team' ),
+                'url'    => rttlp_team()->assets_url() . 'images/layouts/special01.png',
+            ],
 
-		$layouts['layout7'] = [
-			'title'  => esc_html__( 'Layout 5', 'tlp-team' ),
-			'url'    => rttlp_team()->assets_url() . 'images/layouts/layout7.png',
-			'is_pro' => $status,
-		];
 
-		$layouts['layout-el-8'] = [
-			'title'  => esc_html__( 'Layout 6', 'tlp-team' ),
-			'url'    => rttlp_team()->assets_url() . 'images/layouts/layout8.png',
-			'is_pro' => $status,
-		];
+        ];
 
-		$layouts['layout9'] = [
-			'title'  => esc_html__( 'Layout 7', 'tlp-team' ),
-			'url'    => rttlp_team()->assets_url() . 'images/layouts/layout9.png',
-			'is_pro' => $status,
-		];
-
-		$layouts['layout-el-10'] = [
-			'title'  => esc_html__( 'Layout 8', 'tlp-team' ),
-			'url'    => rttlp_team()->assets_url() . 'images/layouts/layout10.png',
-			'is_pro' => $status,
-		];
-
-		for ( $i = 9; $i < 14; $i++ ) {
-			$layouts[ 'layout' . ( $i + 2 ) ] = [
-				'title'  => esc_html( 'Layout ' ) . ( $i ),
-				'url'    => rttlp_team()->assets_url() . 'images/layouts/layout' . ( $i + 2 ) . '.png',
-				'is_pro' => $status,
-			];
-		}
-
-		$layouts['special01'] = [
-			'title'  => esc_html__( 'Special 01', 'tlp-team' ),
-			'url'    => rttlp_team()->assets_url() . 'images/layouts/special01.png',
-			'is_pro' => $status,
-		];
-
-		return $layouts;
+		return $new_layouts;
 	}
 
 	/**

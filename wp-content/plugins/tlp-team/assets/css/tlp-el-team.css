@@ -1269,6 +1269,120 @@ to a reusable layout.
 }
 
 /* ===========================
+	Layout 16
+==============================*/
+
+.rt-elementor-container .layout16 .single-team-area {
+	padding: 30px;
+	background-color: #fff;
+	-webkit-box-shadow: 0 0 38px 0 rgba(0, 0, 0, 0.1);
+	box-shadow: 0 0 38px 0 rgba(0, 0, 0, 0.1);
+	position: relative;
+	overflow: hidden;
+}
+
+.rt-elementor-container .layout16 .single-team-area .default-img {
+	width: 100%;
+}
+
+.rt-elementor-container .layout16 .single-team-area:before {
+	content: "";
+	width: 70px;
+	height: 70px;
+	background-color: #e1e1e1;
+	border: none;
+	border-radius: 6px;
+	position: absolute;
+	bottom: 22px;
+	right: -40px;
+	z-index: 11;
+	-webkit-transform: rotate(50deg);
+	-ms-transform: rotate(50deg);
+	transform: rotate(50deg);
+	-webkit-transition: all 0.3s ease-in-out;
+	-o-transition: all 0.3s ease-in-out;
+	transition: all 0.3s ease-in-out;
+}
+
+.rt-elementor-container .layout16 .single-team-area:after {
+	content: "";
+	width: 70px;
+	height: 70px;
+	border: 2px solid #e1e1e1;
+	border-radius: 6px;
+	position: absolute;
+	right: -45px;
+	bottom: -12px;
+	z-index: 10;
+	-webkit-transform: rotate(50deg);
+	-ms-transform: rotate(50deg);
+	transform: rotate(50deg);
+	-webkit-transition: all 0.3s ease-in-out;
+	-o-transition: all 0.3s ease-in-out;
+	transition: all 0.3s ease-in-out;
+}
+
+.rt-elementor-container .layout16 .single-team-area:hover:before {
+	background-color: var(--rttm-primary-color);
+}
+
+.rt-elementor-container .layout16 .single-team-area:hover:after {
+	border-color: var(--rttm-primary-color);
+}
+
+.rt-elementor-container .layout16 .single-team-area:hover .social-icons {
+	visibility: visible;
+	opacity: 1;
+	bottom: 0;
+}
+
+.rt-elementor-container .layout16 .single-team-area .social-icons {
+	z-index: 5;
+	position: absolute;
+	bottom: -20%;
+	left: 0;
+	right: 0;
+	visibility: hidden;
+	opacity: 0;
+	width: 100%;
+	padding: 15px 0;
+	background-color: var(--rttm-primary-color);
+	margin-top: 0;
+	text-align: center;
+	-webkit-transition: all 0.3s ease-in-out;
+	-o-transition: all 0.3s ease-in-out;
+	transition: all 0.3s ease-in-out;
+}
+
+.rt-elementor-container .layout16 .single-team-area .social-icons a {
+	color: #fff;
+}
+
+.rt-elementor-container .layout16 .single-team-area .social-icons a:hover i {
+	background-color: transparent;
+	opacity: 0.8;
+}
+
+.rt-elementor-container .layout16 .single-team-area .short-bio {
+	margin-bottom: 15px;
+}
+
+.rt-elementor-container .layout16 .single-team-area .tlp-content {
+	background-color: transparent;
+	padding-left: 0;
+	padding-right: 0;
+}
+
+.rt-elementor-container .tlp-position {
+	color: initial;
+}
+
+.rt-elementor-container .tlp-position a {
+	text-decoration: none;
+	color: initial;
+}
+
+/* ===========================
 	Carousel 1
 ==============================*/
 

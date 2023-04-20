@@ -2486,6 +2486,7 @@ function isValidJSONString(str) {
       reader.readAsText(eap_accordions);
       reader.onload = function (event) {
         var jsonObj = JSON.stringify(event.target.result);
+        var unSanitize = $('.eapro-field-checkbox input[name="sp_eap_tools[import_unSanitize]"]').val();
         $.ajax({
           url: ajaxurl,
           type: 'POST',
@@ -2493,6 +2494,7 @@ function isValidJSONString(str) {
             accordion: jsonObj,
             action: 'eap_import_accordions',
             nonce: $im_nonce,
+            unSanitize,
           },
           success: function (resp) {
             $('.eapro-form-result.eapro-form-success').text('Imported successfully!').show();

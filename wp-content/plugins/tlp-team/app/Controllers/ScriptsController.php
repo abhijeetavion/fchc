@@ -171,15 +171,31 @@ class ScriptsController {
 			'footer' => true,
 		];
 
-		$default_swiper_path   = rttlp_team()->assets_url() . 'vendor/swiper/swiper.min.js';
-		$default_swiper_handle = 'tlp-swiper';
+		$default_swiper_handle = 'swiper';
+        $default_swiper_path = rttlp_team()->assets_url() . 'vendor/swiper/swiper.min.js';
 
-		if ( defined( 'ELEMENTOR_ASSETS_PATH' ) ) {
-			$elementor_swiper_path = ELEMENTOR_ASSETS_PATH . 'lib/swiper/swiper.min.js';
-			if ( file_exists( $elementor_swiper_path ) ) {
-				$default_swiper_path   = ELEMENTOR_ASSETS_URL . 'lib/swiper/swiper.min.js';
-			}
-		}
+        if ( defined( 'ELEMENTOR_ASSETS_PATH' ) ) {
+            $is_swiper8_enable = get_option( 'elementor_experiment-e_swiper_latest' );
+
+            if ( $is_swiper8_enable == 'active' ) {
+                $el_swiper_path = 'lib/swiper/v8/swiper.min.js';
+            } else {
+                $el_swiper_path = 'lib/swiper/swiper.min.js';
+            }
+
+            $elementor_swiper_path = ELEMENTOR_ASSETS_PATH . $el_swiper_path;
+
+            if ( file_exists( $elementor_swiper_path ) ) {
+                $default_swiper_path = ELEMENTOR_ASSETS_URL . $el_swiper_path;
+            }
+        }
+
+        $this->scripts[] = [
+            'handle' => $default_swiper_handle,
+            'src'    => $default_swiper_path,
+            'deps'   => [ 'jquery' ],
+            'footer' => false,
+        ];
 
 		$this->scripts[] = [
 			'handle' => 'tlp-swiper',

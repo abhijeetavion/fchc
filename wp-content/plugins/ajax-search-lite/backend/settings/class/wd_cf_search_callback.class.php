@@ -12,12 +12,12 @@ if (!class_exists("wd_CFSearchCallBack")) {
      * @copyright Copyright (c) 2016, Ernest Marcinko
      */
     class wd_CFSearchCallBack extends wpdreamsType {
+        private static $delimiter = '!!!CFRES!!!';
         private $args = array(
             'callback' => '',       // javacsript function name in the windows scope | if empty, shows results
             'placeholder' => 'Search custom fields..',
             'search_values' => 0,
             'limit' => 100,
-            'delimiter' => '!!!CFRES!!!',
             'controls_position' => 'right',
             'class' => ''
         );
@@ -25,6 +25,7 @@ if (!class_exists("wd_CFSearchCallBack")) {
         public function getType() {
             parent::getType();
             $this->processData();
+            $this->args['delimiter'] = self::$delimiter;
             ?>
             <div class='wd_cf_search<?php echo $this->args['class'] != '' ? ' '.$this->args['class'] : "";?>'
                  id='wd_cf_search-<?php echo self::$_instancenumber; ?>'>
@@ -54,7 +55,10 @@ if (!class_exists("wd_CFSearchCallBack")) {
 
         public static function searchCF() {
             global $wpdb;
-			if ( isset($_POST['wd_phrase'], $_POST['wd_args'], $_POST['asl_cf_search_nonce']) ) {
+			if ( 
+                isset($_POST['wd_phrase'], $_POST['wd_args'], $_POST['asl_cf_search_nonce']) &&
+                current_user_can( 'administrator' )
+            ) {
 				$phrase = '%'.trim($_POST['wd_phrase']).'%';
 				$data = json_decode(base64_decode($_POST['wd_args']), true);
 
@@ -68,9 +72,9 @@ if (!class_exists("wd_CFSearchCallBack")) {
 							"SELECT DISTINCT(meta_key) FROM $wpdb->postmeta WHERE meta_key LIKE '%s' LIMIT %d",
 							$phrase, $data['limit']);
 					$cf_results = $wpdb->get_results($cf_query, OBJECT);
-					print_r($data['delimiter'] . json_encode($cf_results) . $data['delimiter']);
+					print_r(self::$delimiter . json_encode($cf_results) . self::$delimiter);
 				} else {
-					print_r($data['delimiter'] . __('The nonce has expired or missing, please reload the page!', 'ajax-search-lite') . $data['delimiter']);
+					print_r(self::$delimiter . __('The nonce has expired or missing, please reload the page!', 'ajax-search-lite') . self::$delimiter);
 				}
 			} else {
 				print_r(__('Missing data.', 'ajax-search-lite') );
@@ -95,5 +99,6 @@ if (!class_exists("wd_CFSearchCallBack")) {
     }
 }
 
-if ( !has_action('wp_ajax_wd_search_cf') )
+if ( !has_action('wp_ajax_wd_search_cf') ) {
     add_action('wp_ajax_wd_search_cf', 'wd_CFSearchCallBack::searchCF');
+}

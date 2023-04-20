@@ -20,7 +20,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 class Preview {
 	use \RT\Team\Traits\SingletonTrait;
-
+    public $check=0;
 	/**
 	 * Class Init.
 	 *

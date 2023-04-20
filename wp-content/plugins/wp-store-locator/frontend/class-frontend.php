@@ -557,7 +557,12 @@ if ( !class_exists( 'WPSL_Frontend' ) ) {
 
                 foreach ( $opening_days as $index => $day ) {
                     $i          = 0;
-                    $hour_count = count( $hours[$index] );
+
+                    if ( isset( $hours[$index] ) && is_array( $hours[$index] ) ) {
+                    	$hour_count = count( $hours[$index] );
+                    } else {
+                        $hour_count = 0;
+                    }
 
                     // If we need to hide days that are set to closed then skip them.
                     if ( $hide_closed && !$hour_count ) {

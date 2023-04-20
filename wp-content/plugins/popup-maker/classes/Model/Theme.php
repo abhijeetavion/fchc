@@ -1,7 +1,10 @@
 <?php
-/*******************************************************************************
- * Copyright (c) 2019, Code Atlantic LLC
- ******************************************************************************/
+/**
+ * Model for Theme
+ *
+ * @package   PUM
+ * @copyright Copyright (c) 2023, Code Atlantic LLC
+ */
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -116,22 +119,22 @@ class PUM_Model_Theme extends PUM_Abstract_Model_Post {
 		$google_fonts = PUM_Integration_GoogleFonts::fetch_fonts();
 
 		if ( ! empty( $settings['title_font_family'] ) && is_string( $settings['title_font_family'] ) && array_key_exists( $settings['title_font_family'], $google_fonts ) ) {
-			$variant = ! empty( $settings['title_font_weight'] ) && $settings['title_font_weight'] != 'normal' ? $settings['title_font_weight'] : '';
-			if ( isset( $settings['title_font_style'] ) && $settings['title_font_style'] == 'italic' ) {
+			$variant = ! empty( $settings['title_font_weight'] ) && 'normal' !== $settings['title_font_weight'] ? $settings['title_font_weight'] : '';
+			if ( isset( $settings['title_font_style'] ) && 'italic' === $settings['title_font_style'] ) {
 				$variant .= 'italic';
 			}
 			$fonts_used[ $settings['title_font_family'] ][ $variant ] = $variant;
 		}
 		if ( ! empty( $settings['content_font_family'] ) && is_string( $settings['content_font_family'] ) && array_key_exists( $settings['content_font_family'], $google_fonts ) ) {
-			$variant = ! empty( $settings['content_font_weight'] ) && $settings['content_font_weight'] != 'normal' ? $settings['content_font_weight'] : '';
-			if ( isset( $settings['content_font_style'] ) && $settings['content_font_style'] == 'italic' ) {
+			$variant = ! empty( $settings['content_font_weight'] ) && 'normal' !== $settings['content_font_weight'] ? $settings['content_font_weight'] : '';
+			if ( isset( $settings['content_font_style'] ) && 'italic' === $settings['content_font_style'] ) {
 				$variant .= 'italic';
 			}
 			$fonts_used[ $settings['content_font_family'] ][ $variant ] = $variant;
 		}
 		if ( ! empty( $settings['close_font_family'] ) && is_string( $settings['close_font_family'] ) && array_key_exists( $settings['close_font_family'], $google_fonts ) ) {
-			$variant = ! empty( $settings['close_font_weight'] ) && $settings['close_font_weight'] != 'normal' ? $settings['close_font_weight'] : '';
-			if ( isset( $settings['close_font_style'] ) && $settings['close_font_style'] == 'italic' ) {
+			$variant = ! empty( $settings['close_font_weight'] ) && 'normal' !== $settings['close_font_weight'] ? $settings['close_font_weight'] : '';
+			if ( isset( $settings['close_font_style'] ) && 'italic' === $settings['close_font_style'] ) {
 				$variant .= 'italic';
 			}
 			$fonts_used[ $settings['close_font_family'] ][ $variant ] = $variant;
@@ -286,6 +289,14 @@ class PUM_Model_Theme extends PUM_Abstract_Model_Post {
 		];
 	}
 
+
+	/**
+	 * Deprecated settings keys that have been remapped to new settings.
+	 *
+	 * @var array
+	 */
+	public $dep_groups = [];
+
 	/**
 	 * Retrieve settings in the form of deprecated grouped arrays.
 	 *
@@ -295,7 +306,7 @@ class PUM_Model_Theme extends PUM_Abstract_Model_Post {
 	 * @return mixed
 	 */
 	public function _dep_get_settings_group( $group, $key = null ) {
-		if ( ! isset( $this->$group ) ) {
+		if ( ! isset( $this->dep_groups[ $group ] ) ) {
 			/**
 			 * Remap old meta settings to new settings location for v1.7. This acts as a passive migration when needed.
 			 */
@@ -324,10 +335,10 @@ class PUM_Model_Theme extends PUM_Abstract_Model_Post {
 				}
 			}
 
-			$this->$group = $group_values;
+			$this->dep_groups[ $group ] = $group_values;
 		}
 
-		$values = apply_filters( "pum_theme_get_$group", $this->$group, $this->ID );
+		$values = apply_filters( "pum_theme_get_$group", $this->dep_groups[ $group ], $this->ID );
 
 		if ( ! $key ) {
 			return $values;
@@ -439,10 +450,6 @@ class PUM_Model_Theme extends PUM_Abstract_Model_Post {
 			return;
 		}
 
-		if ( $this->ID === 5 ) {
-			$test = '1';
-		}
-
 		if ( ! isset( $this->data_version ) ) {
 			$this->data_version = (int) $this->get_meta( 'popup_theme_data_version' );
 
@@ -494,4 +501,3 @@ class PUM_Model_Theme extends PUM_Abstract_Model_Post {
 		$this->doing_passive_migration = false;
 	}
 }
-

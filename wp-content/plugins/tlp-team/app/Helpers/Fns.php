@@ -968,6 +968,9 @@ class Fns {
 					case 'telegram':
 						$icon_class = 'fab fa-telegram';
 						break;
+                    case 'github':
+                        $icon_class = 'fab fa-github';
+                        break;
 				}
 
 				if ( 'google-plus' !== $lID && $icon_class ) {
@@ -1039,6 +1042,8 @@ class Fns {
 					#{$layoutID} .carousel8 .rt-grid-item .tlp-overlay .social-icons:before,
 					#{$layoutID} .layout14 .rt-grid-item .tlp-overlay .social-icons:before,
 					#{$layoutID} .skill-prog .fill,
+					#{$layoutID}.rt-team-container .layout16 .single-team-area .social-icons,
+					#{$layoutID}.rt-team-container .layout16 .single-team-area:hover:before,
 					#{$layoutID} .special-selected-top-wrap .ttp-label,
 					#rt-smart-modal-container.rt-modal-{$scID} .rt-smart-modal-header,
 					#{$layoutID} .layout6 .tlp-info-block, #{$layoutID} .carousel9 .single-team-area .tlp-overlay{";
@@ -1068,6 +1073,10 @@ class Fns {
 			$css .= "#{$layoutID} .special-selected-top-wrap .img:after{";
 			$css .= 'background:' . self::TLPhex2rgba( $primaryColor, 0.2 );
 			$css .= '}';
+
+            $css .= "#{$layoutID}.rt-team-container .layout16 .single-team-area:hover:after{";
+            $css .= 'border-color:' . $primaryColor . ' !important;';
+            $css .= '}';
 
 			$css .= "#rt-smart-modal-container.rt-modal-{$scID} .rt-smart-modal-header a.rt-smart-nav-item{";
 			$css .= '-webkit-text-stroke: 1px ' . self::TLPhex2rgba( $primaryColor ) . ';';
@@ -1778,4 +1787,81 @@ class Fns {
 
 		return wp_kses( $string, self::allowedHtml( $level ) );
 	}
+
+    public static function el_pro_grid_layouts()
+    {
+        $status = !rttlp_team()->has_pro();
+        return [
+            'layout-el-4' => [
+                'title' => esc_html__( 'Layout 3', 'tlp-team' ),
+                'url'   => rttlp_team()->assets_url() . 'images/layouts/layout4.png',
+                'is_pro' => $status,
+            ],
+            'layout-el-6' => [
+                'title' => esc_html__( 'Layout 4', 'tlp-team' ),
+                'url'   => rttlp_team()->assets_url() . 'images/layouts/layout6.png',
+                'is_pro' => $status,
+            ],
+            'layout7' => [
+                'title'  => esc_html__( 'Layout 5', 'tlp-team' ),
+                'url'    => rttlp_team()->assets_url() . 'images/layouts/layout7.png',
+                'is_pro' => $status,
+            ],
+            'layout-el-8' => [
+                'title'  => esc_html__( 'Layout 6', 'tlp-team' ),
+                'url'    => rttlp_team()->assets_url() . 'images/layouts/layout8.png',
+                'is_pro' => $status,
+            ],
+            'layout9'   =>[
+                'title'  => esc_html__( 'Layout 7', 'tlp-team' ),
+                'url'    => rttlp_team()->assets_url() . 'images/layouts/layout9.png',
+                'is_pro' => $status,
+            ],
+            'layout-el-10' =>[
+                'title'  => esc_html__( 'Layout 8', 'tlp-team' ),
+                'url'    => rttlp_team()->assets_url() . 'images/layouts/layout10.png',
+                'is_pro' => $status,
+            ],
+            'layout11'   =>[
+                'title'  => esc_html__( 'Layout 9', 'tlp-team' ),
+                'url'    => rttlp_team()->assets_url() . 'images/layouts/layout11.png',
+                'is_pro' => $status,
+            ],
+            'layout12'   =>[
+                'title'  => esc_html__( 'Layout 10', 'tlp-team' ),
+                'url'    => rttlp_team()->assets_url() . 'images/layouts/layout12.png',
+                'is_pro' => $status,
+            ],
+            'layout13'   =>[
+                'title'  => esc_html__( 'Layout 11', 'tlp-team' ),
+                'url'    => rttlp_team()->assets_url() . 'images/layouts/layout13.png',
+                'is_pro' => $status,
+            ],
+            'layout14'   =>[
+                'title'  => esc_html__( 'Layout 12', 'tlp-team' ),
+                'url'    => rttlp_team()->assets_url() . 'images/layouts/layout14.png',
+                'is_pro' => $status,
+            ],
+            'layout15'   =>[
+                'title'  => esc_html__( 'Layout 13', 'tlp-team' ),
+                'url'    => rttlp_team()->assets_url() . 'images/layouts/layout15.png',
+                'is_pro' => $status,
+            ],
+            'layout17'   =>[
+                'title'  => esc_html__( 'Layout 17', 'tlp-team' ),
+                'url'    => rttlp_team()->assets_url() . 'images/layouts/layout15.png',
+                'is_pro' => $status,
+            ],
+            'layout18'   =>[
+                'title'  => esc_html__( 'Layout 18', 'tlp-team' ),
+                'url'    => rttlp_team()->assets_url() . 'images/layouts/layout15.png',
+                'is_pro' => $status,
+            ],
+            'special01'  =>[
+                'title'  => esc_html__( 'Special 01', 'tlp-team' ),
+                'url'    => rttlp_team()->assets_url() . 'images/layouts/special01.png',
+                'is_pro' => $status,
+            ]
+        ];
+    }
 }

@@ -3,9 +3,9 @@
  * Plugin name: Easy Accordion
  * Plugin URI:  https://shapedplugin.com/easy-accordion/?ref=1
  * Description: The best Responsive and Touch-friendly drag & drop <strong>Accordion FAQ</strong> builder plugin for WordPress.
- * Author:      ShapedPlugin
+ * Author:      ShapedPlugin LLC
  * Author URI:  https://shapedplugin.com/
- * Version:     2.2.0
+ * Version:     2.2.2
  * Text Domain: easy-accordion-free
  * Domain Path: /languages/
  *
@@ -51,7 +51,7 @@ class SP_EASY_ACCORDION_FREE {
 	 *
 	 * @var string
 	 */
-	public $version = '2.2.0';
+	public $version = '2.2.2';
 
 	/**
 	 * The name of the plugin.

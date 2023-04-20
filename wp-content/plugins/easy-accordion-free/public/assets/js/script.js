@@ -1,5 +1,10 @@
 ; (function ($) {
 
+	function isVideo(url) {
+		var regex = /^(https?:\/\/)?((www\.)?youtube\.com|vimeo\.com|dailymotion\.com|wistia\.com|hubspot\.com|sproutvideo\.com|hippovideo\.io|brightcove\.com|spotlightr\.com|vidyard\.com)\/.+$/i;
+		return regex.test(url);
+	}
+
 	$('body').find('.sp-easy-accordion').each(function () {
 		var accordion_id = $(this).attr('id');
 		var _this = $(this);
@@ -55,9 +60,7 @@
 			});
 		}
 
-		if ($("#" + accordion_id + ' .wp-easy-accordion-iframe-container').length <= 1) {
-			$("#" + accordion_id + ' iframe').addClass('wp-ea-iframe').wrap("<div class='wp-easy-accordion-iframe-container'></div>");
-		}
+		
 		// Scroll to active item scripts.
 		if (scroll_active_item) {
 			$("#" + accordion_id + ' .sp-collapse').on('show.bs.spcollapse', function (e) {
@@ -68,6 +71,14 @@
 					}, 500);
 				}, 500)
 			});
+		}
+	});
+
+	$('.sp-easy-accordion iframe:not(.wp-ea-iframe,.skip)').each(function(){
+		var url = $(this).attr('src');
+		if (isVideo(url)) {
+			// This is a video URL
+			$(this).addClass('wp-ea-iframe').wrap("<div class='wp-easy-accordion-iframe-container'></div>");
 		}
 	});
 })(jQuery);

@@ -5,7 +5,7 @@ Tags: donation, donate, recurring donations, fundraising, crowdfunding
 Requires at least: 5.0
 Tested up to: 6.1
 Requires PHP: 7.0
-Stable tag: 2.24.2
+Stable tag: 2.25.3
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -60,7 +60,7 @@ With more than 100,000+ active installs of GiveWP, we hear more and more success
 
 * [The City Mission used GiveWP](https://go.givewp.com/cmstory) for Giving Tuesday and a competition fundraiser with a neighboring organization, where they raised $45K in 16 hours.
 * [A local neighborhood watch program](https://go.givewp.com/memstory) switched from using GoFundMe to GiveWP and raised $40,000 in five days for a memorial fundraiser. 
-* [Students have funded their tuition](https://go.givewp.com/tuitionstory) to schools like Oxford through individual fundraising pages. 
+* [Fans of Ivan the Gorilla have kept his memory alive](https://go.givewp.com/readivan) by fundraising for a conservancy program in his name. 
 * [A hospital raised money](https://go.givewp.com/twiststory) through a community-wide virtual dance party during the pandemic. 
 
 In addition to nonprofit organizations, GiveWP is widely used for individual or creative purposes. We’ve seen tip jars for blogs or musicians, live streams, and more. Our [Donation Upsells for WooCommerce Add-on](https://go.givewp.com/wooread) is even used in some eCommerce stores to collect donations for a cause, or ask for tips in the cart or checkout.
@@ -251,7 +251,40 @@ The 2% fee on Stripe donations only applies to donations taken via our free Stri
 8. GiveWP has a dedicated support team to help answer any questions you may have and help you through stumbling blocks.
 
 == Changelog ==
+= 2.25.3: March 22nd, 2023 =
+* Security: Protect against CSRF during donation import
+
+= 2.25.2: March 8th, 2023 =
+* Security: Protect against CSRF during give cache clear settings
+* Security: Protect against CSV injection in donation export settings
+* Security: Protect against XSS and CSRF in donation import settings
+* Security: Protect against XSS in give_form_grid shortcode
+* Security: Protect against CSRF and Arbitrary Content Deletion in admin list tables
+* Security: Protect against SSRF in add-on changelog requests
+
+= 2.25.1: March 1st, 2023 =
+* Enhancement: Compatibility in the Donor Dashboard with the new Square recurring support
+* Enhancement: Exported donations are ordered by ID by default
+* Fix: Sites without the ctype PHP extension no longer run into problems
+* Fix: Prevent a handful of PHP 8.1 deprecation notices
+* Fix: Fixed a PHP 8.0 error in receipt templates
+
+= 2.25.0: February 21st, 2023 =
+* Feature: Donors now explicitly state whether they are donating as a company, useful for things like Gift Aid
+* Enhancement: Improvements to the Gateway API in preparation for GiveWP 3.0
+* Enhancement: Optimizations to how we interact with the GiveWP Gateway server
+* Enhancement: New method for storing donation notes using the Donation model
+* Fix: Improved how PayPal Donation tokens are handled to prevent the need to reconnect one's PayPal account
+* Fix: Classic forms using Authorize.Net as the default gateway now work as expected
+* Fix: Square credit card fields now work properly on safari
+* Fix: Resolved escaping issue preventing modal from displaying on some sites
+* Fix: The "Download Receipt" link in the PDF is more reliable after making donation updates
+* Fix: Prevented a filter from running twice on the donation summary
+* Fix: Styling looks better for modals in the Classic template
+* Fix: Corrected some styling in the Multi-Step and Classic template receipts that affected the Tributes add-on
+
 = 2.24.2: February 1st, 2023 =
+* Enhancement: Reorganized the GiveWP admin menu items to a cleaner, more intuitive order.
 * Fix: Servers without the PHP Intl extension broke the admin list tables. This is a fixed and a new Currency setting was introduced to [control automatic formatting](https://docs.givewp.com/currency-format).
 
 = 2.24.1: January 19th, 2023 =

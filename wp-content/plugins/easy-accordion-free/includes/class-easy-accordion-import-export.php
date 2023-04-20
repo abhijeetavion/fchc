@@ -69,7 +69,12 @@ class Easy_Accordion_Import_Export {
 	public function export_accordions() {
 		$nonce = ( ! empty( $_POST['nonce'] ) ) ? sanitize_text_field( wp_unslash( $_POST['nonce'] ) ) : '';
 		if ( ! wp_verify_nonce( $nonce, 'eapro_options_nonce' ) ) {
-			die();
+			wp_send_json_error(
+				array(
+					'error' => __( 'Error: Nonce verification has failed. Please try again.', 'easy-accordion-free' ),
+				),
+				403
+			);
 		}
 
 		$accordion_ids = isset( $_POST['eap_ids'] ) ? $_POST['eap_ids'] : ''; // phpcs:ignore
@@ -158,14 +163,20 @@ class Easy_Accordion_Import_Export {
 	public function import_accordions() {
 		$nonce = ( ! empty( $_POST['nonce'] ) ) ? sanitize_text_field( wp_unslash( $_POST['nonce'] ) ) : '';
 		if ( ! wp_verify_nonce( $nonce, 'eapro_options_nonce' ) ) {
-			die();
+			wp_send_json_error(
+				array(
+					'error' => __( 'Error: Nonce verification has failed. Please try again.', 'easy-accordion-free' ),
+				),
+				403
+			);
 		}
 		// This variable has been sanitize in the below.
+		$unsanitize = isset( $_POST['unSanitize'] ) ? sanitize_text_field( wp_unslash( $_POST['unSanitize'] ) ) : '';
+
 		$data         = isset( $_POST['accordion'] ) ? $_POST['accordion'] : ''; // phpcs:ignore 
 		$data         = json_decode( stripslashes( $data ) );
 		$data         = json_decode( $data, true );
-		$import_value = apply_filters( 'sp_easy_accordion_allow_import_tags', false );
-		$accordions   = $import_value ? $data['accordion'] : wp_kses_post_deep( $data['accordion'] );
+		$accordions   = $unsanitize ? $data['accordion'] : wp_kses_post_deep( $data['accordion'] );
 
 		if ( ! $data ) {
 			wp_send_json_error(

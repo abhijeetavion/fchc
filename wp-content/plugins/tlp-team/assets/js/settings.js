@@ -141,7 +141,6 @@
 
 		let layout_type = $('input[name=layout_type]:checked').val(),
 			layout = $("#rttm-style");
-
 		if (layout_type) {
 			let layout_option = '';
 			for (const [key, value] of Object.entries(ttp.layout_group[layout_type])) {
@@ -255,7 +254,9 @@
 				alert("Image or Post ID Not found");
 			}
 		}
+
 	});
+
 
 	$(".rt-tab-nav li").on('click', 'a', function (e) {
 		e.preventDefault();

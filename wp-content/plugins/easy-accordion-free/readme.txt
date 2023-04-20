@@ -2,8 +2,8 @@
 Contributors: shapedplugin, khalilu, rubel_miah, shamimmiashuhagh
 Tags: accordion, accordions, accordion faq, vertical accordion, faq, faqs, faq widget, accordion widget, accordion menu, wordpress faq plugin, easy accordion, premium accordion, bootstrap accordion, horizontal accordion, responsive accordion, accordion jquery, css3 accordion, accordion shortcode, collapsible content, toggle, toggle accordion, wordpress accordion plugin, wordpress accordion, bootstrap collapse, post accordion, post faq, custom post accordion, accordion grid, accordion bar, product faq, woocommerce product accordion, woocommerce accordion, wordpress post accordion, content hide, hidden content, expand content
 Requires at least: 4.3
-Tested up to: 6.1.1
-Stable tag: 2.2.0
+Tested up to: 6.2
+Stable tag: 2.2.2
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -261,6 +261,18 @@ Thank you!
 
 
 == Changelog ==
+
+= 2.2.2 - Mar 30, 2023 =
+* New: Multiple br tags in tab content support.
+* Fix: The iframe width of embedded Google Maps does not work.
+* Tested: WordPress 6.2 compatibility.
+
+= 2.2.1 - Feb 15, 2023 =
+* New: The Allow Iframe/Script Tags option in the import panel of the plugin.
+* New: Allow to skip responsive CSS from the iframe by adding a 'skip' class to the iframe.
+* Fix: Iframe does not show in accordion content with the Twenty Twenty theme.
+* Fix: Import option does not work when the accordion has iframe or script tags.
+* Removed: The hook 'sp_easy_accordion_allow_import_tags' was removed as an option added.
 
 = 2.2.0 - Dec 15, 2022 =
 * New: A hook 'sp_easy_accordion_allow_import_tags' added to modify to allow import shortcodes with special tags.

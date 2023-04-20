@@ -136,7 +136,7 @@ class Shortcode {
 			if ( ! in_array( $layout, array_keys( Options::scLayout() ) ) ) {
 				$layout = 'layout1';
 			}
-
+            
 			$isIsotope  = preg_match( '/isotope/', $layout );
 			$isCarousel = preg_match( '/carousel/', $layout );
 			$isGrid     = preg_match( '/layout/', $layout );
@@ -541,7 +541,7 @@ class Shortcode {
 				if ( $layout == 'layout5' ) {
 					$html .= "<table class='table table-striped table-responsive {$round_img}'>";
 				}
-
+    
 				if ( $isSpecial ) {
 					$html .= "<div class='rt-special-wrapper'>";
 					$html .= "<div class='rt-col-sm-4'><div class='rt-row' id='special-selected-wrapper'></div></div>";

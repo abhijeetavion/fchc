@@ -39,6 +39,7 @@ class Options {
 			'layout2'       => esc_html__( 'Layout 2', 'tlp-team' ),
 			'layout3'       => esc_html__( 'Layout 3', 'tlp-team' ),
 			'layout4'       => esc_html__( 'Layout 4', 'tlp-team' ),
+			'layout16'      => esc_html__( 'Layout 2', 'tlp-team' ),
 			'layout-el-4'   => esc_html__( 'Layout 4', 'tlp-team' ),
 			'isotope-free'  => esc_html__( 'Isotope Layout', 'tlp-team' ),
 			'carousel1'     => esc_html__( 'Carousel (Slider Layout)', 'tlp-team' ),
@@ -124,6 +125,7 @@ class Options {
 			'skype'      => esc_html__( 'Skype', 'tlp-team' ),
 			'whatsapp'   => esc_html__( 'Whatsapp', 'tlp-team' ),
 			'telegram'   => esc_html__( 'Telegram', 'tlp-team' ),
+			'github'   => esc_html__( 'Github', 'tlp-team' ),
 		];
 
 		return apply_filters( 'tlp_team_social_links', $socialLinks );
@@ -812,11 +814,15 @@ class Options {
 					'title' => esc_html__( 'Layout 1', 'tlp-team' ),
 					'url'   => rttlp_team()->assets_url() . 'images/layouts/layout1.png',
 				],
-
+                'layout16' => [
+                    'title' => esc_html__( 'Layout 2', 'tlp-team' ),
+                    'url'   => rttlp_team()->assets_url() . 'images/layouts/layout3.png',
+                ],
 				'layout3' => [
-					'title' => esc_html__( 'Layout 2', 'tlp-team' ),
+					'title' => esc_html__( 'Layout 3', 'tlp-team' ),
 					'url'   => rttlp_team()->assets_url() . 'images/layouts/layout3.png',
 				],
+
 			]
 		);
 	}

@@ -69,8 +69,8 @@ jQuery(document).ready(function ($) {
     // Cookie Getter/Setter
     function setCookie(cname,cvalue,expiration) {
         var d;
-        if (expiration === '' || expiration === '0' || parseInt(expiration)) {
-            var exdays = parseInt(expiration) || 0;
+        if (expiration === '' || expiration === '0' || parseFloat(expiration)) {
+            var exdays = parseFloat(expiration) || 0;
             d = new Date();
             d.setTime(d.getTime() + (exdays*24*60*60*1000));
         } else {

@@ -63,6 +63,7 @@ class AjaxController extends Controller {
 	 * @return Object
 	 */
 	private function frontend_ajax() {
+
 		$this->ajax[] = FrontendAjax\SmartPopup::class;
 		$this->ajax[] = FrontendAjax\MultiPopup::class;
 		$this->ajax[] = FrontendAjax\SinglePopup::class;
@@ -70,4 +71,5 @@ class AjaxController extends Controller {
 
 		return $this;
 	}
+
 }

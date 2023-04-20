@@ -427,6 +427,10 @@ Generic classes
   background: url("icons/b-eye.png") no-repeat scroll 5px 5px transparent;
 }
 
+#wpdreams a.advanced:before {
+  background: url("icons/b-asettings.png") no-repeat scroll 5px 5px transparent;
+}
+
 #tabs a {
     position: relative;
     background-color: #b2d4e1;
@@ -477,10 +481,6 @@ Generic classes
     display: inline-block;
     font-size: 11px;
     border-radius: 30px;
-}
-
-#wpdreams a.advanced {
-  background: url("icons/b-asettings.png") no-repeat scroll 5px 5px #4095B6;
 }
 
 #wpdreams a.cache {

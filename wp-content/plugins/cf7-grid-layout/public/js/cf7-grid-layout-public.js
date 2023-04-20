@@ -906,6 +906,10 @@ var cf7sgCustomHybridddTemplates = (function (cchddt) {return cchddt;}(cf7sgCust
       $('.cf7sg-collapsible[data-cf7sg="error"]', $target).attr('data-cf7sg','');
       $('.slider-dots button[data-cf7sg="error"]', $target).attr('data-cf7sg','');
     });
+    /** @since 4.15.4 clear select2 fields when form is reset */
+    $('select.select2').closest('form').on('reset', function(e){
+      $('select.select2', $(this)).val(null).trigger('change');
+    });
     /** on hover popup message for disabled submit buttons
     * @since 2.6.0
     */

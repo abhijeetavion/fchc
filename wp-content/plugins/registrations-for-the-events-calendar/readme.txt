@@ -4,9 +4,9 @@ Contributors: roundupwp
 Support Website: https://roundupwp.com/support
 Tags: registration, The Events Calendar, RSVP, events, event registration
 Requires at least: 5.6
-Tested up to: 6.1
+Tested up to: 6.2
 Requires PHP: 7.1
-Stable tag: 2.9.4
+Stable tag: 2.9.5
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -191,6 +191,11 @@ Yes. There is a custom database table added to each sub-site's database to separ
 Go to the "Support" tab on the plugin's settings page and follow the link to our support page, setup instructions page, or feature request page.
 
 == Changelog ==
+= 2.9.5 =
+* Fix: Fixed setting for the text "Check your email inbox for an unregister link" not applying.
+* Fix: Fixed setting for the text "Please enter the email you registered with" not applying.
+* Fix: Fixed setting for the text found on the unregister button in emails not applying.
+
 = 2.9.4 =
 * Fix: Filtering events by author while on the registrations overview page was not working.
 * Fix: When using the registrations overview page, the number of events shown on a single page load is now set to 10 instead of whatever the site has for the "Blog pages show at most" setting.

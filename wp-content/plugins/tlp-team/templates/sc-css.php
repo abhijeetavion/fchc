@@ -41,13 +41,17 @@ $gutter         = ! empty( $scMeta['ttp_gutter'][0] ) ? absint( $scMeta['ttp_gut
 
 
 if ( $primaryColor ) {
-	$css .= "$selector .single-team-area .overlay a.detail-popup, $selector .contact-info ul li i{";
+	$css .= "$selector .single-team-area .overlay a.detail-popup,$selector .layout18 .single-team-area .tlp-overlay  a.share-icon,$selector .layout18 .single-team-area .tlp-overlay .social-icons > a, $selector .contact-info ul li i{";
 	$css .= 'color:' . $primaryColor . ';';
 	$css .= '}';
 
-	$css .= "$selector .single-team-area .skill-prog .fill,.tlp-team $selector .tlp-content, .tlp-popup-wrap-{$scID} .tlp-tooltip + .tooltip > .tooltip-inner, .tlp-modal-{$scID} .tlp-tooltip + .tooltip > .tooltip-inner, .rt-modal-{$scID} .tlp-tooltip + .tooltip > .tooltip-inner,$selector .layout1 .tlp-content,$selector .layout11 .single-team-area .tlp-title,$selector .carousel7 .single-team-area .team-name,$selector .layout14 .rt-grid-item .tlp-overlay, $selector .carousel8 .rt-grid-item .tlp-overlay,$selector .isotope6 .single-team-area h3 .team-name,$selector .carousel8 .rt-grid-item .tlp-overlay .social-icons:before,$selector .layout14 .rt-grid-item .tlp-overlay .social-icons:before,$selector .skill-prog .fill,$selector .special-selected-top-wrap .ttp-label,#rt-smart-modal-container.rt-modal-{$scID} .rt-smart-modal-header,$selector .layout6 .tlp-info-block, $selector .isotope-free .tlp-content, $selector .carousel9 .single-team-area .tlp-overlay{";
+	$css .= "$selector .layout16 .single-team-area .social-icons, $selector .layout16 .single-team-area:hover:before, $selector .single-team-area .skill-prog .fill,.tlp-team $selector .tlp-content, .tlp-popup-wrap-{$scID} .tlp-tooltip + .tooltip > .tooltip-inner, .tlp-modal-{$scID} .tlp-tooltip + .tooltip > .tooltip-inner, .rt-modal-{$scID} .tlp-tooltip + .tooltip > .tooltip-inner,$selector .layout1 .tlp-content,$selector .layout11 .single-team-area .tlp-title,$selector .carousel7 .single-team-area .team-name,$selector .layout14 .rt-grid-item .tlp-overlay, $selector .carousel8 .rt-grid-item .tlp-overlay,$selector .isotope6 .single-team-area h3 .team-name,$selector .carousel8 .rt-grid-item .tlp-overlay .social-icons:before,$selector .layout14 .rt-grid-item .tlp-overlay .social-icons:before,$selector .skill-prog .fill,$selector .special-selected-top-wrap .ttp-label,#rt-smart-modal-container.rt-modal-{$scID} .rt-smart-modal-header,$selector .layout6 .tlp-info-block, $selector .isotope-free .tlp-content,$selector .layout17 .single-team-area:hover .tlp-content,$selector .layout17 .single-team-area .social-icons a:hover,$selector .layout18 .single-team-area .tlp-overlay  a.share-icon:hover,$selector .layout18 .single-team-area .tlp-overlay  .social-icons > a:hover, $selector .carousel9 .single-team-area .tlp-overlay{";
 	$css .= 'background:' . $primaryColor . ' !important;';
 	$css .= '}';
+
+    $css .= "$selector .layout16 .single-team-area:hover:after{";
+    $css .= 'border-color:' . $primaryColor . ' !important;';
+    $css .= '}';
 
 	$css .= "$selector .layout15 .single-team-area:before,$selector .isotope10 .single-team-area:before,$selector .carousel11 .single-team-area:before{";
 	$css .= 'background:' . Fns::TLPhex2rgba( $primaryColor, 0.8 );
@@ -228,10 +232,10 @@ if ( ! empty( $designation ) ) {
 	$cCss .= ! empty( $designation['size'] ) ? 'font-size:' . $designation['size'] . 'px;' : null;
 	$cCss .= ! empty( $designation['weight'] ) ? 'font-weight:' . $designation['weight'] . ';' : null;
 
-	$css .= "$selector .tlp-position,$selector .isotope10 .single-team-area .ttp-member-title .tlp-position a,$selector .isotope1 .team-member .overlay .tlp-position,$selector .layout11 .single-team-area .ttp-member-title .tlp-position a,$selector .carousel11 .single-team-area .ttp-member-title .tlp-position a,$selector .layout15 .single-team-area .ttp-member-title .tlp-position a,$selector .tlp-position a,$selector .overlay .tlp-position,$selector .tlp-layout-isotope .overlay .tlp-position{ {$cCss} }";
+	$css .= "$selector .tlp-position,$selector .isotope10 .single-team-area .ttp-member-title .tlp-position a,$selector .isotope1 .team-member .overlay .tlp-position,$selector .layout11 .single-team-area .ttp-member-title .tlp-position a,$selector .carousel11 .single-team-area .ttp-member-title .tlp-position a,$selector .layout15 .single-team-area .ttp-member-title .tlp-position a,$selector .layout16 .single-team-area .tlp-position a ,$selector .tlp-position a,$selector .layout17 .single-team-area .tlp-position a,$selector .overlay .tlp-position,$selector .tlp-layout-isotope .overlay .tlp-position{ {$cCss} }";
 
 	if ( ! empty( $designation['hover_color'] ) ) {
-		$css .= "$selector .tlp-position:hover,$selector .isotope10 .single-team-area .ttp-member-title .tlp-position a:hover,$selector .layout11 .single-team-area .ttp-member-title .tlp-position a:hover,$selector .carousel11 .single-team-area .ttp-member-title .tlp-position a:hover,$selector .layout15 .single-team-area .ttp-member-title .tlp-position a:hover,$selector .tlp-position a:hover,$selector .overlay .tlp-position:hover,$selector .tlp-layout-isotope .overlay .tlp-position:hover{ color: {$designation['hover_color']}; }";
+		$css .= "$selector .tlp-position:hover,$selector .isotope10 .single-team-area .ttp-member-title .tlp-position a:hover,$selector .layout11 .single-team-area .ttp-member-title .tlp-position a:hover,$selector .carousel11 .single-team-area .ttp-member-title .tlp-position a:hover,$selector .layout15 .single-team-area .ttp-member-title .tlp-position a:hover,$selector .layout16 .single-team-area .tlp-position a:hover,$selector .tlp-position a:hover,$selector .layout17 .single-team-area .tlp-content .tlp-position a:hover,$selector .overlay .tlp-position:hover,$selector .tlp-layout-isotope .overlay .tlp-position:hover{ color: {$designation['hover_color']}; }";
 	}
 }
 
@@ -250,6 +254,7 @@ if ( ! empty( $short_bio ) ) {
 
 // Email.
 if ( ! empty( $email ) ) {
+
 	// $cCss  = null;
 	$emailcCss  = ! empty( $email['color'] ) ? 'color:' . $email['color'] . ';' : null;
 	$emailcCss .= ! empty( $email['size'] ) ? 'font-size:' . $email['size'] . 'px;' : null;
@@ -343,7 +348,7 @@ if ( ! empty( $social_icon ) ) {
 	$social_iconcCss .= ! empty( $social_icon['weight'] ) ? 'font-weight:' . $social_icon['weight'] . ';' : null;
 
 	if ( $social_iconcCss ) {
-		$css .= "$selector .overlay .social-icons a,$selector .isotope8 .single-team-area .tlp-overlay .social-icons a,$selector .tlp-social,$selector .social-icons a{ {$social_iconcCss} }";
+		$css .= "$selector .overlay .social-icons a,$selector .layout17 .single-team-area .icons-wrapper a.share-icon,$selector .isotope8 .single-team-area .tlp-overlay .social-icons a,$selector .tlp-social,$selector .social-icons a{ {$social_iconcCss} }";
 	}
 
 	if ( ! empty( $social_icon['align'] ) ) {
@@ -353,7 +358,7 @@ if ( ! empty( $social_icon ) ) {
 
 // Social Icon bg.
 if ( $social_icon_bg ) {
-	$css .= "$selector .social-icons a{background:{$social_icon_bg};}";
+	$css .= "$selector .social-icons a,$selector .layout17 .single-team-area .social-icons a,$selector .layout17 .single-team-area .icons-wrapper a.share-icon{background:{$social_icon_bg};}";
 }
 
 if ( ! empty( $popupTextColor ) ) {
