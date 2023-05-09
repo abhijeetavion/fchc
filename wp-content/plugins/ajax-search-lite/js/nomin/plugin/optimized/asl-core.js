@@ -733,8 +733,8 @@
                             if ($this.n('showmore') != null) {
                                 $this.n('showmore').css('display', 'block');
 
-                                $('a', $this.n('showmore')).off();
-                                $('a', $this.n('showmore')).on('click', function () {
+                                $('span', $this.n('showmore')).off();
+                                $('span', $this.n('showmore')).on('click', function () {
                                     let source = $this.o.trigger.click, url;
 
                                     if (source == 'results_page') {

@@ -240,8 +240,8 @@ class RenderHelpers {
 		if ( ( 'layout2' === $layout ) || ( 'layout3' === $layout ) ) {
 			$iCol                = $meta['iCol'] > 12 ? 4 : $meta['iCol'];
 			$cCol                = 12 - $iCol;
-			$arg['image_area']   = 'rt-col-sm-' . $iCol . ' rt-col-xs-12 ';
-			$arg['content_area'] = 'rt-col-sm-' . $cCol . ' rt-col-xs-12 ';
+			$arg['image_area']   = 'rt-col-sm-' . $iCol . ' rt-col-xs-4 ';
+			$arg['content_area'] = 'rt-col-sm-' . $cCol . ' rt-col-xs-8';
 		}
 
 		$arg['class'] .= 'rt-grid-item';

@@ -3,9 +3,9 @@
     <tr valign="top">
         <th scope="row">
             Hide Simple Banner
-            <br><span style="font-weight:400;">This can hide the banner, essentially applies <code>display: none;</code> to the banner</span>
+            <div>This can hide the banner, essentially applies <code>display: none;</code> to the banner</div>
         </th>
-        <td style="vertical-align:top;">
+        <td>
             <!-- -->
             <input type="radio" id="yes" name="hide_simple_banner" value="yes" <?php echo ((get_option('hide_simple_banner') == 'yes') ? 'checked' : '' ); ?>>
             <label for="yes">yes</label>
@@ -19,10 +19,9 @@
     <tr valign="top">
         <th scope="row">
             Close button enabled
-            <br>
-            <span style="font-weight:400;">
+            <div>
                 This feature uses strictly necessary cookies which do not require consent from users per <a href="https://gdpr.eu/cookies/">GDPR</a> guidelines
-            </span>
+            </div>
         </th>
         <td>
             <?php
@@ -35,12 +34,11 @@
     <tr valign="top">
         <th scope="row">
             Close button expiration
-            <br>
-            <span style="font-weight:400;">
+            <div>
                 The amount of time until the close button action will expire. Enter the amount of days until the close button action will expire (e.g. <code>14</code>), fractions of days (e.g. <code>0.5</code>), or the exact day and time (e.g. <code>21 Feb 2022 15:53:22 GMT</code>). Default is 0.
-            </span>
+            </div>
         </th>
-        <td>
+        <td style="vertical-align:top;">
             <input id="close_button_expiration" name="close_button_expiration" style="width:60%;"
                             value="<?php echo esc_attr( get_option('close_button_expiration') ); ?>" />
         </td>
@@ -49,7 +47,7 @@
     <tr valign="top">
         <th scope="row">
             Simple Banner Font Size
-            <br><span style="font-weight:400;">Leaving this blank sets the default to your theme CSS value</span>
+            <div>Leaving this blank sets the default to your theme CSS value</div>
         </th>
         <td style="vertical-align:top;">
             <input type="text" id="simple_banner_font_size" name="simple_banner_font_size" placeholder="font-size"
@@ -61,12 +59,12 @@
     <tr valign="top">
         <th scope="row">
             Simple Banner Background Color
-            <br><span style="font-weight:400;">Leaving this blank sets the color to the default value #024985</span>
+            <div>Leaving this blank sets the color to the default value #024985</div>
         </th>
         <td style="vertical-align:top;">
             <input type="text" id="simple_banner_color" name="simple_banner_color" placeholder="Hex value"
                             value="<?php echo esc_attr( get_option('simple_banner_color') ); ?>" />
-            <input style="height: 30px;width: 100px;" type="color" id="simple_banner_color_show"
+            <input style="height: 30px;width: 100px;vertical-align: inherit;" type="color" id="simple_banner_color_show"
                             value="<?php echo ((get_option('simple_banner_color') == '') ? '#024985' : esc_attr( get_option('simple_banner_color') )); ?>">
         </td>
     </tr>
@@ -74,12 +72,12 @@
     <tr valign="top">
         <th scope="row">
             Simple Banner Text Color
-            <br><span style="font-weight:400;">Leaving this blank sets the color to the default value white</span>
+            <div>Leaving this blank sets the color to the default value white</div>
         </th>
         <td style="vertical-align:top;">
             <input type="text" id="simple_banner_text_color" name="simple_banner_text_color" placeholder="Hex value"
                             value="<?php echo esc_attr( get_option('simple_banner_text_color') ); ?>" />
-            <input style="height: 30px;width: 100px;" type="color" id="simple_banner_text_color_show"
+            <input style="height: 30px;width: 100px;vertical-align: inherit;" type="color" id="simple_banner_text_color_show"
                             value="<?php echo ((get_option('simple_banner_text_color') == '') ? '#ffffff' : esc_attr( get_option('simple_banner_text_color') )); ?>">
         </td>
     </tr>
@@ -87,12 +85,12 @@
     <tr valign="top">
         <th scope="row">
             Simple Banner Link Color
-            <br><span style="font-weight:400;">Leaving this blank sets the color to the default value #f16521</span>
+            <div>Leaving this blank sets the color to the default value #f16521</div>
         </th>
         <td style="vertical-align:top;">
             <input type="text" id="simple_banner_link_color" name="simple_banner_link_color" placeholder="Hex value"
                             value="<?php echo esc_attr( get_option('simple_banner_link_color') ); ?>" />
-            <input style="height: 30px;width: 100px;" type="color" id="simple_banner_link_color_show"
+            <input style="height: 30px;width: 100px;vertical-align: inherit;" type="color" id="simple_banner_link_color_show"
                             value="<?php echo ((get_option('simple_banner_link_color') == '') ? '#f16521' : esc_attr( get_option('simple_banner_link_color') )); ?>">
         </td>
     </tr>
@@ -100,12 +98,12 @@
     <tr valign="top">
         <th scope="row">
             Simple Banner Close Button Color
-            <br><span style="font-weight:400;">Leaving this blank sets the color to the default value black</span>
+            <div>Leaving this blank sets the color to the default value black</div>
         </th>
         <td style="vertical-align:top;">
             <input type="text" id="simple_banner_close_color" name="simple_banner_close_color" placeholder="Hex value"
                             value="<?php echo esc_attr( get_option('simple_banner_close_color') ); ?>" />
-            <input style="height: 30px;width: 100px;" type="color" id="simple_banner_close_color_show"
+            <input style="height: 30px;width: 100px;vertical-align: inherit;" type="color" id="simple_banner_close_color_show"
                             value="<?php echo ((get_option('simple_banner_close_color') == '') ? 'black' : esc_attr( get_option('simple_banner_close_color') )); ?>">
         </td>
     </tr>
@@ -113,7 +111,7 @@
     <tr valign="top">
         <th scope="row">
             Simple Banner Text
-            <br><span style="font-weight:400;">Leaving this blank removes the banner</span>
+            <div>Leaving this blank removes the banner</div>
         </th>
             <td>
                 <textarea id="simple_banner_text" class="large-text code" style="height: 150px;width: 97%;" name="simple_banner_text"><?php echo esc_textarea(get_option('simple_banner_text')); ?></textarea>
@@ -125,12 +123,12 @@
             Simple Banner Custom CSS
         </th>
         <td>
-            <span style="font-weight:400;">CSS will be applied directly to the <code>simple-banner</code> class, the <code>simple-banner-scrolling</code> class for scrolling styles, the <code>simple-banner-text</code> class for text specific styles, and the <code>simple-banner-button</code> class for close button specific styles.</span>
+            <span>CSS will be applied directly to the <code>simple-banner</code> class, the <code>simple-banner-scrolling</code> class for styles applied as the page scrolls, the <code>simple-banner-text</code> class for text specific styles, and the <code>simple-banner-button</code> class for close button specific styles.</span>
             <strong style="color:red;">Be very careful, bad CSS can break the banner.</strong>
         </td>
     </tr>
     <tr valign="top">
-        <th scope="row" style="font-weight:400;">
+        <th scope="row">
             <div>.simple-banner {</div>
             <textarea id="simple_banner_custom_css" class="code" style="height: 150px;width: 90%;" name="simple_banner_custom_css"><?php echo esc_textarea(get_option('simple_banner_custom_css')); ?></textarea>
             <div>}</div>
@@ -159,7 +157,7 @@
     <tr valign="top">
         <th scope="row">
             Simple Banner Position
-            <br><span style="font-weight:400;">Change the <code>position</code> value of your banner. More information <a target="_blank" href="https://www.w3schools.com/cssref/pr_class_position.asp">here</a></span>
+            <div>Change the <code>position</code> value of your banner. More information <a target="_blank" href="https://developer.mozilla.org/en-US/docs/Web/CSS/position">here</a>.</div>
         </th>
         <td style="vertical-align:top;">
             <!-- -->
@@ -196,8 +194,8 @@
     <tr valign="top">
         <th scope="row">
             Header Top Margin
-            <br><span style="font-weight:400;">Apply margin to the top of your theme header</span>
-            <br><span style="font-weight:400;color:red;">Will be disabled if banner is hidden, disabled, or closed</span>
+            <div>Apply margin to the top of your theme header</div>
+            <div style="color:red;">Will be disabled if banner is hidden, disabled, or closed</div>
         </th>
         <td style="vertical-align:top;">
             <input type="text" id="header_margin" name="header_margin" placeholder="margin-top"
@@ -209,8 +207,8 @@
     <tr valign="top">
         <th scope="row">
             Header Top Padding
-            <br><span style="font-weight:400;">Apply padding to the top of your theme header</span>
-            <br><span style="font-weight:400;color:red;">Will be disabled if banner is hidden, disabled, or closed</span>
+            <div>Apply padding to the top of your theme header</div>
+            <div style="color:red;">Will be disabled if banner is hidden, disabled, or closed</div>
         </th>
         <td style="vertical-align:top;">
             <input type="text" id="header_padding" name="header_padding" placeholder="padding-top"
@@ -223,12 +221,11 @@
         <tr valign="top">
             <th scope="row">
                 wp_body_open enabled
-                <br>
-                    <span style="font-weight:400;">
-                        If enabled, will use the <a href="https://developer.wordpress.org/reference/functions/wp_body_open/">wp_body_open</a> action
-                        to insert the banner to your site. This will allow the banner to be translated into other languages if you are using another 
-                        translation plugin.
-                    </span>
+                <div>
+                    If enabled, will use the <a href="https://developer.wordpress.org/reference/functions/wp_body_open/">wp_body_open</a> action
+                    to insert the banner to your site. This will allow the banner to be translated into other languages if you are using another 
+                    translation plugin.
+                </div>
             </th>
             <td>
                 <?php

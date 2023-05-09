@@ -10,20 +10,43 @@ wpsl.gmaps = {};
  * @since 2.2.22
  * @returns {void}
  */
-function initWpslMap() {
+function wpslBorlabsCallback() {
 	var mapsLoaded;
 
 	mapsLoaded = setInterval( function() {
 		if ( typeof google === 'object' && typeof google.maps === 'object' ) {
 			clearInterval( mapsLoaded );
-
-			jQuery( ".wpsl-gmap-canvas" ).each( function( mapIndex ) {
-				var mapId = jQuery( this ).attr( "id" );
-
-				wpsl.gmaps.init( mapId, mapIndex );
-			});
+			initWpsl();
 		}
 	}, 500 );
+}
+
+/**
+ * Callback required by Google Maps.
+ */
+function wpslCallback() {
+	jQuery( document ).ready( function( $ ) {
+		initWpsl();
+	})
+}
+
+function initWpsl() {
+
+	// Create the maps
+	jQuery( ".wpsl-gmap-canvas" ).each( function ( mapIndex ) {
+		var mapId = jQuery( this ).attr( "id" );
+
+		wpsl.gmaps.init( mapId, mapIndex );
+	});
+
+	// Init JS from the WPSL add-ons.
+	if ( typeof wpslAddons === 'object' ) {
+		for ( const key in wpslAddons ) {
+			if ( wpslAddons.hasOwnProperty( key ) ) {
+				wpslAddons[key].init()
+			}
+		}
+	}
 }
 
 jQuery( document ).ready( function( $ ) {
@@ -221,29 +244,6 @@ wpsl.gmaps.init = function( mapId, mapIndex ) {
 	// Bind the zoom_changed listener.
 	zoomChangedListener();
 };
-
-// Only continue if a map is present.
-if ( $( ".wpsl-gmap-canvas" ).length ) {
-	$( "<img />" ).attr( "src", wpslSettings.url + "img/ajax-loader.gif" );
-
-	/*
-	 * The [wpsl] shortcode can only exist once on a page,
-	 * but the [wpsl_map] shortcode can exist multiple times.
-	 *
-	 * So to make sure we init all the maps we loop over them.
-	 */
-	$( ".wpsl-gmap-canvas" ).each( function( mapIndex ) {
-		var mapId = $( this ).attr( "id" );
-
-		wpsl.gmaps.init( mapId, mapIndex );
-	});
-
-	/*
-	 * Check if we are dealing with a map that's placed in a tab,
-	 * if so run a fix to prevent the map from showing up grey.
-	 */
-	maybeApplyTabFix();
-}
 
 
 /**

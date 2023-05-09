@@ -19,7 +19,7 @@
 	<?php if ($style['showmoreresults'] == 1): ?>
 		<?php do_action('asl_layout_before_showmore', $id); ?>
 		<p class='showmore'>
-			<a><?php echo asl_icl_t('Show more results text', $style['showmoreresultstext']); ?></a>
+			<span><?php echo asl_icl_t('Show more results text', $style['showmoreresultstext']); ?></span>
 		</p>
 		<?php do_action('asl_layout_after_showmore', $id); ?>
 	<?php endif; ?>

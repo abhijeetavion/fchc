@@ -84,6 +84,7 @@
 
         widget_css += "div.skiptranslate,#google_translate_element2{display:none!important}";
         widget_css += "body{top:0!important}";
+        widget_css += "font font{background-color:transparent!important;box-shadow:none!important;position:initial!important}";
     }
 
     widget_css += '.gt_float_switcher{font-family:Arial;font-size:20px;border-radius:2px;color:#555;display:inline-block;line-height:20px;box-shadow:rgba(0,0,0,0.15) 0 5px 15px;background:#fff;overflow:hidden;transition:all .5s cubic-bezier(0.4, 0, 1, 1)}';
@@ -173,7 +174,7 @@
     }
 
     var gt_float_open = false;
-    function gt_hscroll(evt){evt.preventDefault();var tgt = evt.target;if(tgt.tagName == 'A')tgt=tgt.parentNode;else if(tgt.tagName == 'IMG')tgt=tgt.parentNode.parentNode;if(evt.type == 'mousewheel')tgt.scrollLeft -= Math.sign(evt.wheelDelta) * 88;else if(evt.type == 'touchstart'){gt_touchstart_posx = gt_touchstart_posx_static = evt.touches[0].pageX;gt_touchstart_timestamp = evt.timeStamp;}else if(evt.type == 'touchmove'){tgt.scrollLeft += Math.sign(gt_touchstart_posx - evt.touches[0].pageX) * 10;gt_touchstart_posx = evt.touches[0].pageX;}else if(evt.type == 'touchend'){var scroll_speed = (gt_touchstart_posx_static - evt.changedTouches[0].pageX) / (evt.timeStamp - gt_touchstart_timestamp);tgt.scrollTo({left: tgt.scrollLeft + scroll_speed * 500, behavior: 'smooth'});}}
+    function gt_hscroll(evt){var tgt = evt.target;if(tgt.tagName == 'A')tgt=tgt.parentNode;else if(tgt.tagName == 'IMG')tgt=tgt.parentNode.parentNode;if(evt.type == 'mousewheel'){evt.preventDefault();tgt.scrollLeft -= Math.sign(evt.wheelDelta) * 88;}else if(evt.type == 'touchstart'){gt_touchstart_posx = gt_touchstart_posx_static = evt.touches[0].pageX;gt_touchstart_timestamp = evt.timeStamp;}else if(evt.type == 'touchmove'){evt.preventDefault();tgt.scrollLeft += Math.sign(gt_touchstart_posx - evt.touches[0].pageX) * 10;gt_touchstart_posx = evt.touches[0].pageX;}else if(evt.type == 'touchend'){var scroll_speed = (gt_touchstart_posx_static - evt.changedTouches[0].pageX) / (evt.timeStamp - gt_touchstart_timestamp);tgt.scrollTo({left: tgt.scrollLeft + scroll_speed * 500, behavior: 'smooth'});}}
     function gt_show_float_switcher(el){
         gt_float_open=true;
         if(switcher_horizontal_position == 'inline')

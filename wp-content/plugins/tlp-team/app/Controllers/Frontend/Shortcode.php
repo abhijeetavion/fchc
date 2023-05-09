@@ -178,8 +178,8 @@ class Shortcode {
 			if ( ( $layout == 'layout2' ) || ( $layout == 'layout3' ) ) {
 				$iCol                = $iCol > 12 ? 4 : $iCol;
 				$cCol                = 12 - $iCol;
-				$arg['image_area']   = "rt-col-sm-{$iCol} rt-col-xs-12 ";
-				$arg['content_area'] = "rt-col-sm-{$cCol} rt-col-xs-12 ";
+				$arg['image_area']   = "rt-col-sm-{$iCol} rt-col-xs-4 ";
+				$arg['content_area'] = "rt-col-sm-{$cCol} rt-col-xs-8 ";
 			}
 
 			$arg['class'] = null;

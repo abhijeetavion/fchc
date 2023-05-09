@@ -245,7 +245,6 @@
 }@media only screen and (max-width:767px){.hidden-xs{display:none !important}
 .rt-elementor-container .margin-bottom15{margin-bottom:5px !important}
 .tlp-member-feature-img,.tlp-member-description-container{float:none;width:100%}
-.rt-elementor-container .layout2 .rttm-content-area{padding:0}
 }@media only screen and (max-width:576px){.rt-elementor-container .rt-carousel-holder:not(#team-member-profile-gallery):not(.bottom-nav):not(.rttm-carousel-main){margin-top:50px}
 .rt-carousel-holder.standard-nav .swiper-nav .swiper-arrow{top:auto}
 .rt-carousel-holder.standard-nav .swiper-nav,.rt-carousel-holder.top-nav .swiper-nav{top:25px;right:auto;left:50%;margin-top:0;width:auto;-webkit-transform:translateX(-50%);-ms-transform:translateX(-50%);transform:translateX(-50%)}

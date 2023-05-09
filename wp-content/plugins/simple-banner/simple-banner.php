@@ -3,16 +3,16 @@
  * Plugin Name: Simple Banner
  * Plugin URI: https://github.com/rpetersen29/simple-banner
  * Description: Display a simple banner at the top or bottom of your website.
- * Version: 2.14.2
+ * Version: 2.15.1
  * Author: Ryan Petersen
  * Author URI: http://rpetersen29.github.io/
  * License: GPL2
  *
  * @package Simple Banner
- * @version 2.14.2
+ * @version 2.15.1
  * @author Ryan Petersen <rpetersen.dev@gmail.com>
  */
-define ('SB_VERSION', '2.14.2');
+define ('SB_VERSION', '2.15.1');
 
 register_activation_hook( __FILE__, 'simple_banner_activate' );
 function simple_banner_activate() {
@@ -97,6 +97,7 @@ function simple_banner() {
 		'close_button_expiration' => get_option('close_button_expiration'),
 		'close_button_cookie_set' => isset($_COOKIE['simplebannerclosed']),
 		'simple_banner_remove_after_date' => get_option('simple_banner_remove_after_date'),
+		'simple_banner_insert_inside_element' => get_option('simple_banner_insert_inside_element'),
 	);
 	// Enqueue the script
     wp_register_script('simple-banner-script', plugin_dir_url( __FILE__ ) . 'simple-banner.js', array( 'jquery' ), SB_VERSION);
@@ -406,6 +407,11 @@ function simple_banner_settings() {
 	    	'sanitize_callback' => 'wp_filter_nohtml_kses'
 		)
     );
+	register_setting( 'simple-banner-settings-group', 'simple_banner_insert_inside_element',
+		array(
+	    	'sanitize_callback' => 'wp_strip_all_tags'
+		)
+    );
 }
 
 function is_license_verified(){
@@ -482,6 +488,8 @@ function simple_banner_settings_page() {
 
 	<style type="text/css" id="settings_stylesheet">
 		.simple-banner-settings-form th {width: 30%;}
+		.simple-banner-settings-form th div {font-size: 13px;font-weight: 400;}
+		.simple-banner-settings-form th div code {font-size: 12px;}
 	</style>
 
 	<div class="wrap">

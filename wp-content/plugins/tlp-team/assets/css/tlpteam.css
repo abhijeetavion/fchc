@@ -5589,9 +5589,11 @@ div#tlp-modal .tlp-md-loading {
 	.tlp-member-description-container {
 		float: none;
 		width: 100%; }
+	.tlp-member-description-container{
+		padding-top: 15px;
+	}
 
-	.rt-team-container .layout2 .rttm-content-area {
-		padding: 0px; } }
+}
 @media (min-width: 768px) {
 	.margin-bottom15 {
 		margin-bottom: 5px !important; }

@@ -3,7 +3,7 @@
 Plugin Name: GTranslate
 Plugin URI: https://gtranslate.io/?xyz=998
 Description: Translate your website and make it multilingual. For support visit <a href="https://wordpress.org/support/plugin/gtranslate">GTranslate Support Forum</a>.
-Version: 3.0.2
+Version: 3.0.3
 Author: Translate AI Multilingual Solutions
 Author URI: https://gtranslate.io
 Text Domain: gtranslate
@@ -126,7 +126,7 @@ class GTranslate extends WP_Widget {
             $orig_domain = parse_url(site_url(), PHP_URL_HOST);
             $widget_id = str_replace('gt_widget_script_', '', $handle);
 
-            $tag = strstr($tag, '</script>', true) . '</script><script src="' . esc_attr($src) . '" data-no-minify="1" data-gt-orig-url="' . esc_attr($orig_url) . '" data-gt-orig-domain="' . esc_attr($orig_domain) . '" data-gt-widget-id="' . esc_attr($widget_id) .'" defer></script>';
+            $tag = strstr($tag, '</script>', true) . '</script><script src="' . esc_attr($src) . '" data-no-optimize="1" data-no-minify="1" data-gt-orig-url="' . esc_attr($orig_url) . '" data-gt-orig-domain="' . esc_attr($orig_domain) . '" data-gt-widget-id="' . esc_attr($widget_id) .'" defer></script>';
         }
 
         return $tag;
@@ -197,7 +197,7 @@ class GTranslate extends WP_Widget {
                 wp_enqueue_script('gt_widget_script_' . $unique_id, 'https://cdn.gtranslate.net/widgets/latest/base.js', array(), '', true);
             } else {
                 $base_path = plugins_url('', __FILE__);
-                $gt_settings['flags_location'] = $base_path . '/flags/';
+                $gt_settings['flags_location'] = wp_make_link_relative($base_path) . '/flags/';
 
                 wp_enqueue_script('gt_widget_script_' . $unique_id, $base_path . '/js/base.js', array(), '', true);
             }
@@ -349,9 +349,9 @@ class GTranslate extends WP_Widget {
         } else {
             $base_path = plugins_url('', __FILE__);
             if($data['widget_look'] == 'globe')
-                $gt_settings['flags_location'] = $base_path . '/flags/svg/';
+                $gt_settings['flags_location'] = wp_make_link_relative($base_path) . '/flags/svg/';
             else
-                $gt_settings['flags_location'] = $base_path . '/flags/';
+                $gt_settings['flags_location'] = wp_make_link_relative($base_path) . '/flags/';
 
             wp_enqueue_script('gt_widget_script_' . $unique_id, $base_path . '/js/' . $widget_short_name . '.js', array(), '', true);
         }
@@ -1200,7 +1200,7 @@ EOT;
             <div class="postbox">
                 <h3 id="settings"><?php _e('Custom CSS', 'gtranslate'); ?> <a href="#TB_inline?width=700&height=170&inlineId=common-customization-tips-description" title="<?php echo esc_attr(translate('Common customizations tips')); ?>" class="thickbox" style="text-decoration:none"><span class="dashicons dashicons-editor-help"></span></a></h3>
                 <div class="inside">
-                    <textarea id="custom_css" name="custom_css" onchange="RefreshDoWidgetCode()" style="font-family:Monospace;font-size:11px;height:150px;width:565px;"><?php echo $custom_css; ?></textarea><br />
+                    <textarea id="custom_css" name="custom_css" onchange="RefreshDoWidgetCode()" style="font-family:Monospace;font-size:11px;height:150px;width:565px;"><?php echo htmlspecialchars($custom_css, ENT_QUOTES, get_option('blog_charset')); ?></textarea><br />
                     <div id="common-customization-tips-description" style="display:none">
                         <p><?php _e('Hide current language:'); ?> <code>a.gt-current-lang{display:none}</code></p>
                         <p><?php _e('Monochrome flags:'); ?> <code>a[data-gt-lang] img{filter:grayscale(1)}</code></p>

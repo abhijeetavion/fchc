@@ -3,8 +3,8 @@ Plugin URI: https://wpstorelocator.co
 Contributors: tijmensmit
 Tags: google maps, store locator, business locations, geocoding, stores, geo, zipcode locator, dealer locater, geocode, gmaps, google map, google map plugin, location finder, map tools, shop locator, wp google map
 Requires at least: 3.7
-Tested up to: 6.1.1
-Stable tag: 2.2.236
+Tested up to: 6.2.0
+Stable tag: 2.2.237
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl.html
 
@@ -125,6 +125,10 @@ If you find a plugin or theme that causes a conflict, please report it on the [s
 4. The plugin settings
 
 == Changelog ==
+
+= 2.2.237 =
+* Fixed: The "Loading the Google Maps JavaScript API without a callback is not supported" console warning.
+* Note: If you have the search widget add-on installed and are using the autocomplete function, then please make sure to update to the latest version ( 1.2.1 ).
 
 = 2.2.236 =
 * Fixed: The search function can break if the created opening hours doesn't contain every day of the week.

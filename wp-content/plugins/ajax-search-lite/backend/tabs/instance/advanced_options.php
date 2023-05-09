@@ -3,8 +3,7 @@
 	<li><a tabid="702" class='subtheme'><?php echo __('Exclude Results', 'ajax-search-lite'); ?></a></li>
 	<li><a tabid="703" class='subtheme'><?php echo __('Keyword exceptions', 'ajax-search-lite'); ?></a></li>
 	<li><a tabid="705" class='subtheme'><?php echo __('Accessibility', 'ajax-search-lite'); ?></a></li>
-	<li><a tabid="706" class='subtheme'><?php echo __('Include Results', 'ajax-search-lite'); ?><span>PREMIUM</span></a></li>
-	<li><a tabid="707" class='subtheme'><?php echo __('Grouping', 'ajax-search-lite'); ?><span>PREMIUM</span></a></li>
+	<li><a tabid="706" class='subtheme'><?php echo __('More', 'ajax-search-lite'); ?><span>PREMIUM</span></a></li>
 </ul>
 <div class='tabscontent'>
 	<div tabid="701">
@@ -42,10 +41,7 @@
 		</fieldset>
 	</div>
 	<div tabid="706">
-		<?php include(ASL_PATH."backend/tabs/instance/advanced/include_results.php"); ?>
-	</div>
-	<div tabid="707">
-		<?php include(ASL_PATH."backend/tabs/instance/advanced/grouping.php"); ?>
+		<?php include(ASL_PATH."backend/tabs/instance/advanced/advanced_premium_more.php"); ?>
 	</div>
 </div>
 

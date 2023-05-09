@@ -2449,8 +2449,8 @@ window.WPD.intervalUntilExecute = function(f, criteria, interval, maxTries) {
                             if ($this.n('showmore') != null) {
                                 $this.n('showmore').css('display', 'block');
 
-                                $('a', $this.n('showmore')).off();
-                                $('a', $this.n('showmore')).on('click', function () {
+                                $('span', $this.n('showmore')).off();
+                                $('span', $this.n('showmore')).on('click', function () {
                                     let source = $this.o.trigger.click, url;
 
                                     if (source == 'results_page') {
@@ -4305,6 +4305,16 @@ window.ASL.api = (function() {
         }
         let initialized = 0;
         instances.forEach(function (data, i) {
+            // Menu or invalid node detection and replacement
+            $('.asl_w_container_' + i).forEach(function(el){
+                let $p = $(el).parent();
+                if ( $p.is('a') ) {
+                    let div = document.createElement('div'),
+                        p = $p.get(0);
+                    div.innerHTML = p.innerHTML;
+                    p.replaceWith(div);
+                }
+            });
             // noinspection JSUnusedAssignment
             $('.asl_m_' + i).forEach(function(el){
                 let $el = $(el);

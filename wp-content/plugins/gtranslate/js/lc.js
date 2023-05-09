@@ -72,6 +72,7 @@
 
         widget_css += "div.skiptranslate,#google_translate_element2{display:none!important}";
         widget_css += "body{top:0!important}";
+        widget_css += "font font{background-color:transparent!important;box-shadow:none!important;position:initial!important}";
     }
 
     if(horizontal_position != 'inline')

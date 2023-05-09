@@ -2,14 +2,14 @@
 # This file is distributed under the same license as the Ajax Search Lite plugin.
 msgid ""
 msgstr ""
-"Project-Id-Version: Ajax Search Lite 4.11\n"
+"Project-Id-Version: Ajax Search Lite 4.11.2\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/ajax-search-lite\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2023-01-06T16:50:26+00:00\n"
+"POT-Creation-Date: 2023-04-26T14:39:21+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.6.0\n"
 "X-Domain: ajax-search-lite\n"
@@ -242,51 +242,51 @@ msgstr ""
 msgid "Search settings saved!"
 msgstr ""
 
-#: backend/settings.php:99
+#: backend/settings.php:92
 msgid "Search shortcode:"
 msgstr ""
 
-#: backend/settings.php:102
+#: backend/settings.php:95
 msgid "Search shortcode for templates:"
 msgstr ""
 
-#: backend/settings.php:112
+#: backend/settings.php:105
 msgid "General Options"
 msgstr ""
 
-#: backend/settings.php:113
-#: backend/settings.php:129
+#: backend/settings.php:106
+#: backend/settings.php:122
 msgid "Image Options"
 msgstr ""
 
-#: backend/settings.php:114
+#: backend/settings.php:107
 msgid "Frontend Filters"
 msgstr ""
 
-#: backend/settings.php:115
+#: backend/settings.php:108
 msgid "Layout options"
 msgstr ""
 
-#: backend/settings.php:116
+#: backend/settings.php:109
 msgid "Advanced"
 msgstr ""
 
-#: backend/settings.php:121
+#: backend/settings.php:114
 msgid "Genearal Options"
 msgstr ""
 
-#: backend/settings.php:132
-#: backend/settings.php:146
+#: backend/settings.php:125
+#: backend/settings.php:139
 #: backend/tabs/instance/advanced/content.php:20
 #: backend/tabs/instance/advanced/content.php:80
-#: backend/tabs/instance/advanced_options.php:19
-#: backend/tabs/instance/advanced_options.php:31
+#: backend/tabs/instance/advanced_options.php:18
+#: backend/tabs/instance/advanced_options.php:30
 #: backend/tabs/instance/general/behavior.php:6
 #: backend/tabs/instance/general/behavior.php:73
 #: backend/tabs/instance/general/results_page_live_loader.php:6
-#: backend/tabs/instance/general_options.php:17
-#: backend/tabs/instance/general_options.php:32
-#: backend/tabs/instance/general_options.php:44
+#: backend/tabs/instance/general_options.php:15
+#: backend/tabs/instance/general_options.php:30
+#: backend/tabs/instance/general_options.php:42
 #: backend/tabs/instance/layout/box_layout.php:18
 #: backend/tabs/instance/layout/keyword_highlight.php:6
 #: backend/tabs/instance/layout/keyword_highlight.php:39
@@ -295,15 +295,15 @@ msgstr ""
 msgid "Documentation"
 msgstr ""
 
-#: backend/settings.php:143
+#: backend/settings.php:136
 msgid "Frontend Search Filters"
 msgstr ""
 
-#: backend/settings.php:157
+#: backend/settings.php:150
 msgid "Layout Options"
 msgstr ""
 
-#: backend/settings.php:165
+#: backend/settings.php:158
 msgid "Advanced Options"
 msgstr ""
 
@@ -319,11 +319,11 @@ msgstr ""
 msgid "Desktop devices, 1025px width  and higher"
 msgstr ""
 
-#: backend/settings/class/wd_cf_search_callback.class.php:73
+#: backend/settings/class/wd_cf_search_callback.class.php:77
 msgid "The nonce has expired or missing, please reload the page!"
 msgstr ""
 
-#: backend/settings/class/wd_cf_search_callback.class.php:76
+#: backend/settings/class/wd_cf_search_callback.class.php:80
 msgid "Missing data."
 msgstr ""
 
@@ -427,6 +427,10 @@ msgstr ""
 msgid "Will try to force utf8 conversion on all LIKE operations in the WHERE and HAVING clauses."
 msgstr ""
 
+#: backend/tabs/instance/advanced/advanced_premium_more.php:2
+msgid "Grouping results"
+msgstr ""
+
 #: backend/tabs/instance/advanced/content.php:3
 msgid "What to do with shortcodes in results content?"
 msgstr ""
@@ -517,14 +521,6 @@ msgstr ""
 msgid "Exclude Posts by ID's (comma separated post ID-s)"
 msgstr ""
 
-#: backend/tabs/instance/advanced/grouping.php:2
-msgid "Grouping results"
-msgstr ""
-
-#: backend/tabs/instance/advanced/include_results.php:2
-msgid "Include results"
-msgstr ""
-
 #: backend/tabs/instance/advanced/kw_exceptions.php:1
 msgid "Keyword exceptions will be replaced with an empty string \"\" in the search phrase."
 msgstr ""
@@ -554,24 +550,20 @@ msgid "Exclude Results"
 msgstr ""
 
 #: backend/tabs/instance/advanced_options.php:4
-#: backend/tabs/instance/advanced_options.php:28
+#: backend/tabs/instance/advanced_options.php:27
 msgid "Keyword exceptions"
 msgstr ""
 
 #: backend/tabs/instance/advanced_options.php:5
-#: backend/tabs/instance/advanced_options.php:40
+#: backend/tabs/instance/advanced_options.php:39
 msgid "Accessibility"
 msgstr ""
 
 #: backend/tabs/instance/advanced_options.php:6
-msgid "Include Results"
+msgid "More"
 msgstr ""
 
-#: backend/tabs/instance/advanced_options.php:7
-msgid "Grouping"
-msgstr ""
-
-#: backend/tabs/instance/advanced_options.php:16
+#: backend/tabs/instance/advanced_options.php:15
 msgid "Exclude/Include results"
 msgstr ""
 
@@ -785,10 +777,6 @@ msgid ""
 "        If you set it differently, or your theme has a different option for that, then <strong>set this option to the same value</strong> as well."
 msgstr ""
 
-#: backend/tabs/instance/general/media_search.php:2
-msgid "File Search"
-msgstr ""
-
 #: backend/tabs/instance/general/ordering.php:2
 msgid "Primary ordering"
 msgstr ""
@@ -987,15 +975,6 @@ msgstr ""
 msgid "Search in terms? (categories, tags)"
 msgstr ""
 
-#: backend/tabs/instance/general/taxonomy_terms_search.php:2
-#: backend/tabs/instance/general_options.php:7
-msgid "Taxonomy Terms Search"
-msgstr ""
-
-#: backend/tabs/instance/general/users_search.php:2
-msgid "Users Search"
-msgstr ""
-
 #: backend/tabs/instance/general_options.php:2
 msgid "Post Type Search"
 msgstr ""
@@ -1005,12 +984,12 @@ msgid "Behavior"
 msgstr ""
 
 #: backend/tabs/instance/general_options.php:4
-#: backend/tabs/instance/general_options.php:29
+#: backend/tabs/instance/general_options.php:27
 msgid "Ordering"
 msgstr ""
 
 #: backend/tabs/instance/general_options.php:5
-#: backend/tabs/instance/general_options.php:41
+#: backend/tabs/instance/general_options.php:39
 msgid "Autocomplete & Suggestions"
 msgstr ""
 
@@ -1018,19 +997,15 @@ msgstr ""
 msgid "Results Page Live Loader"
 msgstr ""
 
-#: backend/tabs/instance/general_options.php:8
-msgid "User Search"
+#: backend/tabs/instance/general_options.php:7
+msgid "More Sources"
 msgstr ""
 
-#: backend/tabs/instance/general_options.php:9
-msgid "Media Files Search"
-msgstr ""
-
-#: backend/tabs/instance/general_options.php:14
+#: backend/tabs/instance/general_options.php:12
 msgid "Sources & Basics"
 msgstr ""
 
-#: backend/tabs/instance/general_options.php:66
+#: backend/tabs/instance/general_options.php:58
 #: backend/tabs/instance/image_options.php:139
 #: backend/tabs/instance/layout_options.php:48
 msgid "Save options!"

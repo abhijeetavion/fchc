@@ -1488,6 +1488,16 @@ window.WPD.intervalUntilExecute = function(f, criteria, interval, maxTries) {
         }
         let initialized = 0;
         instances.forEach(function (data, i) {
+            // Menu or invalid node detection and replacement
+            $('.asl_w_container_' + i).forEach(function(el){
+                let $p = $(el).parent();
+                if ( $p.is('a') ) {
+                    let div = document.createElement('div'),
+                        p = $p.get(0);
+                    div.innerHTML = p.innerHTML;
+                    p.replaceWith(div);
+                }
+            });
             // noinspection JSUnusedAssignment
             $('.asl_m_' + i).forEach(function(el){
                 let $el = $(el);

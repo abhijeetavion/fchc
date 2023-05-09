@@ -1753,10 +1753,6 @@ to a reusable layout.
 	width: 100%;
 }
 
-.rt-elementor-container .layout2 .rttm-content-area {
-	padding: 0px;
-}
-
 }
 
 @media only screen and (max-width: 576px) {

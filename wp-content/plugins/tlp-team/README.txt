@@ -3,8 +3,8 @@ Contributors: techlabpro1
 Donate link:
 Tags: team, team showcase, team members showcase, our team, team members
 Requires at least: 4.5
-Tested up to: 6.1
-Stable tag: 4.3.1
+Tested up to: 6.2
+Stable tag: 4.3.2
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -281,6 +281,9 @@ Install and Activate
 09. Elementor Team Grid layout
 
 == Changelog ==
+
+= 4.3.2  (April 17, 2022 ) =
+* Fixed: Some Css & Responsive issue.
 
 = 4.3.1  (March 20, 2022 ) =
 * Added: Css Fixed.

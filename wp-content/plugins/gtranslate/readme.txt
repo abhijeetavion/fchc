@@ -3,8 +3,8 @@ Contributors: edo888
 Author: Translate AI Multilingual Solutions
 Tags: translate, translate wordpress, multilingual, translation, translate language, bilingual, localization, translation proxy, localisation, multilanguage, google translate
 Requires at least: 2.8.1
-Tested up to: 6.1
-Stable tag: 3.0.2
+Tested up to: 6.2
+Stable tag: 3.0.3
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 Donate link: https://gtranslate.io/?xyz=998#pricing
@@ -248,6 +248,12 @@ If you want us to translate your website professionally or provide you a proofre
 8. User Dashboard (paid)
 
 == Changelog ==
+= 3.0.3 =
+* Fix mobile touch-no-click issue for float look in horizontal open direction mode
+* Fix for invalid input in Custom CSS section which can break the settings interface
+* Removed translated text highlight on hover
+* Added more litespeed cache related excludes
+
 = 3.0.2 =
 * Fix for multiple appearance of the language selector in menus for some themes which call the render menu more than once
 * Removed unused CSS code and additional query string

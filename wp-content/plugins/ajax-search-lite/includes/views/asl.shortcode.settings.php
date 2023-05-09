@@ -61,10 +61,10 @@ if ( function_exists('qtranxf_getLanguage') ) {
 		<legend style="display: none;">Generic selectors</legend>
 		<div class="asl_option<?php echo(($style['showexactmatches'] != 1) ? " hiddend" : ""); ?>">
 			<div class="asl_option_inner">
-				<input type="checkbox" value="exact" id="set_exactonly<?php echo $id; ?>"
-					   title="<?php echo asl_icl_t('Exact matches filter', $style['exactmatchestext'], true); ?>"
+				<input type="checkbox" value="exact"
+					   aria-label="<?php echo esc_attr(asl_icl_t('Exact matches filter', $style['exactmatchestext'])); ?>"
 					   name="asl_gen[]" <?php echo $_checked["set_exactonly"]; ?>/>
-				<label for="set_exactonly<?php echo $id; ?>"><?php echo asl_icl_t('Exact matches filter', $style['exactmatchestext'], true); ?></label>
+				<div class="asl_option_checkbox"></div>
 			</div>
 			<div class="asl_option_label">
 				<?php echo asl_icl_t('Exact matches filter', $style['exactmatchestext']); ?>
@@ -72,10 +72,10 @@ if ( function_exists('qtranxf_getLanguage') ) {
 		</div>
 		<div class="asl_option<?php echo(($style['showsearchintitle'] != 1) ? " hiddend" : ""); ?>">
 			<div class="asl_option_inner">
-				<input type="checkbox" value="title" id="set_intitle<?php echo $id; ?>"
-					   title="<?php echo asl_icl_t('Search in title filter', $style['searchintitletext'], true); ?>"
+				<input type="checkbox" value="title"
+					   aria-label="<?php echo esc_attr(asl_icl_t('Search in title filter', $style['searchintitletext'], true)); ?>"
 					   name="asl_gen[]" <?php echo $_checked["set_intitle"]; ?>/>
-				<label for="set_intitle<?php echo $id; ?>"><?php echo asl_icl_t('Search in title filter', $style['searchintitletext'], true); ?></label>
+				<div class="asl_option_checkbox"></div>
 			</div>
 			<div class="asl_option_label">
 				<?php echo asl_icl_t('Search in title filter', $style['searchintitletext']); ?>
@@ -83,20 +83,20 @@ if ( function_exists('qtranxf_getLanguage') ) {
 		</div>
 		<div class="asl_option<?php echo(($style['showsearchincontent'] != 1) ? " hiddend" : ""); ?>">
 			<div class="asl_option_inner">
-				<input type="checkbox" value="content" id="set_incontent<?php echo $id; ?>"
-					   title="<?php echo asl_icl_t('Search in content filter', $style['searchincontenttext'], true); ?>"
+				<input type="checkbox" value="content"
+					   aria-label="<?php echo esc_attr(asl_icl_t('Search in content filter', $style['searchincontenttext'], true)); ?>"
 					   name="asl_gen[]" <?php echo $_checked["set_incontent"]; ?>/>
-				<label for="set_incontent<?php echo $id; ?>"><?php echo asl_icl_t('Search in content filter', $style['searchincontenttext'], true); ?></label>
+				<div class="asl_option_checkbox"></div>
 			</div>
 			<div class="asl_option_label">
 				<?php echo asl_icl_t('Search in content filter', $style['searchincontenttext']); ?>
 			</div>
 		</div>
 		<div class="asl_option_inner hiddend">
-			<input type="checkbox" value="excerpt" id="set_inexcerpt<?php echo $id; ?>"
-				   title="Search in excerpt"
+			<input type="checkbox" value="excerpt"
+				   aria-label="Search in excerpt"
 				   name="asl_gen[]" <?php echo $_checked["set_inexcerpt"]; ?>/>
-			<label for="set_inexcerpt<?php echo $id; ?>">Search in excerpt</label>
+			<div class="asl_option_checkbox"></div>
 		</div>
 	</fieldset>
 	<fieldset class="asl_sett_scroll">
@@ -118,10 +118,9 @@ if ( function_exists('qtranxf_getLanguage') ) {
 			<div class="asl_option">
 				<div class="asl_option_inner">
 					<input type="checkbox" value="<?php echo $v[0]; ?>"
-						   id="<?php echo $id; ?>customset_<?php echo $id . $i; ?>"
-						   title="<?php echo asl_icl_t('Search filter for post type: ' . $v[1], $v[1], true); ?>"
+						   aria-label="<?php echo esc_attr(asl_icl_t('Search filter for post type: ' . $v[1], $v[1], true)); ?>"
 						   name="customset[]" <?php echo(($selected) ? 'checked="checked"' : ''); ?>/>
-					<label for="<?php echo $id; ?>customset_<?php echo $id . $i; ?>"><?php echo asl_icl_t('Search filter for post type: ' . $v[1], $v[1], true); ?></label>
+					<div class="asl_option_checkbox"></div>
 				</div>
 				<div class="asl_option_label">
 					<?php echo asl_icl_t('Search filter for post type: ' . $v[1], $v[1]); ?>
@@ -136,13 +135,9 @@ if ( function_exists('qtranxf_getLanguage') ) {
 			?>
 			<div class="asl_option_inner hiddend">
 				<input type="checkbox" value="<?php echo $v; ?>"
-					   id="<?php echo $id; ?>customset_<?php echo $id . $i; ?>"
-					   title="Hidden option, ignore please"
+					   aria-label="Hidden option, ignore please"
 					   name="customset[]" checked="checked"/>
-				<label for="<?php echo $id; ?>customset_<?php echo $id . $i; ?>">Hidden</label>
 			</div>
-			<div class="asl_option_label hiddend"></div>
-
 			<?php
 			$i++;
 		}
@@ -182,10 +177,9 @@ if ( function_exists('qtranxf_getLanguage') ) {
 					<div class="asl_option<?php echo $hidden; ?>">
 						<div class="asl_option_inner">
 							<input type="checkbox" value="<?php echo $v; ?>"
-								   id="<?php echo $id; ?>categoryset_<?php echo $v; ?>"
-								   title="<?php echo asl_icl_t('Search filter for category: ' . $val, $val, true); ?>"
+								   aria-label="<?php echo esc_attr(asl_icl_t('Search filter for category: ' . $val, $val, true)); ?>"
 								   name="categoryset[]" <?php echo(($selected) ? 'checked="checked"' : ''); ?>/>
-							<label for="<?php echo $id; ?>categoryset_<?php echo $v; ?>"><?php echo asl_icl_t('Search filter for category: ' . $val, $val, true); ?></label>
+							<div class="asl_option_checkbox"></div>
 						</div>
 						<div class="asl_option_label">
 							<?php echo asl_icl_t('Search filter for category: ' . $val, $val); ?>

@@ -6,11 +6,12 @@ jQuery(document).ready(function ($) {
 
     if (isSimpleBannerVisible) {
         if (!simpleBannerScriptParams.wp_body_open || !simpleBannerScriptParams.wp_body_open_enabled) {
-            var closeButton = simpleBannerScriptParams.close_button_enabled ? '<button id="simple-banner-close-button" class="simple-banner-button">&#x2715;</button>' : '';
+            var closeButton = simpleBannerScriptParams.close_button_enabled ? '<button aria-label="Close" id="simple-banner-close-button" class="simple-banner-button">&#x2715;</button>' : '';
+            var prependElement = document.querySelector(simpleBannerScriptParams.simple_banner_insert_inside_element || 'body');
             $('<div id="simple-banner" class="simple-banner"><div class="simple-banner-text"><span>' 
                 + simpleBannerScriptParams.simple_banner_text 
                 + '</span></div>' + closeButton + '</div>')
-            .prependTo('body');
+            .prependTo(prependElement || 'body');
         }
 
         var bodyPaddingLeft = $('body').css('padding-left')
@@ -32,7 +33,7 @@ jQuery(document).ready(function ($) {
                 $("#simple-banner").removeClass("simple-banner-scrolling");
             }
         }
-        window.onscroll = function() {scrollClass()};
+        document.addEventListener("scroll", scrollClass);
     }
 
     // Add close button function to close button and close if cookie found
