@@ -3,9 +3,9 @@ Contributors:nik00726
 Donate link:http://www.i13websolution.com/donate-wordpress_image_thumbnail.php
 Tags:Accordion tabs, Vertical tabs,horizontal tabs,wp tabs,Responsive Tabs, All in one tabs
 Requires at least:3.0
-Tested up to:6.0
-Version:2.21
-Stable tag:2.21
+Tested up to:6.2
+Version:2.22
+Stable tag:2.22
 License:GPLv2 or later
 License URI:http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -109,6 +109,12 @@ This plugin is free for everyone! Since it's released under the GPL, you can use
 
 
 == Changelog ==
+
+= 2.22 =
+
+ * Fixed vulnerability
+ * Tested with WordPress 6.2
+
 
 = 2.21 =
 

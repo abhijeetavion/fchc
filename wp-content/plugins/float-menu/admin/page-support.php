@@ -3,7 +3,7 @@
  * Support Page
  *
  * @package     Wow_Pluign
- * @author      Dmytro Lobov <helper@wow-company.com>
+ * @author      Dmytro Lobov <yoda@wow-company.com>
  * @copyright   2019 Wow-Company
  * @since       1.0
  */
@@ -22,7 +22,7 @@ $website = get_option( 'home' );
             <div class="col">
 
                 <p><?php printf( esc_attr__( 'To get your support related question answered in the fastest timing, please send a message via the form below or write to us on email %1$s',
-						$this->plugin['text'] ), '<a href="mailto:helper@wow-company.com">helper@wow-company.com</a>' ); ?>
+						$this->plugin['text'] ), '<a href="mailto:yoda@wow-company.com">yoda@wow-company.com</a>' ); ?>
                     .</p>
 
                 <p><?php esc_attr_e( 'Also, you can send us your ideas and suggestions for improving the plugin.',
@@ -76,7 +76,7 @@ $website = get_option( 'home' );
                                 ' . nl2br( wp_kses_post( $message ) ) . '
                                 </body>
                                 </html>';
-							wp_mail( 'helper@wow-company.com', 'Support Ticket: ' . $type, $message_mail, $headers );
+							wp_mail( 'yoda@wow-company.com', 'Support Ticket: ' . $type, $message_mail, $headers );
 							echo '<div class="wow-alert wow-alert-update "><p class="wow_error">'
 							     . esc_attr__( 'Your Message sent to the Support.', $this->plugin['text'] ) . '</p></div>';
 
@@ -85,7 +85,7 @@ $website = get_option( 'home' );
 
 					} else {
 						echo '<div class="wow-alert wow-alert-error "><p class="wow_error">'
-						     . esc_attr__( 'Sorry, but message did not send. Please, contact us helper@wow-company.com',
+						     . esc_attr__( 'Sorry, but message did not send. Please, contact us yoda@wow-company.com',
 								$this->plugin['text'] ) . ' </p></div>';
 					}
 				}

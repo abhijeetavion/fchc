@@ -4,7 +4,7 @@
  *
  * @package     Wow_Plugin
  * @subpackage  Admin/Items
- * @author      Wow-Company <helper@wow-company.com>
+ * @author      Wow-Company <yoda@wow-company.com>
  * @copyright   2019 Wow-Company
  * @license     GNU Public License
  * @version     1.0
@@ -25,6 +25,6 @@ $list_table->prepare_items();
 		$list_table->search_box( esc_attr__( 'Search', $this->plugin['text'] ), $this->plugin['slug'] );
 		$list_table->display();
 		?>
-        <input type="hidden" name="page" value="<?php echo sanitize_text_field( $_REQUEST['page'] ); ?>"/>
+        <input type="hidden" name="page" value="<?php echo esc_attr( $_REQUEST['page'] ); ?>"/>
     </form>
 </div>

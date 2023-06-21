@@ -3,7 +3,7 @@
  * Plugin Name:       Float Menu Lite
  * Plugin URI:        https://wordpress.org/plugins/float-menu/
  * Description:       Easily create floating menus of varying complexity
- * Version:           5.0.1
+ * Version:           5.0.2
  * Author:            Wow-Company
  * Author URI:        https://wow-estore.com
  * License:           GPL-2.0+
@@ -56,7 +56,7 @@ if ( ! class_exists( 'Wow_Plugin' ) ) :
 						'author'    => 'Wow-Company', // Author
 						'prefix'    => self::PREF, // Prefix for database
 						'text'      => 'float-menu',    // Text domain for translate files
-						'version'   => '5.0.1', // Current version of the plugin
+						'version'   => '5.0.2', // Current version of the plugin
 						'file'      => __FILE__, // Main file of the plugin
 						'slug'      => dirname( plugin_basename( __FILE__ ) ), // Name of the plugin folder
 						'url'       => plugin_dir_url( __FILE__ ), // filesystem directory path for the plugin

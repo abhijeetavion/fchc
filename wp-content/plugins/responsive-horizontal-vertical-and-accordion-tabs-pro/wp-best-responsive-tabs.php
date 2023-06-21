@@ -5,7 +5,7 @@
  * Plugin URI:https://www.i13websolution.com
  * Description:This is beautiful responsive all in one tabs for wordpress sites/blogs. Add any number of tabs sets to your site. your tabs sets will be ready within few min. 
  * Author:I Thirteen Web Solution 
- * Version:2.21
+ * Version:2.22
  * Text Domain:responsive-horizontal-vertical-and-accordion-tabs
  * Domain Path: /languages
  */
@@ -19,7 +19,7 @@ if (!defined('I13_RTHV_PSLUG')) {
 
 if (!defined('I13_RTHV_PL_VERSION')) {
 
-     define('I13_RTHV_PL_VERSION', '2.21');
+     define('I13_RTHV_PL_VERSION', '2.22');
 
 }
 add_filter ( 'widget_text', 'do_shortcode' );
@@ -473,7 +473,7 @@ function wp_ajax_rt_get_tab_data_byid_callback(){
        $retrieved_nonce='';
         if (isset($_POST['vNonce']) and $_POST['vNonce'] != '') {
 
-           $retrieved_nonce = $_POST['vNonce'];
+           $retrieved_nonce = sanitize_text_field($_POST['vNonce']);
         }
         if (!wp_verify_nonce($retrieved_nonce, 'vNonce')) {
 
@@ -515,7 +515,7 @@ function rt_wp_responsive_wp_admin_options_func() {
         
                if(sanitize_sql_orderby($_GET['order_by'])){
                    
-                    $order_by=trim($_GET['order_by']); 
+                    $order_by=esc_html(sanitize_text_field($_GET['order_by'])); 
                 }
                 else{
 
@@ -531,7 +531,7 @@ function rt_wp_responsive_wp_admin_options_func() {
         $search_term_='';
         if(isset($_GET['search_term'])){
         
-           $search_term_='&search_term='.urlencode(sanitize_text_field($_GET['search_term']));
+           $search_term_='&search_term='.esc_html(sanitize_text_field($_GET['search_term']));
         }
         
         
@@ -539,7 +539,7 @@ function rt_wp_responsive_wp_admin_options_func() {
 	$action = 'gridview';
 	if (isset ( $_GET ['action'] ) and $_GET ['action'] != '') {
 		
-		$action = trim (sanitize_text_field($_GET ['action'] ));
+		$action = esc_html (sanitize_text_field($_GET ['action'] ));
 	}
 	if (strtolower ( $action ) == strtolower ( 'gridview' )) {
             
@@ -596,16 +596,16 @@ function rt_wp_responsive_wp_admin_options_func() {
                                                 $setacrionpage='admin.php?page=rt_wp_responsive_tabs';
 
                                                 if(isset($_GET['order_by']) and $_GET['order_by']!=""){
-                                                 $setacrionpage.='&order_by='.sanitize_text_field($_GET['order_by']);   
+                                                 $setacrionpage.='&order_by='.esc_html(sanitize_text_field($_GET['order_by']));   
                                                 }
 
                                                 if(isset($_GET['order_pos']) and $_GET['order_pos']!=""){
-                                                 $setacrionpage.='&order_pos='.sanitize_text_field($_GET['order_pos']);   
+                                                 $setacrionpage.='&order_pos='.esc_html(sanitize_text_field($_GET['order_pos']));   
                                                 }
 
                                                 $seval="";
                                                 if(isset($_GET['search_term']) and $_GET['search_term']!=""){
-                                                 $seval=trim(sanitize_text_field($_GET['search_term']));   
+                                                 $seval=esc_html(sanitize_text_field($_GET['search_term']));   
                                                 }
 
                                             ?>
@@ -690,7 +690,7 @@ function rt_wp_responsive_wp_admin_options_func() {
                                                 $search_term='';
                                                 if(isset($_GET['search_term'])){
 
-                                                   $search_term= sanitize_text_field(esc_sql($_GET['search_term']));
+                                                   $search_term= esc_html(sanitize_text_field($_GET['search_term']));
                                                 }
 
 
@@ -1373,7 +1373,7 @@ function rt_wp_responsive_wp_admin_options_func() {
 
                 if (isset($_GET['nonce']) and $_GET['nonce'] != '') {
 
-                    $retrieved_nonce = $_GET['nonce'];
+                    $retrieved_nonce = sanitize_text_field($_GET['nonce']);
                 }
                 if (!wp_verify_nonce($retrieved_nonce, 'delete_tabset')) {
 
@@ -1697,7 +1697,7 @@ function rt_wp_responsive_tabs_data_management() {
         
 	if (isset ( $_GET ['action'] ) and $_GET ['action'] != '') {
 		
-		$action = trim ( sanitize_text_field($_GET ['action'] ));
+		$action = esc_html ( sanitize_text_field($_GET ['action'] ));
                 
                
 	}
@@ -1769,16 +1769,16 @@ function rt_wp_responsive_tabs_data_management() {
                                              $setacrionpage="admin.php?page=rt_wp_responsive_tabs_management&tabid=$tabid";
 
                                              if(isset($_GET['order_by']) and $_GET['order_by']!=""){
-                                               $setacrionpage.='&order_by='.sanitize_text_field($_GET['order_by']);   
+                                               $setacrionpage.='&order_by='.esc_html(sanitize_text_field($_GET['order_by']));   
                                              }
 
                                              if(isset($_GET['order_pos']) and $_GET['order_pos']!=""){
-                                              $setacrionpage.='&order_pos='.sanitize_text_field($_GET['order_pos']);   
+                                              $setacrionpage.='&order_pos='.esc_html(sanitize_text_field($_GET['order_pos']));   
                                              }
 
                                              $seval="";
                                              if(isset($_GET['search_term']) and $_GET['search_term']!=""){
-                                              $seval=trim(sanitize_text_field($_GET['search_term']));   
+                                              $seval=esc_html(sanitize_text_field($_GET['search_term']));   
                                              }
 
                                          ?>
@@ -1793,23 +1793,23 @@ function rt_wp_responsive_tabs_data_management() {
 
                                                         if(isset($_GET['order_by']) and sanitize_sql_orderby($_GET['order_by'])!==false){
 
-                                                           $order_by=trim($_GET['order_by']); 
+                                                           $order_by=esc_html(sanitize_text_field($_GET['order_by'])); 
                                                         }
 
                                                         if(isset($_GET['order_pos'])){
 
-                                                           $order_pos=trim(sanitize_text_field($_GET['order_pos'])); 
+                                                           $order_pos=esc_html(sanitize_text_field($_GET['order_pos'])); 
                                                         }
                                                          $search_term='';
                                                         if(isset($_GET['search_term'])){
 
-                                                           $search_term= sanitize_text_field(esc_sql($_GET['search_term']));
+                                                           $search_term= esc_html(sanitize_text_field(esc_sql($_GET['search_term'])));
                                                         }
                                                         
                                                          $search_term_='';
                                                         if(isset($_GET['search_term'])){
 
-                                                           $search_term_='&search_term='.urlencode(sanitize_text_field($_GET['search_term']));
+                                                           $search_term_='&search_term='.esc_html(sanitize_text_field($_GET['search_term']));
                                                         }
 
                                                         
@@ -2575,7 +2575,7 @@ function rt_wp_responsive_tabs_data_management() {
 
               if(isset($_GET['nonce']) and $_GET['nonce']!=''){
 
-                  $retrieved_nonce=$_GET['nonce'];
+                  $retrieved_nonce=sanitize_text_field($_GET['nonce']);
 
               }
               $tabid='';

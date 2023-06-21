@@ -158,7 +158,7 @@ msgstr ""
 
 #: admin/page-support.php:88
 msgid ""
-"Sorry, but message did not send. Please, contact us helper@wow-company.com"
+"Sorry, but message did not send. Please, contact us yoda@wow-company.com"
 msgstr ""
 
 #: admin/page-support.php:104

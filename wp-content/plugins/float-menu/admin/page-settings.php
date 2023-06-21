@@ -4,7 +4,7 @@
  *
  * @package     Wow_Plugin
  * @subpackage  Admin/Add_Item
- * @author      Wow-Company <helper@wow-company.com>
+ * @author      Wow-Company <yoda@wow-company.com>
  * @copyright   2019 Wow-Company
  * @license     GNU Public License
  * @version     1.0

@@ -106,13 +106,22 @@ if ( ! class_exists( 'ReSizer' ) ) {
 
 				// Get image info.
 				$info                    = pathinfo( $img_path );
+
 				$ext                     = $info['extension'];
 				list( $orig_w, $orig_h ) = getimagesize( $img_path );
 
 				// Get image size after cropping.
+
+
 				$dims  = image_resize_dimensions( $orig_w, $orig_h, $width, $height, $crop );
-				$dst_w = $dims[4];
-				$dst_h = $dims[5];
+
+				if ( empty( $dims ) ) {
+					$dst_w = $orig_w;
+					$dst_h = $orig_h;
+				} else {
+					$dst_w = $dims[4];
+					$dst_h = $dims[5];
+				}
 
 				// Return the original image only if it exactly fits the needed measures.
 				if ( ! $dims && ( ( ( null === $height && $orig_w == $width ) xor ( null === $width && $orig_h == $height ) ) xor ( $height == $orig_h && $width == $orig_w ) ) ) {
