@@ -3,16 +3,16 @@
  * Plugin Name: Simple Banner
  * Plugin URI: https://github.com/rpetersen29/simple-banner
  * Description: Display a simple banner at the top or bottom of your website.
- * Version: 2.15.1
+ * Version: 2.15.2
  * Author: Ryan Petersen
  * Author URI: http://rpetersen29.github.io/
  * License: GPL2
  *
  * @package Simple Banner
- * @version 2.15.1
+ * @version 2.15.2
  * @author Ryan Petersen <rpetersen.dev@gmail.com>
  */
-define ('SB_VERSION', '2.15.1');
+define ('SB_VERSION', '2.15.2');
 
 register_activation_hook( __FILE__, 'simple_banner_activate' );
 function simple_banner_activate() {
@@ -67,6 +67,7 @@ function simple_banner() {
 		'simple_banner_position' => get_option('simple_banner_position'),
 		'header_margin' => get_option('header_margin'),
 		'header_padding' => get_option('header_padding'),
+		'simple_banner_z_index' => get_option('simple_banner_z_index'),
 		'simple_banner_text' => get_option('simple_banner_text'),
 		'pro_version_enabled' => get_option('pro_version_enabled'),
 		'disabled_on_current_page' => $disabled_on_current_page,
@@ -180,6 +181,12 @@ function simple_banner_custom_options()
 		echo '<style type="text/css">.simple-banner .simple-banner-text a{color:' . get_option('simple_banner_link_color') . ';}</style>';
 	} else {
 		echo '<style type="text/css">.simple-banner .simple-banner-text a{color:#f16521;}</style>';
+	}
+
+	if (get_option('simple_banner_z_index') != ""){
+		echo '<style type="text/css">.simple-banner{z-index:' . get_option('simple_banner_z_index') . ';}</style>';
+	} else {
+		echo '<style type="text/css">.simple-banner{z-index: 99999;}</style>';
 	}
 
 	if (get_option('simple_banner_close_color') != ""){
@@ -332,6 +339,11 @@ function simple_banner_settings() {
 		)
     );
 	register_setting( 'simple-banner-settings-group', 'header_padding',
+		array(
+	    	'sanitize_callback' => 'wp_filter_nohtml_kses'
+		)
+    );
+	register_setting( 'simple-banner-settings-group', 'simple_banner_z_index',
 		array(
 	    	'sanitize_callback' => 'wp_filter_nohtml_kses'
 		)
@@ -490,6 +502,17 @@ function simple_banner_settings_page() {
 		.simple-banner-settings-form th {width: 30%;}
 		.simple-banner-settings-form th div {font-size: 13px;font-weight: 400;}
 		.simple-banner-settings-form th div code {font-size: 12px;}
+		#mobile-alert {
+			padding: 10px;
+			margin: 10px 0;
+			border: 2px solid red;
+			border-radius: 10px;
+			background-color: white;
+			color: red;
+			font-size: medium;
+			font-weight: bold;
+			text-align: center;
+		}
 	</style>
 
 	<div class="wrap">
@@ -498,8 +521,6 @@ function simple_banner_settings_page() {
 			<a class="button button-primary button-hero" style="font-weight: 700;" href="https://www.paypal.me/rpetersenDev" target="_blank">DONATE</a>
 		</div>
 
-
-		<p>Use Hex color values for the color fields.</p>
 		<p>Links in the banner text must be typed in with HTML <code>&lt;a&gt;</code> tags.
 		<br />e.g. <code>This is a &lt;a href=&#34;http:&#47;&#47;www.wordpress.com&#34;&gt;Link to Wordpress&lt;&#47;a&gt;</code>.</p>
 
@@ -514,29 +535,19 @@ function simple_banner_settings_page() {
 			</div>
 		</div>
 		<br>
-		<span><b>*Note: Font and text styles subject to change based on chosen theme CSS.</b></span>
+		<span><b><i>Note: Font and text styles subject to change based on chosen theme CSS.</i></b></span>
 
 		<!-- Settings Form -->
 		<form class="simple-banner-settings-form" method="post" action="options.php">
 			<?php settings_fields( 'simple-banner-settings-group' ); ?>
 			<?php do_settings_sections( 'simple-banner-settings-group' ); ?>
 
-			<!-- Free Features -->
 			<?php include 'free_features.php';?>
 
-			<div style="padding: 10px;
-						margin: 10px 0;
-						border: 2px solid red;
-						border-radius: 10px;
-						background-color: white;
-						color: red;
-						font-size: medium;
-						font-weight: bold;
-						text-align: center;">
+			<div id="mobile-alert" style="">
 				Always make sure you test your banner in mobile views, theme headers often change their css for mobile.
 			</div>
 
-			<!-- Pro Features -->
 			<?php include 'pro_features.php';?>
 
 			<?php

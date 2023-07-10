@@ -1,9 +1,9 @@
-﻿=== Easy Accordion - Best Accordion FAQ Plugin for WordPress ===
+=== Easy Accordion - Best Accordion FAQ Plugin for WordPress ===
 Contributors: shapedplugin, khalilu, rubel_miah, shamimmiashuhagh
 Tags: accordion, accordions, accordion faq, vertical accordion, faq, faqs, faq widget, accordion widget, accordion menu, wordpress faq plugin, easy accordion, premium accordion, bootstrap accordion, horizontal accordion, responsive accordion, accordion jquery, css3 accordion, accordion shortcode, collapsible content, toggle, toggle accordion, wordpress accordion plugin, wordpress accordion, bootstrap collapse, post accordion, post faq, custom post accordion, accordion grid, accordion bar, product faq, woocommerce product accordion, woocommerce accordion, wordpress post accordion, content hide, hidden content, expand content
 Requires at least: 4.3
-Tested up to: 6.2
-Stable tag: 2.2.2
+Tested up to: 6.2.2
+Stable tag: 2.2.3
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -255,12 +255,18 @@ Thank you!
 1. Live Demo. 
 2. Accordion Settings (Add New).
 3. Display Settings.
-4. All Accordions.
+4. Accordion Groups.
 5. Advanced Settings.
 6. Custom CSS.
+7. Export Accordion Groups.
 
 
 == Changelog ==
+
+= 2.2.3 - Jun 08, 2023 =
+* Improved: The import feature with animation. 
+* Fix: The custom CSS does not work after importing accordions from another site.
+* Tested: WordPress 6.2.2 compatibility.
 
 = 2.2.2 - Mar 30, 2023 =
 * New: Multiple br tags in tab content support.

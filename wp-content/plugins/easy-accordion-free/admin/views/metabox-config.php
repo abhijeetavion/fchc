@@ -644,6 +644,13 @@ SP_EAP::createSection(
 				'default'  => 300,
 			),
 			array(
+				'id'      => 'eap_accordion_uniq_id',
+				'class'   => 'eap_accordion_wrapper_uniq_attribute',
+				'type'    => 'text',
+				'title'   => '',
+				'default' => 'sp_easy_accordion-' . time() . '',
+			),
+			array(
 				'type'    => 'subheading',
 				'content' => __( 'Ajax Pagination', 'easy-accordion-free' ),
 			),

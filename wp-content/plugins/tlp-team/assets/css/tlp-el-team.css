@@ -1755,6 +1755,14 @@ to a reusable layout.
 
 }
 
+@media (max-width: 767px) {
+
+.rt-elementor-container .layout16 .single-team-area {
+	padding: 20px;
+}
+
+}
+
 @media only screen and (max-width: 576px) {
 
 .rt-elementor-container .rt-carousel-holder:not(#team-member-profile-gallery):not(.bottom-nav):not(.rttm-carousel-main) {

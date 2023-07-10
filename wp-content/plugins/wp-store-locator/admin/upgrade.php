@@ -32,7 +32,7 @@ function wpsl_check_upgrade() {
     global $wpsl_settings;
 
     $current_version = get_option( 'wpsl_version' );
-   
+
     if ( version_compare( $current_version, WPSL_VERSION_NUM, '==' ) )
         return;
 

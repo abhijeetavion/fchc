@@ -108,13 +108,13 @@ class RTEC_Admin_Registrations {
 				'past'           => true,
 			);
 		} elseif ( $settings['qtype'] === 'cur' ) {
-			$post_type = defined('Tribe__Events__Main::POSTTYPE') ? Tribe__Events__Main::POSTTYPE : 'tribe_events';
-			$args = array(
+			$post_type = defined( 'Tribe__Events__Main::POSTTYPE' ) ? Tribe__Events__Main::POSTTYPE : 'tribe_events';
+			$args      = array(
 				'post_type'      => $post_type,
 				'post_status'    => 'publish',
 				'posts_per_page' => 50,
 				'orderby'        => 'meta_value',
-				'order'          => 'ASC'
+				'order'          => 'ASC',
 			);
 			if ( $this->settings['with'] === 'with' ) {
 				$args['meta_query'] = array(
@@ -125,15 +125,15 @@ class RTEC_Admin_Registrations {
 							'key'     => '_EventStartDate',
 							'value'   => date( 'Y-m-d H:i', time() + rtec_get_utc_offset() ),
 							'compare' => '<=',
-							'type'    => 'DATE'
+							'type'    => 'DATE',
 						),
 						array(
 							'key'     => '_EventEndDate',
-							'value'   => date( 'Y-m-d H:i', time() + rtec_get_utc_offset() ),
+							'value'   => date( 'Y-m-d H:i', time() - ( 1 * DAY_IN_SECONDS ) + rtec_get_utc_offset() ),
 							'compare' => '>=',
-							'type'    => 'DATE'
-						)
-					)
+							'type'    => 'DATE',
+						),
+					),
 				);
 			} else {
 				$args['meta_query'] = array(
@@ -142,40 +142,56 @@ class RTEC_Admin_Registrations {
 						'key'     => '_EventStartDate',
 						'value'   => date( 'Y-m-d H:i', time() + rtec_get_utc_offset() ),
 						'compare' => '<=',
-						'type'    => 'DATE'
+						'type'    => 'DATE',
 					),
 					array(
 						'key'     => '_EventEndDate',
-						'value'   => date( 'Y-m-d H:i', time() + rtec_get_utc_offset() ),
+						'value'   => date( 'Y-m-d H:i', time() - ( 1 * DAY_IN_SECONDS ) + rtec_get_utc_offset() ),
 						'compare' => '>=',
-						'type'    => 'DATE'
-					)
+						'type'    => 'DATE',
+					),
 				);
 			}
 
 			if ( $this->settings['with'] === 'with' ) {
 				if ( isset( $rtec_options['disable_by_default'] ) && $rtec_options['disable_by_default'] === true ) {
 					$args['meta_query'][] = array(
-						'key' => '_RTECregistrationsDisabled',
-						'value' => '0',
-						'compare' => '='
+						'key'     => '_RTECregistrationsDisabled',
+						'value'   => '0',
+						'compare' => '=',
 					);
 				} else {
 					$args['meta_query'][] = array(
 						'relation' => 'OR',
 						array(
-							'key' => '_RTECregistrationsDisabled',
-							'compare' => 'NOT EXISTS'
+							'key'     => '_RTECregistrationsDisabled',
+							'compare' => 'NOT EXISTS',
 						),
 						array(
-							'key' => '_RTECregistrationsDisabled',
-							'value' => '1',
-							'compare' => '!='
-						)
+							'key'     => '_RTECregistrationsDisabled',
+							'value'   => '1',
+							'compare' => '!=',
+						),
 					);
 				}
 			}
 
+			if ( ! empty( $this->settings['cat'] ) ) {
+				$args['tax_query'] = array(
+					array(
+						'taxonomy' => 'tribe_events_cat',
+						'field'    => 'term_id',
+						'terms'    => $this->settings['cat'],
+					),
+				);
+			}
+
+			if ( ! current_user_can( 'edit_others_tribe_events' )
+			     && ! current_user_can( 'edit_others_rtec_registrations' ) ) {
+				$args['author'] = $this->current_user->data->ID;
+			}
+
+			return get_posts( $args );
 		}  elseif ( $settings['qtype'] === 'hid' ) {
 
 			$post_type = defined( 'Tribe__Events__Main::POSTTYPE' ) ? Tribe__Events__Main::POSTTYPE : 'tribe_events';
@@ -249,9 +265,10 @@ class RTEC_Admin_Registrations {
 		} else {
 			$args = array(
 				'posts_per_page' => $this->posts_per_page,
-				'start_date' => date( 'Y-m-d H:i' ),
-				'offset' => $settings['off']
+				'start_date'     => date( 'Y-m-d H:i', time() + rtec_get_utc_offset() ),
+				'offset'         => $settings['off'],
 			);
+
 		}
 
 		if ( $this->tab === 'my-registrations' ) {

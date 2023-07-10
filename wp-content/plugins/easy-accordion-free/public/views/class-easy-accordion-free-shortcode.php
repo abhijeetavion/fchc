@@ -95,6 +95,8 @@ class Easy_Accordion_Free_Shortcode {
 		// Shortcode Option.
 		$accordion_layout      = isset( $shortcode_data['eap_accordion_layout'] ) ? $shortcode_data['eap_accordion_layout'] : '';
 		$accordion_theme_class = isset( $shortcode_data['eap_accordion_theme'] ) ? $shortcode_data['eap_accordion_theme'] : '';
+		$eap_accordion_uniq_id = isset( $shortcode_data['eap_accordion_uniq_id'] ) ? $shortcode_data['eap_accordion_uniq_id'] : 'sp_easy_accordion-' . time() . '';
+
 		global $accordion_wrapper_class;
 		$accordion_wrapper_class = $accordion_theme_class . ' sp-easy-accordion';
 		$accordion_item_class    = 'sp-ea-single';

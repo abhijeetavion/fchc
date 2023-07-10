@@ -13,7 +13,7 @@ if ( ! empty( $param['menu_1']['item_icon'] ) ):
 
 			echo '<li class="fm-item-' . absint( $id ) . '-' . absint( $i ) . '">';
 			$target = ! empty( $param['menu_1']['new_tab'][ $i ] ) ? '_blank' : '_self';
-			$link   = $param['menu_1']['item_link'][ $i ];
+			$link   = !empty($param['menu_1']['item_link'][ $i ]) ? $param['menu_1']['item_link'][ $i ] : '#';
 			echo '<a href="' . esc_attr( $link ) . '" target="' . esc_attr( $target ) . '"';
 			if ( ! empty( $param['menu_1']['button_class'][ $i ] ) ) {
 				echo ' class="' . esc_attr( $param['menu_1']['button_class'][ $i ] ) . '"';

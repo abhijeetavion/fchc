@@ -59,7 +59,7 @@
     <tr valign="top">
         <th scope="row">
             Simple Banner Background Color
-            <div>Leaving this blank sets the color to the default value #024985</div>
+            <div>Leaving this blank sets the color to the default value <code>#024985</code></div>
         </th>
         <td style="vertical-align:top;">
             <input type="text" id="simple_banner_color" name="simple_banner_color" placeholder="Hex value"
@@ -72,7 +72,7 @@
     <tr valign="top">
         <th scope="row">
             Simple Banner Text Color
-            <div>Leaving this blank sets the color to the default value white</div>
+            <div>Leaving this blank sets the color to the default value <code>white</code></div>
         </th>
         <td style="vertical-align:top;">
             <input type="text" id="simple_banner_text_color" name="simple_banner_text_color" placeholder="Hex value"
@@ -85,7 +85,7 @@
     <tr valign="top">
         <th scope="row">
             Simple Banner Link Color
-            <div>Leaving this blank sets the color to the default value #f16521</div>
+            <div>Leaving this blank sets the color to the default value <code>#f16521</code></div>
         </th>
         <td style="vertical-align:top;">
             <input type="text" id="simple_banner_link_color" name="simple_banner_link_color" placeholder="Hex value"
@@ -98,7 +98,7 @@
     <tr valign="top">
         <th scope="row">
             Simple Banner Close Button Color
-            <div>Leaving this blank sets the color to the default value black</div>
+            <div>Leaving this blank sets the color to the default value <code>black</code></div>
         </th>
         <td style="vertical-align:top;">
             <input type="text" id="simple_banner_close_color" name="simple_banner_close_color" placeholder="Hex value"
@@ -157,7 +157,10 @@
     <tr valign="top">
         <th scope="row">
             Simple Banner Position
-            <div>Change the <code>position</code> value of your banner. More information <a target="_blank" href="https://developer.mozilla.org/en-US/docs/Web/CSS/position">here</a>.</div>
+            <div>
+                Change the <code>position</code> value of your banner<br>
+                <a target="_blank" href="https://developer.mozilla.org/en-US/docs/Web/CSS/position">More info</a>
+            </div>
         </th>
         <td style="vertical-align:top;">
             <!-- -->
@@ -214,6 +217,22 @@
             <input type="text" id="header_padding" name="header_padding" placeholder="padding-top"
                             value="<?php echo esc_attr( get_option('header_padding') ); ?>" />
             <span>e.g. 40px</span>
+        </td>
+    </tr>
+    <!-- Z-Index -->
+    <tr valign="top">
+        <th scope="row">
+            <span style="color: limegreen;">NEW</span>
+            z-index
+            <div>
+                CSS property sets the z-order of the banner
+                <div>Default value <code>99999</code></div>
+                <a target="_blank" href="https://developer.mozilla.org/en-US/docs/Web/CSS/z-index">More info</a>
+            </div>
+        </th>
+        <td style="vertical-align:top;">
+            <input type="number" id="simple_banner_z_index" name="simple_banner_z_index" placeholder="z-index"
+                            value="<?php echo esc_attr( get_option('simple_banner_z_index') ); ?>" />
         </td>
     </tr>
     <!-- wp_body_open -->

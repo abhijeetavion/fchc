@@ -5772,7 +5772,10 @@ div#tlp-modal .tlp-md-loading {
 	.table-responsive > .table-bordered > tbody > tr > td:last-child,
 	.table-responsive > .table-bordered > tfoot > tr > td:last-child {
 		border-right: 0; }
-
+	.rt-team-container .layout16 .single-team-area{
+		padding:20px;
+		margin-bottom: 20px;
+	}
 	.table-responsive > .table-bordered > tbody > tr:last-child > th,
 	.table-responsive > .table-bordered > tfoot > tr:last-child > th,
 	.table-responsive > .table-bordered > tbody > tr:last-child > td,

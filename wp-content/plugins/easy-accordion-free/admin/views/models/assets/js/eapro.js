@@ -538,218 +538,218 @@
 
     });
   };
-	//
-	// Field: group
-	//
-	$.fn.eapro_field_group = function () {
-		return this.each(function () {
+  //
+  // Field: group
+  //
+  $.fn.eapro_field_group = function () {
+    return this.each(function () {
 
-			var $this = $(this),
-				$fieldset = $this.children('.eapro-fieldset'),
-				$group = $fieldset.length ? $fieldset : $this,
-				$wrapper = $group.children('.eapro-cloneable-wrapper'),
-				$hidden = $group.children('.eapro-cloneable-hidden'),
-				$max = $group.children('.eapro-cloneable-max'),
-				$min = $group.children('.eapro-cloneable-min'),
-				field_id = $wrapper.data('field-id'),
-				unique_id = $wrapper.data('unique-id'),
-				is_number = Boolean(Number($wrapper.data('title-number'))),
-				max = parseInt($wrapper.data('max')),
-				min = parseInt($wrapper.data('min'));
+      var $this = $(this),
+        $fieldset = $this.children('.eapro-fieldset'),
+        $group = $fieldset.length ? $fieldset : $this,
+        $wrapper = $group.children('.eapro-cloneable-wrapper'),
+        $hidden = $group.children('.eapro-cloneable-hidden'),
+        $max = $group.children('.eapro-cloneable-max'),
+        $min = $group.children('.eapro-cloneable-min'),
+        field_id = $wrapper.data('field-id'),
+        unique_id = $wrapper.data('unique-id'),
+        is_number = Boolean(Number($wrapper.data('title-number'))),
+        max = parseInt($wrapper.data('max')),
+        min = parseInt($wrapper.data('min'));
 
-			// clear accordion arrows if multi-instance
-			if ($wrapper.hasClass('ui-accordion')) {
-				$wrapper.find('.ui-accordion-header-icon').remove();
-			}
+      // clear accordion arrows if multi-instance
+      if ($wrapper.hasClass('ui-accordion')) {
+        $wrapper.find('.ui-accordion-header-icon').remove();
+      }
 
-			var update_title_numbers = function ($selector) {
-				$selector.find('.eapro-cloneable-title-number').each(function (index) {
-					$(this).html(($(this).closest('.eapro-cloneable-item').index() + 1) + '.');
-				});
-			};
+      var update_title_numbers = function ($selector) {
+        $selector.find('.eapro-cloneable-title-number').each(function (index) {
+          $(this).html(($(this).closest('.eapro-cloneable-item').index() + 1) + '.');
+        });
+      };
 
-			$wrapper.accordion({
-				header: '> .eapro-cloneable-item > .eapro-cloneable-title',
-				collapsible: true,
-				active: false,
-				animate: false,
-				heightStyle: 'content',
-				icons: {
-					'header': 'eapro-cloneable-header-icon fa fa-angle-right',
-					'activeHeader': 'eapro-cloneable-header-icon fa fa-angle-down'
-				},
-				activate: function (event, ui) {
+      $wrapper.accordion({
+        header: '> .eapro-cloneable-item > .eapro-cloneable-title',
+        collapsible: true,
+        active: false,
+        animate: false,
+        heightStyle: 'content',
+        icons: {
+          'header': 'eapro-cloneable-header-icon fa fa-angle-right',
+          'activeHeader': 'eapro-cloneable-header-icon fa fa-angle-down'
+        },
+        activate: function (event, ui) {
 
-					var $panel = ui.newPanel;
-					var $header = ui.newHeader;
+          var $panel = ui.newPanel;
+          var $header = ui.newHeader;
 
-					if ($panel.length && !$panel.data('opened')) {
+          if ($panel.length && !$panel.data('opened')) {
 
-						var $fields = $panel.children();
-						var $first = $fields.first().find(':input').first();
-						var $title = $header.find('.eapro-cloneable-value');
+            var $fields = $panel.children();
+            var $first = $fields.first().find(':input').first();
+            var $title = $header.find('.eapro-cloneable-value');
 
-						$first.on('change keyup', function (event) {
-							$title.text($first.val());
-						});
+            $first.on('change keyup', function (event) {
+              $title.text($first.val());
+            });
 
-						$panel.eapro_reload_script();
-						$panel.data('opened', true);
-						$panel.data('retry', false);
+            $panel.eapro_reload_script();
+            $panel.data('opened', true);
+            $panel.data('retry', false);
 
-					} else if ($panel.data('retry')) {
+          } else if ($panel.data('retry')) {
 
-						$panel.eapro_reload_script_retry();
-						$panel.data('retry', false);
+            $panel.eapro_reload_script_retry();
+            $panel.data('retry', false);
 
-					}
+          }
 
-				}
-			});
+        }
+      });
 
-			$wrapper.sortable({
-				axis: 'y',
-				handle: '.eapro-cloneable-title,.eapro-cloneable-sort',
-				helper: 'original',
-				cursor: 'move',
-				placeholder: 'widget-placeholder',
-				start: function (event, ui) {
+      $wrapper.sortable({
+        axis: 'y',
+        handle: '.eapro-cloneable-title,.eapro-cloneable-sort',
+        helper: 'original',
+        cursor: 'move',
+        placeholder: 'widget-placeholder',
+        start: function (event, ui) {
 
-					$wrapper.accordion({ active: false });
-					$wrapper.sortable('refreshPositions');
-					ui.item.children('.eapro-cloneable-content').data('retry', true);
+          $wrapper.accordion({ active: false });
+          $wrapper.sortable('refreshPositions');
+          ui.item.children('.eapro-cloneable-content').data('retry', true);
 
-				},
-				update: function (event, ui) {
+        },
+        update: function (event, ui) {
 
-					SP_EAP.helper.name_nested_replace($wrapper.children('.eapro-cloneable-item'), field_id);
-					$wrapper.eapro_customizer_refresh();
+          SP_EAP.helper.name_nested_replace($wrapper.children('.eapro-cloneable-item'), field_id);
+          $wrapper.eapro_customizer_refresh();
 
-					if (is_number) {
-						update_title_numbers($wrapper);
-					}
+          if (is_number) {
+            update_title_numbers($wrapper);
+          }
 
-				},
-			});
+        },
+      });
 
-			$group.children('.eapro-cloneable-add').on('click', function (e) {
+      $group.children('.eapro-cloneable-add').on('click', function (e) {
 
-				e.preventDefault();
+        e.preventDefault();
 
-				var count = $wrapper.children('.eapro-cloneable-item').length;
+        var count = $wrapper.children('.eapro-cloneable-item').length;
 
-				$min.hide();
+        $min.hide();
 
-				if (max && (count + 1) > max) {
-					$max.show();
-					return;
-				}
+        if (max && (count + 1) > max) {
+          $max.show();
+          return;
+        }
 
-				var new_field_id = unique_id + field_id + '[' + count + ']';
+        var new_field_id = unique_id + field_id + '[' + count + ']';
 
-				var $cloned_item = $hidden.eapro_clone(true);
+        var $cloned_item = $hidden.eapro_clone(true);
 
-				$cloned_item.removeClass('eapro-cloneable-hidden');
+        $cloned_item.removeClass('eapro-cloneable-hidden');
 
-				$cloned_item.find(':input[name!="_pseudo"]').each(function () {
-					this.name = new_field_id + this.name.replace((this.name.startsWith('_nonce') ? '_nonce' : unique_id), '');
-				});
+        $cloned_item.find(':input[name!="_pseudo"]').each(function () {
+          this.name = new_field_id + this.name.replace((this.name.startsWith('_nonce') ? '_nonce' : unique_id), '');
+        });
 
-				$cloned_item.find('.eapro-data-wrapper').each(function () {
-					$(this).attr('data-unique-id', new_field_id);
-				});
+        $cloned_item.find('.eapro-data-wrapper').each(function () {
+          $(this).attr('data-unique-id', new_field_id);
+        });
 
-				$wrapper.append($cloned_item);
-				$wrapper.accordion('refresh');
-				$wrapper.accordion({ active: count });
-				$wrapper.eapro_customizer_refresh();
-				$wrapper.eapro_customizer_listen({ closest: true });
+        $wrapper.append($cloned_item);
+        $wrapper.accordion('refresh');
+        $wrapper.accordion({ active: count });
+        $wrapper.eapro_customizer_refresh();
+        $wrapper.eapro_customizer_listen({ closest: true });
 
-				if (is_number) {
-					update_title_numbers($wrapper);
-				}
+        if (is_number) {
+          update_title_numbers($wrapper);
+        }
 
-			});
+      });
 
-			var event_clone = function (e) {
+      var event_clone = function (e) {
 
-				e.preventDefault();
+        e.preventDefault();
 
-				var count = $wrapper.children('.eapro-cloneable-item').length;
+        var count = $wrapper.children('.eapro-cloneable-item').length;
 
-				$min.hide();
+        $min.hide();
 
-				if (max && (count + 1) > max) {
-					$max.show();
-					return;
-				}
+        if (max && (count + 1) > max) {
+          $max.show();
+          return;
+        }
 
-				var $this = $(this),
-					$parent = $this.parent().parent(),
-					$cloned_helper = $parent.children('.eapro-cloneable-helper').eapro_clone(true),
-					$cloned_title = $parent.children('.eapro-cloneable-title').eapro_clone(),
-					$cloned_content = $parent.children('.eapro-cloneable-content').eapro_clone(),
-					cloned_regex = new RegExp('(' + SP_EAP.helper.preg_quote(field_id) + ')\\[(\\d+)\\]', 'g');
+        var $this = $(this),
+          $parent = $this.parent().parent(),
+          $cloned_helper = $parent.children('.eapro-cloneable-helper').eapro_clone(true),
+          $cloned_title = $parent.children('.eapro-cloneable-title').eapro_clone(),
+          $cloned_content = $parent.children('.eapro-cloneable-content').eapro_clone(),
+          cloned_regex = new RegExp('(' + SP_EAP.helper.preg_quote(field_id) + ')\\[(\\d+)\\]', 'g');
 
-				$cloned_content.find('.eapro-data-wrapper').each(function () {
-					var $this = $(this);
-					$this.attr('data-unique-id', $this.attr('data-unique-id').replace(cloned_regex, field_id + '[' + ($parent.index() + 1) + ']'));
-				});
+        $cloned_content.find('.eapro-data-wrapper').each(function () {
+          var $this = $(this);
+          $this.attr('data-unique-id', $this.attr('data-unique-id').replace(cloned_regex, field_id + '[' + ($parent.index() + 1) + ']'));
+        });
 
-				var $cloned = $('<div class="eapro-cloneable-item" />');
+        var $cloned = $('<div class="eapro-cloneable-item" />');
 
-				$cloned.append($cloned_helper);
-				$cloned.append($cloned_title);
-				$cloned.append($cloned_content);
+        $cloned.append($cloned_helper);
+        $cloned.append($cloned_title);
+        $cloned.append($cloned_content);
 
-				$wrapper.children().eq($parent.index()).after($cloned);
+        $wrapper.children().eq($parent.index()).after($cloned);
 
-				SP_EAP.helper.name_nested_replace($wrapper.children('.eapro-cloneable-item'), field_id);
+        SP_EAP.helper.name_nested_replace($wrapper.children('.eapro-cloneable-item'), field_id);
 
-				$wrapper.accordion('refresh');
-				$wrapper.eapro_customizer_refresh();
-				$wrapper.eapro_customizer_listen({ closest: true });
+        $wrapper.accordion('refresh');
+        $wrapper.eapro_customizer_refresh();
+        $wrapper.eapro_customizer_listen({ closest: true });
 
-				if (is_number) {
-					update_title_numbers($wrapper);
-				}
+        if (is_number) {
+          update_title_numbers($wrapper);
+        }
 
-			};
+      };
 
-			$wrapper.children('.eapro-cloneable-item').children('.eapro-cloneable-helper').on('click', '.eapro-cloneable-clone', event_clone);
-			$group.children('.eapro-cloneable-hidden').children('.eapro-cloneable-helper').on('click', '.eapro-cloneable-clone', event_clone);
+      $wrapper.children('.eapro-cloneable-item').children('.eapro-cloneable-helper').on('click', '.eapro-cloneable-clone', event_clone);
+      $group.children('.eapro-cloneable-hidden').children('.eapro-cloneable-helper').on('click', '.eapro-cloneable-clone', event_clone);
 
-			var event_remove = function (e) {
+      var event_remove = function (e) {
 
-				e.preventDefault();
+        e.preventDefault();
 
-				var count = $wrapper.children('.eapro-cloneable-item').length;
+        var count = $wrapper.children('.eapro-cloneable-item').length;
 
-				$max.hide();
-				$min.hide();
+        $max.hide();
+        $min.hide();
 
-				if (min && (count - 1) < min) {
-					$min.show();
-					return;
-				}
+        if (min && (count - 1) < min) {
+          $min.show();
+          return;
+        }
 
-				$(this).closest('.eapro-cloneable-item').remove();
+        $(this).closest('.eapro-cloneable-item').remove();
 
-				SP_EAP.helper.name_nested_replace($wrapper.children('.eapro-cloneable-item'), field_id);
+        SP_EAP.helper.name_nested_replace($wrapper.children('.eapro-cloneable-item'), field_id);
 
-				$wrapper.eapro_customizer_refresh();
+        $wrapper.eapro_customizer_refresh();
 
-				if (is_number) {
-					update_title_numbers($wrapper);
-				}
+        if (is_number) {
+          update_title_numbers($wrapper);
+        }
 
-			};
+      };
 
-			$wrapper.children('.eapro-cloneable-item').children('.eapro-cloneable-helper').on('click', '.eapro-cloneable-remove', event_remove);
-			$group.children('.eapro-cloneable-hidden').children('.eapro-cloneable-helper').on('click', '.eapro-cloneable-remove', event_remove);
+      $wrapper.children('.eapro-cloneable-item').children('.eapro-cloneable-helper').on('click', '.eapro-cloneable-remove', event_remove);
+      $group.children('.eapro-cloneable-hidden').children('.eapro-cloneable-helper').on('click', '.eapro-cloneable-remove', event_remove);
 
-		});
-	};
+    });
+  };
 
   //
   // Field: spinner
@@ -1504,7 +1504,7 @@
         }, 1000);
       }
 
-      $(document).on('keydown',function (event) {
+      $(document).on('keydown', function (event) {
         if ((event.ctrlKey || event.metaKey) && event.which === 83) {
           $save_button.trigger('click');
           event.preventDefault();
@@ -2285,7 +2285,7 @@
 
         // Field plugins
         $this.children('.eapro-field-code_editor').eapro_field_code_editor();
-		  $this.children('.eapro-field-group').eapro_field_group();
+        $this.children('.eapro-field-group').eapro_field_group();
 
         $this.children('.eapro-field-spinner').eapro_field_spinner();
         $this.children('.eapro-field-switcher').eapro_field_switcher();
@@ -2344,7 +2344,7 @@
 
   });
 
-	$('.post-type-sp_easy_accordion .column-shortcode input').on('click',function (e) {
+  $('.post-type-sp_easy_accordion .column-shortcode input').on('click', function (e) {
     e.preventDefault();
     /* Get the text field */
     var copyText = $(this);
@@ -2364,7 +2364,7 @@
       }, 0);
     }, 2000);
   });
-	$('.eap-shortcode-selectable').on('click', function (e) {
+  $('.eap-shortcode-selectable').on('click', function (e) {
     e.preventDefault();
     sp_eap_copyToClipboard($(this));
     sp_eap_SelectText($(this));
@@ -2399,7 +2399,7 @@
     sel.addRange(r);
   }
   // Theme preview
-  $('.sp_eap_accordion_theme').on('change',function () {
+  $('.sp_eap_accordion_theme').on('change', function () {
     var str = "";
     $(".sp_eap_accordion_theme option:selected").each(function () {
       str = $(this).val();
@@ -2423,25 +2423,25 @@
   }
   );
 
-function isValidJSONString(str) {
-	try {
-		JSON.parse(str);
-	} catch (e) {
-		return false;
-	}
-	return true;
-}
+  function isValidJSONString(str) {
+    try {
+      JSON.parse(str);
+    } catch (e) {
+      return false;
+    }
+    return true;
+  }
   // Accordion export.
   var $export_type = $('.eap_what_export').find('input:checked').val();
   $('.eap_what_export').on('change', function () {
     $export_type = $(this).find('input:checked').val();
   });
-	$('.eap_export .eapro--button').on('click', function (event) {
+  $('.eap_export .eapro--button').on('click', function (event) {
     event.preventDefault();
     var $accordion_ids = $('.eap_post_ids select').val();
     var $accordion_ids_type = 'all_shortcodes' === $export_type ? 'all_shortcodes' : $accordion_ids;
     var $ex_nonce = $('#eapro_options_noncesp_eap_tools').val();
-    if ('all_shortcodes' === $export_type || 'selected_shortcodes' === $export_type ) {
+    if ('all_shortcodes' === $export_type || 'selected_shortcodes' === $export_type) {
       var data = {
         action: 'eap_export_accordions',
         eap_ids: $accordion_ids_type,
@@ -2449,14 +2449,14 @@ function isValidJSONString(str) {
       }
       $.post(ajaxurl, data, function (resp) {
         if (resp) {
-			// Convert JSON Array to string.
-			if (isValidJSONString(resp)) {
-				var json = JSON.stringify(JSON.parse(resp));
-			} else {
-				var json = JSON.stringify(resp);
-			}
-		  // Convert JSON string to BLOB.
-		  var blob = new Blob([json], { type: 'application/json' });
+          // Convert JSON Array to string.
+          if (isValidJSONString(resp)) {
+            var json = JSON.stringify(JSON.parse(resp));
+          } else {
+            var json = JSON.stringify(resp);
+          }
+          // Convert JSON string to BLOB.
+          var blob = new Blob([json], { type: 'application/json' });
           var link = document.createElement('a');
           var eap_time = $.now();
           link.href = window.URL.createObjectURL(blob);
@@ -2477,10 +2477,16 @@ function isValidJSONString(str) {
     }
   });
   // Accordion import.
-	$('.eap_import button.import').on('click', function (event) {
+  $('.eap_import button.import').on('click', function (event) {
+    var $this = $(this),
+      button_text = $this.text();
     event.preventDefault();
     var eap_accordions = $('#import').prop('files')[0];
+
     if ($('#import').val() != '') {
+      $this.append('<span class="eapro-page-loading-spinner"><i class="fa fa-spinner" aria-hidden="true"></i></span>');
+      $this.css('opacity', '0.7');
+
       var $im_nonce = $('#eapro_options_noncesp_eap_tools').val();
       var reader = new FileReader();
       reader.readAsText(eap_accordions);
@@ -2497,13 +2503,24 @@ function isValidJSONString(str) {
             unSanitize,
           },
           success: function (resp) {
+            $this.html(button_text).css('opacity', '1');
+
             $('.eapro-form-result.eapro-form-success').text('Imported successfully!').show();
             setTimeout(function () {
               $('.eapro-form-result.eapro-form-success').hide().text('');
               $('#import').val('');
               window.location.replace($('#eap_link_redirect').attr('href'));
-            }, 2000);
-          }
+            }, 2000); 
+          },
+					error: function (error) { 
+						$('#import').val('');
+						$this.html(button_text).css('opacity', '1');
+						$('.eapro-form-result.eapro-form-success').addClass('error')
+						.text('Something went wrong, please try again!').show();
+						setTimeout(function () {
+							$('.eapro-form-result.eapro-form-success').hide().text('').removeClass('error');
+						}, 2000);
+					}
         });
       }
     } else {
@@ -2515,15 +2532,15 @@ function isValidJSONString(str) {
   });
 
   // Live Preview script.
-	var preview_box = $('#sp_eap-preview-box');
-	var preview_display = $('#sp_eap_live_preview').hide();
-	$(document).on('click', '#sp__eap-show-preview:contains(Hide)', function (e) {
-	  e.preventDefault();
-	  var _this = $(this);
-	  _this.html('<i class="fa fa-eye" aria-hidden="true"></i> Show Preview');
-	  preview_box.html('');
-	  preview_display.hide();
-	});
+  var preview_box = $('#sp_eap-preview-box');
+  var preview_display = $('#sp_eap_live_preview').hide();
+  $(document).on('click', '#sp__eap-show-preview:contains(Hide)', function (e) {
+    e.preventDefault();
+    var _this = $(this);
+    _this.html('<i class="fa fa-eye" aria-hidden="true"></i> Show Preview');
+    preview_box.html('');
+    preview_display.hide();
+  });
 
   $(document).on('click', '#sp__eap-show-preview:not(:contains(Hide))', function (e) {
     e.preventDefault();
@@ -2554,14 +2571,14 @@ function isValidJSONString(str) {
     })
   });
 
-  $(document).on('keyup change', '.sp-eap-options #eapro-form', function (e)  { 
+  $(document).on('keyup change', '.sp-eap-options #eapro-form', function (e) {
     e.preventDefault();
     var $button = $(this).find('.eapro-save');
-    $button.css({"background-color": "#00C263", "pointer-events": "initial"}).val('Save Settings');
+    $button.css({ "background-color": "#00C263", "pointer-events": "initial" }).val('Save Settings');
   });
-	$('.sp-eap-options .eapro-save').on('click', function(e) {
+  $('.sp-eap-options .eapro-save').on('click', function (e) {
     e.preventDefault();
-    $(this).css({"background-color": "#C5C5C6","pointer-events": "none"}).val('Changes Saved');
-})
+    $(this).css({ "background-color": "#C5C5C6", "pointer-events": "none" }).val('Changes Saved');
+  })
 
 })(jQuery, window, document);

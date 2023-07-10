@@ -4,7 +4,7 @@ Donate link: https://www.paypal.me/rpetersenDev
 Tags: banner, bar, top, announcement, notification, simple, bulletin, notice, cta, free
 Requires at least: 3.0.1
 Tested up to: 6.2.0
-Stable tag: 2.15.1
+Stable tag: 2.15.2
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -119,6 +119,9 @@ Set your banner position to <code>relative</code> and try this in 'Website Custo
 4. This is the settings page... and the fourth screen shot.
 
 == Changelog ==
+
+= 2.15.2 =
+* z-index now configurable
 
 = 2.15.1 =
 * Aria label on close button, addEventListener instead of onscroll
@@ -335,6 +338,9 @@ Set your banner position to <code>relative</code> and try this in 'Website Custo
 * First Version.
 
 == Upgrade Notice ==
+
+= 2.15.2 =
+* z-index now configurable
 
 = 2.15.1 =
 * Aria label on close button, addEventListener instead of onscroll

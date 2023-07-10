@@ -43,7 +43,6 @@ if ( !class_exists( 'WPSL_Frontend' ) ) {
 
         private $store_map_data = array();
 
-
         /**
          * Class constructor
          */
@@ -77,7 +76,6 @@ if ( !class_exists( 'WPSL_Frontend' ) ) {
         public function includes() {
             require_once( WPSL_PLUGIN_DIR . 'frontend/underscore-functions.php' );
         }
-
 
         /**
          * Include the required file for the borlabs cookie plugin to work.
@@ -1846,8 +1844,6 @@ if ( !class_exists( 'WPSL_Frontend' ) ) {
 
             // Check if we need to include the infobox script and settings.
             if ( $wpsl_settings['infowindow_style'] == 'infobox' ) {
-                wp_enqueue_script( 'wpsl-infobox', WPSL_URL . 'js/infobox'. $min .'.js', array( 'wpsl-gmap' ), WPSL_VERSION_NUM, true  ); // Not minified version is in the /js folder
-
                 $base_settings['infoWindowStyle'] = $wpsl_settings['infowindow_style'];
                 $base_settings = $this->get_infobox_settings( $base_settings );
             }
@@ -1916,20 +1912,16 @@ if ( !class_exists( 'WPSL_Frontend' ) ) {
          */
         public function get_infobox_settings( $settings ) {
 
-            $infobox_settings = apply_filters( 'wpsl_infobox_settings', array(
-                'infoBoxClass'                  => 'wpsl-infobox',
-                'infoBoxCloseMargin'            => '2px', // The margin can be written in css style, so 2px 2px 4px 2px for top, right, bottom, left
-                'infoBoxCloseUrl'               => '//www.google.com/intl/en_us/mapfiles/close.gif',
-                'infoBoxClearance'              => '40,40',
-                'infoBoxDisableAutoPan'         => 0,
-                'infoBoxEnableEventPropagation' => 0,
-                'infoBoxPixelOffset'            => '-52,-45',
-                'infoBoxZindex'                 => 1500
-            ) );
-
-            foreach ( $infobox_settings as $infobox_key => $infobox_setting ) {
-                $settings[$infobox_key] = $infobox_setting;
-            }
+            $settings['infoBox'] = apply_filters( 'wpsl_infobox_settings', array(
+                'class'                  => 'wpsl-infobox',
+                'margin'                 => '2px', // The margin can be written in css style, so 2px 2px 4px 2px for top, right, bottom, left
+                'url'                    => '//www.google.com/intl/en_us/mapfiles/close.gif',
+                'clearance'              => '40,40',
+                'disableAutoPan'         => 0,
+                'enableEventPropagation' => 0,
+                'pixelOffset'            => '-52,-45',
+                'zIndex'                 => 1500
+            ));
 
             return $settings;
         }

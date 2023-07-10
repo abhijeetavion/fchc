@@ -2523,7 +2523,15 @@
 .eapro-form-show {
 	display: block;
 }
-
+.eapro-form-success {
+	/* color: #fff; */
+	border-left-color: #46b450;
+}
+.eapro-form-success.error {
+	padding: 12px;
+	margin: 0 0 15px 0;
+	border-left-color: #d63638;
+}
 .eapro-label-error {
 	position: relative;
 	top: -2px;
@@ -3770,7 +3778,25 @@
 	pointer-events: none;
 }
 
+.eapro-page-loading-spinner i {
+	animation: import-spinner 2s linear infinite;
+	margin-left: 5px;
+}
+
+@keyframes import-spinner {
+	0% {
+		transform: rotate(0deg);
+	}
+	100% {
+		transform: rotate(360deg);
+	}
+}
+
 /* Accordion Pagination label. */
 #eapro-section-sp_eap_shortcode_options_2 .eapro-field-text input {
 	width: 30%;
+}
+
+.eapro-field.eapro-field-text.eap_accordion_wrapper_uniq_attribute{
+	display: none;
 }

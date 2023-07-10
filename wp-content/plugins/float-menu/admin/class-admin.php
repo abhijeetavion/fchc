@@ -295,6 +295,7 @@ class Wow_Plugin_Admin {
 		$id                    = absint( $_POST['tool_id'] );
 		$title                 = sanitize_text_field( $_POST['title'] );
 		$param                 = map_deep( $_POST['param'], array( $this, 'sanitize_param' ) );
+		$param['menu_1']['item_link'] = map_deep( $_POST['param']['menu_1']['item_link'], 'sanitize_url' );
 		$param['menu_1']['item_tooltip']     = map_deep( $_POST['param']['menu_1']['item_tooltip'], array(
 			$this,
 			'sanitize_tooltip'

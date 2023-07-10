@@ -2,7 +2,7 @@
 /**
  * @license GPL-2.0-or-later
  *
- * Modified by impress-org on 24-May-2023 using Strauss.
+ * Modified by impress-org on 29-June-2023 using Strauss.
  * @see https://github.com/BrianHenryIE/strauss
  */
 
@@ -13,12 +13,12 @@ namespace Give\Vendors\StellarWP\Validation\Contracts;
 /**
  * Intended to be used as part of a Validation Rule to sanitize data after it is validated.
  *
- * @unreleased
+ * @since 1.0.0
  */
 interface Sanitizer
 {
     /**
-     * @unreleased
+     * @since 1.0.0
      *
      * @param mixed $value
      *

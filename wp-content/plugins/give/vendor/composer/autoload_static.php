@@ -4,7 +4,7 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInit68b78a9ee6d6df9310afc75de09aa271
+class ComposerStaticInit5caed9bc3940272d7fccb01e581f711a
 {
     public static $files = array (
         '5255c38a0faeba867671b61dfda6d864' => __DIR__ . '/..' . '/paragonie/random_compat/lib/random.php',
@@ -23,6 +23,7 @@ class ComposerStaticInit68b78a9ee6d6df9310afc75de09aa271
             'Symfony\\Component\\HttpFoundation\\' => 33,
             'Stripe\\' => 7,
             'StellarWP\\Validation\\' => 21,
+            'StellarWP\\FieldConditions\\' => 26,
             'StellarWP\\ContainerContract\\' => 28,
             'Sample\\' => 7,
         ),
@@ -75,6 +76,10 @@ class ComposerStaticInit68b78a9ee6d6df9310afc75de09aa271
         'StellarWP\\Validation\\' => 
         array (
             0 => __DIR__ . '/..' . '/stellarwp/validation/src',
+        ),
+        'StellarWP\\FieldConditions\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/stellarwp/field-conditions/src',
         ),
         'StellarWP\\ContainerContract\\' => 
         array (
@@ -146,9 +151,9 @@ class ComposerStaticInit68b78a9ee6d6df9310afc75de09aa271
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInit68b78a9ee6d6df9310afc75de09aa271::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInit68b78a9ee6d6df9310afc75de09aa271::$prefixDirsPsr4;
-            $loader->classMap = ComposerStaticInit68b78a9ee6d6df9310afc75de09aa271::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInit5caed9bc3940272d7fccb01e581f711a::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInit5caed9bc3940272d7fccb01e581f711a::$prefixDirsPsr4;
+            $loader->classMap = ComposerStaticInit5caed9bc3940272d7fccb01e581f711a::$classMap;
 
         }, null, ClassLoader::class);
     }

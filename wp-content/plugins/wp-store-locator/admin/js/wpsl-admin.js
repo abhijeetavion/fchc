@@ -424,6 +424,11 @@ jQuery( document ).ready( function( $ ) {
         map		  = new google.maps.Map( document.getElementById( mapId ), mapOptions );
 
         checkEditStoreMarker();
+
+        // If we have a city/country input field enable the autocomplete.
+        if ( $( "#wpsl-start-name" ).length ) {
+            activateAutoComplete();
+        }
     }
 
     /**
@@ -447,11 +452,6 @@ jQuery( document ).ready( function( $ ) {
             map.setZoom( 16 );
             addMarker( location );
         }
-    }
-
-    // If we have a city/country input field enable the autocomplete.
-    if ( $( "#wpsl-start-name" ).length ) {
-        activateAutoComplete();
     }
 
     /**

@@ -454,9 +454,11 @@ function rtec_check_action_before_post() {
             }
 
         } else {
+			$message = isset( $rtec_options['no_record_found_text'] ) ? $rtec_options['no_record_found_text'] : __( 'No record found.', 'registrations-for-the-events-calendar' );
+			$o_message = rtec_get_text( $message, __( 'No record found.', 'registrations-for-the-events-calendar' ) );
 
 	        if ( method_exists ( 'Tribe__Notices' , 'set_notice' ) ) {
-		        Tribe__Notices::set_notice( 'unregistered', __( 'No record found.', 'registrations-for-the-events-calendar' ) );
+		        Tribe__Notices::set_notice( 'unregistered', $o_message );
 	        }
         }
 

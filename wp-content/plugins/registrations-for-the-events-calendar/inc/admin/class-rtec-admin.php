@@ -44,7 +44,7 @@ class RTEC_Admin
 	    );
     }
 
-	function add_rtec_menu() {
+	public function add_rtec_menu() {
 		$menu_title = __( 'Registrations', 'registrations-for-the-events-calendar' );
 
 		$new_registrations_count = rtec_get_existing_new_reg_count();
@@ -1231,6 +1231,23 @@ class RTEC_Admin
 				'legend'      => true,
 			)
 		);
+
+	    $this->create_settings_field( array(
+		    'option' => 'rtec_options',
+		    'name' => 'no_record_found_text',
+		    'title' => '<label for="rtec_no_record_found_text">' . __( 'No Record Found Text', 'registrations-for-the-events-calendar' ) . '</label>',
+		    'example' => '',
+		    'description' => __( 'Appears as a notice if no record is found when unregistering', 'registrations-for-the-events-calendar' ),
+		    'callback'  => 'default_text',
+		    'class' => '',
+		    'input_class' => 'default-text',
+		    'page' => 'rtec_unregister_email',
+		    'section' => 'rtec_unregister_email',
+		    'type' => 'text',
+		    'default' => __( 'No record found.', 'registrations-for-the-events-calendar' )
+	    ));
+
+        //
 
     }
 
