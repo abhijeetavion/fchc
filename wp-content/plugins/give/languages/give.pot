@@ -2,14 +2,14 @@
 # This file is distributed under the same license as the Give - Donation Plugin plugin.
 msgid ""
 msgstr ""
-"Project-Id-Version: Give - Donation Plugin 2.29.2\n"
+"Project-Id-Version: Give - Donation Plugin 2.31.0\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/givewp\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2023-06-29T16:22:05+00:00\n"
+"POT-Creation-Date: 2023-07-22T01:06:25+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.8.1\n"
 "X-Domain: give\n"
@@ -66,14 +66,14 @@ msgstr ""
 
 #: blocks/donor-wall/class-give-donor-wall.php:164
 #: includes/admin/shortcodes/shortcode-give-donor-wall.php:99
-#: includes/donors/class-give-donor-wall.php:212
+#: includes/donors/class-give-donor-wall.php:213
 #: assets/dist/js/gutenberg.js:4166
 msgid "Read more"
 msgstr ""
 
 #: blocks/donor-wall/class-give-donor-wall.php:168
 #: includes/admin/shortcodes/shortcode-give-donor-wall.php:106
-#: includes/donors/class-give-donor-wall.php:213
+#: includes/donors/class-give-donor-wall.php:214
 #: assets/dist/js/gutenberg.js:4170
 msgid "Load more"
 msgstr ""
@@ -331,7 +331,7 @@ msgstr[1] ""
 #: includes/admin/admin-actions.php:562
 #: includes/admin/tools/import/class-give-import-donations.php:253
 #: includes/admin/tools/import/class-give-import-donations.php:259
-#: src/Views/Form/Templates/Classic/Classic.php:341
+#: src/Views/Form/Templates/Classic/Classic.php:345
 #: src/Views/Form/Templates/Sequoia/sections/income-stats.php:54
 #: assets/dist/js/donor-dashboards-block.js:3473
 msgid "donor"
@@ -371,7 +371,7 @@ msgstr ""
 #: includes/admin/admin-actions.php:957
 #: includes/class-give-scripts.php:519
 #: includes/process-donation.php:596
-#: includes/shortcodes.php:449
+#: includes/shortcodes.php:457
 msgid "Please enter your first name."
 msgstr ""
 
@@ -1025,7 +1025,7 @@ msgstr ""
 #: includes/formatting.php:767
 #: includes/gateways/manual.php:80
 #: includes/gateways/stripe/includes/admin/admin-actions.php:183
-#: src/LegacyPaymentGateways/Adapters/LegacyPaymentGatewayAdapter.php:144
+#: src/LegacyPaymentGateways/Adapters/LegacyPaymentGatewayAdapter.php:189
 #: src/Log/ValueObjects/LogType.php:48
 msgid "Error"
 msgstr ""
@@ -1086,7 +1086,7 @@ msgstr ""
 #: includes/gateways/actions.php:48
 #: includes/gateways/manual.php:80
 #: includes/process-donation.php:880
-#: src/LegacyPaymentGateways/Adapters/LegacyPaymentGatewayAdapter.php:140
+#: src/LegacyPaymentGateways/Adapters/LegacyPaymentGatewayAdapter.php:185
 msgid "We're unable to recognize your session. Please refresh the screen to try again; otherwise contact your website administrator for assistance."
 msgstr ""
 
@@ -2479,7 +2479,7 @@ msgstr ""
 #: includes/admin/forms/dashboard-columns.php:536
 #: src/DonationForms/V2/ListTable/Columns/GoalColumn.php:34
 #: assets/dist/js/gutenberg.js:3964
-#: assets/dist/js/gutenberg.js:5302
+#: assets/dist/js/gutenberg.js:5303
 msgid "Goal"
 msgstr ""
 
@@ -2735,7 +2735,7 @@ msgstr ""
 #: includes/admin/settings/class-settings-general.php:312
 #: includes/admin/tools/export/class-batch-export-donors.php:190
 #: includes/admin/tools/export/give-export-donations-exporter.php:198
-#: includes/ajax-functions.php:207
+#: includes/ajax-functions.php:208
 #: includes/country-functions.php:502
 #: includes/country-functions.php:552
 #: includes/country-functions.php:810
@@ -2892,7 +2892,6 @@ msgstr ""
 #: includes/post-types.php:69
 #: src/Donations/ListTable/Columns/FormColumn.php:37
 #: assets/dist/js/gutenberg.js:2695
-#: assets/dist/js/gutenberg.js:4046
 msgid "Donation Form"
 msgstr ""
 
@@ -3300,7 +3299,7 @@ msgid "Donation Level:"
 msgstr ""
 
 #: includes/admin/payments/view-payment-details.php:451
-#: includes/ajax-functions.php:630
+#: includes/ajax-functions.php:635
 #: assets/dist/js/give-migrations-list-table-app.js:9793
 msgid "n/a"
 msgstr ""
@@ -5139,7 +5138,7 @@ msgid "Enter a message to display encouraging donors to support the goal."
 msgstr ""
 
 #: includes/admin/shortcodes/shortcode-give-totals.php:105
-#: includes/shortcodes.php:585
+#: includes/shortcodes.php:593
 msgid "Hey! We've raised {total} of the {total_goal} we are trying to raise for this campaign!"
 msgstr ""
 
@@ -5682,15 +5681,15 @@ msgstr ""
 #: includes/admin/tools/import/class-give-import-donations.php:271
 #: includes/admin/tools/import/class-give-import-donations.php:277
 #: src/MultiFormGoals/resources/views/progressbar.php:37
-#: src/Views/Form/Templates/Classic/Classic.php:308
+#: src/Views/Form/Templates/Classic/Classic.php:312
 #: src/Views/Form/Templates/Sequoia/sections/income-stats.php:25
-#: templates/shortcode-form-grid.php:431
+#: templates/shortcode-form-grid.php:450
 #: assets/dist/js/give-admin-donations.js:5013
 #: assets/dist/js/gutenberg.js:3486
 #: assets/dist/js/gutenberg.js:4052
 #: assets/dist/js/gutenberg.js:4759
-#: assets/dist/js/gutenberg.js:4994
-#: assets/dist/js/gutenberg.js:5426
+#: assets/dist/js/gutenberg.js:4995
+#: assets/dist/js/gutenberg.js:5427
 msgid "donation"
 msgid_plural "donations"
 msgstr[0] ""
@@ -6930,30 +6929,30 @@ msgstr ""
 msgid "Save changes"
 msgstr ""
 
-#: includes/ajax-functions.php:586
+#: includes/ajax-functions.php:591
 msgid "All Levels"
 msgstr ""
 
-#: includes/ajax-functions.php:696
+#: includes/ajax-functions.php:701
 #: includes/login-register.php:396
 #: src/DonorDashboards/Routes/VerifyEmailRoute.php:69
 #: src/DonorDashboards/Routes/VerifyEmailRoute.php:104
 msgid "Unable to send email. Please try again."
 msgstr ""
 
-#: includes/ajax-functions.php:711
+#: includes/ajax-functions.php:716
 #: includes/class-give-scripts.php:485
 #: templates/email-login-form.php:33
 msgid "Please check your email and click on the link to access your complete donation history."
 msgstr ""
 
-#: includes/ajax-functions.php:736
+#: includes/ajax-functions.php:741
 #: templates/email-login-form.php:60
 #: templates/history-donations.php:45
 msgid "Too many access email requests detected. Please wait %s before requesting a new donation history access link."
 msgstr ""
 
-#: includes/ajax-functions.php:737
+#: includes/ajax-functions.php:742
 #: src/DonorDashboards/Routes/VerifyEmailRoute.php:123
 #: templates/email-login-form.php:61
 #: templates/history-donations.php:46
@@ -6962,7 +6961,7 @@ msgid_plural "%s minutes"
 msgstr[0] ""
 msgstr[1] ""
 
-#: includes/ajax-functions.php:830
+#: includes/ajax-functions.php:835
 msgid "Sorry, unable to load changelog."
 msgstr ""
 
@@ -12766,7 +12765,7 @@ msgstr ""
 #: includes/forms/template.php:2019
 #: includes/forms/widget.php:172
 #: includes/gateways/stripe/includes/give-stripe-scripts.php:54
-#: includes/shortcodes.php:595
+#: includes/shortcodes.php:603
 #: src/Form/Template.php:239
 #: src/Form/Template.php:250
 #: src/Form/Template/Options.php:60
@@ -13164,7 +13163,7 @@ msgstr ""
 msgid "You must enable a payment gateway to use Give."
 msgstr ""
 
-#: includes/gateways/functions.php:280
+#: includes/gateways/functions.php:293
 #: includes/gateways/manual.php:104
 msgid "Payment Error"
 msgstr ""
@@ -14010,7 +14009,7 @@ msgid "Unable to retrieve account details. Please contact support for assistance
 msgstr ""
 
 #: includes/gateways/stripe/includes/give-stripe-scripts.php:45
-#: templates/shortcode-form-grid.php:219
+#: templates/shortcode-form-grid.php:221
 msgid "Donate"
 msgstr ""
 
@@ -14551,43 +14550,43 @@ msgstr ""
 msgid "You must be logged in to view your donation history. Please login using your account or create an account using the same email you used to donate with."
 msgstr ""
 
-#: includes/shortcodes.php:204
+#: includes/shortcodes.php:212
 msgid "The shortcode is missing Donation Form ID attribute."
 msgstr ""
 
-#: includes/shortcodes.php:210
+#: includes/shortcodes.php:218
 msgid "The form does not have Goals enabled."
 msgstr ""
 
-#: includes/shortcodes.php:303
+#: includes/shortcodes.php:311
 msgid "You are missing the donation id to view this donation receipt."
 msgstr ""
 
-#: includes/shortcodes.php:377
+#: includes/shortcodes.php:385
 msgid "Your Donor and User profile are no longer connected. Please contact the site administrator."
 msgstr ""
 
-#: includes/shortcodes.php:457
+#: includes/shortcodes.php:465
 msgid "The email you entered is empty."
 msgstr ""
 
-#: includes/shortcodes.php:461
+#: includes/shortcodes.php:469
 msgid "The email you entered is not valid. Please use another"
 msgstr ""
 
-#: includes/shortcodes.php:466
+#: includes/shortcodes.php:474
 msgid "The email you entered belongs to another user. Please use another."
 msgstr ""
 
-#: includes/shortcodes.php:469
+#: includes/shortcodes.php:477
 msgid "The email you entered belongs to another donor. Please use another."
 msgstr ""
 
-#: includes/shortcodes.php:1026
+#: includes/shortcodes.php:1034
 msgid "&laquo; Previous"
 msgstr ""
 
-#: includes/shortcodes.php:1027
+#: includes/shortcodes.php:1035
 msgid "Next &raquo;"
 msgstr ""
 
@@ -14939,7 +14938,7 @@ msgstr ""
 
 #: src/DonorDashboards/Helpers/LocationList.php:26
 #: src/Onboarding/Helpers/LocationList.php:23
-#: assets/dist/js/gutenberg.js:5759
+#: assets/dist/js/gutenberg.js:5760
 msgid "Select"
 msgstr ""
 
@@ -15896,14 +15895,14 @@ msgstr ""
 msgid "Charge succeeded in Stripe."
 msgstr ""
 
-#: src/PaymentGateways/Gateways/TestGateway/TestGateway.php:43
-#: src/PaymentGateways/Gateways/TestGateway/TestGateway.php:51
+#: src/PaymentGateways/Gateways/TestGateway/TestGateway.php:44
+#: src/PaymentGateways/Gateways/TestGateway/TestGateway.php:63
 msgid "Test Gateway"
 msgstr ""
 
-#: src/PaymentGateways/Gateways/TestGateway/TestGatewayOffsite.php:56
 #: src/PaymentGateways/Gateways/TestGateway/TestGatewayOffsite.php:64
-msgid "Test Gateway Offsite"
+#: src/PaymentGateways/Gateways/TestGateway/TestGatewayOffsite.php:72
+msgid "Test Gateway (Offsite)"
 msgstr ""
 
 #: src/PaymentGateways/PayPalCommerce/AccountAdminNotices.php:53
@@ -16531,6 +16530,7 @@ msgid "Dramatically reduce the impact of gateway credit card processing fees by 
 msgstr ""
 
 #: src/Promotions/InPluginUpsells/resources/views/sale-banners.php:37
+#: src/Promotions/InPluginUpsells/resources/views/summer-sales-banner.php:64
 msgid "Dismiss"
 msgstr ""
 
@@ -16551,7 +16551,29 @@ msgstr ""
 
 #: src/Promotions/InPluginUpsells/SaleBanners.php:50
 #: src/Promotions/InPluginUpsells/SaleBanners.php:61
+#: src/Promotions/InPluginUpsells/SummerSalesBanner.php:22
 msgid "Shop Now"
+msgstr ""
+
+#: src/Promotions/InPluginUpsells/SummerSalesBanner.php:16
+#: src/Promotions/InPluginUpsells/SummerSalesBanner.php:44
+msgid "Save 30% on all GiveWP Pricing Plans."
+msgstr ""
+
+#: src/Promotions/InPluginUpsells/SummerSalesBanner.php:17
+msgid "Make it yours."
+msgstr ""
+
+#: src/Promotions/InPluginUpsells/SummerSalesBanner.php:18
+msgid "Purchase any StellarWP product during the sale and get 100% off WP Business Reviews and take 40% off all other brands."
+msgstr ""
+
+#: src/Promotions/InPluginUpsells/SummerSalesBanner.php:23
+msgid "View all StellarWP Deals"
+msgstr ""
+
+#: src/Promotions/InPluginUpsells/SummerSalesBanner.php:35
+msgid "Save 30% on all StellarWP products."
 msgstr ""
 
 #: src/Receipt/DonationReceipt.php:103
@@ -17341,27 +17363,27 @@ msgid "Anonymous"
 msgstr ""
 
 #. translators: 1: amount of income raised 2: goal target amount.
-#: templates/shortcode-form-grid.php:388
+#: templates/shortcode-form-grid.php:397
 msgid ""
 "<span class=\"amount\"  data-amounts=\"%1$s\">%2$s</span>\n"
 "                                                     <span class=\"goal\" data-amounts=\"%3$s\">of %4$s</span>"
 msgstr ""
 
 #. translators: %s: percentage of the amount raised compared to the goal target
-#: templates/shortcode-form-grid.php:399
+#: templates/shortcode-form-grid.php:411
 msgid ""
 "\n"
 "                                                   <span class=\"amount\">%s%%</span>\n"
 "                                                   <span class=\"goal\">of 100&#37;</span>"
 msgstr ""
 
-#: templates/shortcode-form-grid.php:412
+#: templates/shortcode-form-grid.php:428
 msgid "of %s donation"
 msgid_plural "of %s donations"
 msgstr[0] ""
 msgstr[1] ""
 
-#: templates/shortcode-form-grid.php:420
+#: templates/shortcode-form-grid.php:438
 msgid "of %s donor"
 msgid_plural "of %s donors"
 msgstr[0] ""
@@ -18344,7 +18366,7 @@ msgid "subscriptions"
 msgstr ""
 
 #: assets/dist/js/give-log-list-table-app.js:9829
-#: assets/dist/js/gutenberg.js:5349
+#: assets/dist/js/gutenberg.js:5350
 msgid "All categories"
 msgstr ""
 
@@ -18650,6 +18672,10 @@ msgstr ""
 msgid "Content Position"
 msgstr ""
 
+#: assets/dist/js/gutenberg.js:4046
+msgid "Donation Form (v2)"
+msgstr ""
+
 #: assets/dist/js/gutenberg.js:4047
 msgid "The GiveWP Donation Form block inserts an existing donation form into the page. Each donation form's presentation can be customized below."
 msgstr ""
@@ -18782,75 +18808,75 @@ msgstr ""
 msgid "-- Select Form --"
 msgstr ""
 
-#: assets/dist/js/gutenberg.js:4928
+#: assets/dist/js/gutenberg.js:4929
 msgid "Heading"
 msgstr ""
 
-#: assets/dist/js/gutenberg.js:4930
+#: assets/dist/js/gutenberg.js:4931
 msgid "Summary"
 msgstr ""
 
-#: assets/dist/js/gutenberg.js:4988
+#: assets/dist/js/gutenberg.js:4989
 msgid "Multi-Form Goal"
 msgstr ""
 
-#: assets/dist/js/gutenberg.js:4989
+#: assets/dist/js/gutenberg.js:4990
 msgid "The Multi-Form Goals block displays progress made across donation forms towards a common goal."
 msgstr ""
 
-#: assets/dist/js/gutenberg.js:4994
+#: assets/dist/js/gutenberg.js:4995
 msgid "multi form goals"
 msgstr ""
 
-#: assets/dist/js/gutenberg.js:5306
+#: assets/dist/js/gutenberg.js:5307
 msgid "Goal amount"
 msgstr ""
 
-#: assets/dist/js/gutenberg.js:5314
+#: assets/dist/js/gutenberg.js:5315
 msgid "Goal end date"
 msgstr ""
 
-#: assets/dist/js/gutenberg.js:5322
+#: assets/dist/js/gutenberg.js:5323
 msgid "Progress bar color"
 msgstr ""
 
-#: assets/dist/js/gutenberg.js:5328
+#: assets/dist/js/gutenberg.js:5329
 msgid "Filters"
 msgstr ""
 
-#: assets/dist/js/gutenberg.js:5332
+#: assets/dist/js/gutenberg.js:5333
 msgid "Filter by forms"
 msgstr ""
 
-#: assets/dist/js/gutenberg.js:5336
+#: assets/dist/js/gutenberg.js:5337
 msgid "All forms"
 msgstr ""
 
-#: assets/dist/js/gutenberg.js:5345
+#: assets/dist/js/gutenberg.js:5346
 msgid "Filter by categories"
 msgstr ""
 
-#: assets/dist/js/gutenberg.js:5358
+#: assets/dist/js/gutenberg.js:5359
 msgid "Filter by tags"
 msgstr ""
 
-#: assets/dist/js/gutenberg.js:5362
+#: assets/dist/js/gutenberg.js:5363
 msgid "All tags"
 msgstr ""
 
-#: assets/dist/js/gutenberg.js:5420
+#: assets/dist/js/gutenberg.js:5421
 msgid "Progress Bar"
 msgstr ""
 
-#: assets/dist/js/gutenberg.js:5421
+#: assets/dist/js/gutenberg.js:5422
 msgid "The Progress Bar block displays progress made across donation forms towards a common goal."
 msgstr ""
 
-#: assets/dist/js/gutenberg.js:5426
+#: assets/dist/js/gutenberg.js:5427
 msgid "progress-bar"
 msgstr ""
 
-#: assets/dist/js/gutenberg.js:5584
+#: assets/dist/js/gutenberg.js:5585
 msgid "Set date"
 msgstr ""
 

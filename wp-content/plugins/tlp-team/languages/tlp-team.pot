@@ -8,7 +8,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Language-Team: RadiusTheme\n"
 "Last-Translator: RadiusTheme\n"
-"POT-Creation-Date: 2023-06-24 10:31+0000\n"
+"POT-Creation-Date: 2023-07-10 06:49+0000\n"
 "Report-Msgid-Bugs-To: https://radiustheme.com/tlp-team-for-wordpress/\n"
 "X-Poedit-Basepath: ..\n"
 "X-Poedit-KeywordsList: __;_e;_ex:1,2c;_n:1,2;_n_noop:1,2;_nx:1,2,4c;_nx_noop:1,2,3c;_x:1,2c;esc_attr__;esc_attr_e;esc_attr_x:1,2c;esc_html__;esc_html_e;esc_html_x:1,2c\n"
@@ -185,19 +185,19 @@ msgstr ""
 msgid "Get Help"
 msgstr ""
 
-#: app/Controllers/Admin/TaxSorting.php:78
+#: app/Controllers/Admin/TaxSorting.php:81
 msgid "Security error"
 msgstr ""
 
-#: app/Controllers/Admin/TaxSorting.php:75
+#: app/Controllers/Admin/TaxSorting.php:78
 msgid "Select a taxonomy"
 msgstr ""
 
-#: app/Controllers/Admin/TaxSorting.php:72
+#: app/Controllers/Admin/TaxSorting.php:75
 msgid "No term found"
 msgstr ""
 
-#: app/Controllers/Admin/TaxSorting.php:92, app/Helpers/Options.php:478, app/Widgets/Elementor/Sections/Layout.php:283
+#: app/Controllers/Admin/TaxSorting.php:95, app/Helpers/Options.php:478, app/Widgets/Elementor/Sections/Layout.php:283
 msgid "Order"
 msgstr ""
 

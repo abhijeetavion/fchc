@@ -26,7 +26,10 @@ class TaxSorting {
 	 * @return void
 	 */
 	protected function init() {
-		add_action( 'admin_init', [ $this, 'refresh' ] );
+
+		if (isset($_GET['page'] ) && isset($_GET['post_type']) && 'ttp_taxonomy_order' === $_GET['page'] && 'team' === $_GET['post_type']){
+			add_action( 'admin_init', [ $this, 'refresh' ] );
+		}
 
 		$taxo = [
 			'team_department',
