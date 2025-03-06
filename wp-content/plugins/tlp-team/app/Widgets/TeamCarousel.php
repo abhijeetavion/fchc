@@ -232,7 +232,7 @@ class TeamCarousel extends WP_Widget {
 	public function update( $new_instance, $old_instance ) {
 
 		$instance           = [];
-		$instance['title']  = ( ! empty( $new_instance['title'] ) ) ? strip_tags( $new_instance['title'] ) : '';
+		$instance['title']  = ( ! empty( $new_instance['title'] ) ) ? wp_strip_all_tags( $new_instance['title'] ) : '';
 		$instance['number'] = ( ! empty( $new_instance['number'] ) ) ? (int) ( $new_instance['number'] ) : '';
 		$instance['total']  = ( ! empty( $new_instance['total'] ) ) ? (int) ( $new_instance['total'] ) : '';
 		$instance['speed']  = ( ! empty( $new_instance['speed'] ) ) ? (int) ( $new_instance['speed'] ) : '';

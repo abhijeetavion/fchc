@@ -269,9 +269,8 @@ $borlabs_exists = function_exists( 'BorlabsCookieHelper' );
                                 <label for="wpsl-map-style"><?php _e( 'Map style', 'wpsl' ); ?>:<span class="wpsl-info"><span class="wpsl-info-text wpsl-hide"><?php _e( 'Custom map styles only work if the map type is set to "Roadmap" or "Terrain".', 'wpsl' ); ?></span></span></label>
                             </p>
                             <div class="wpsl-style-input">
-                                <p><?php echo sprintf( __( 'You can use existing map styles from %sSnazzy Maps%s or %sMap Stylr%s and paste it in the textarea below, or you can generate a custom map style through the %sMap Style Editor%s or %sStyled Maps Wizard%s.', 'wpsl' ), '<a target="_blank" href="http://snazzymaps.com">', '</a>', '<a target="_blank" href="http://mapstylr.com">', '</a>', '<a target="_blank" href="http://mapstylr.com/map-style-editor/">', '</a>', '<a target="_blank" href="http://gmaps-samples-v3.googlecode.com/svn/trunk/styledmaps/wizard/index.html">', '</a>' ); ?></p> 
-                                <p><?php echo sprintf( __( 'If you like to write the style code yourself, then you can find the documentation from Google %shere%s.', 'wpsl' ), '<a target="_blank" href="https://developers.google.com/maps/documentation/javascript/styling">', '</a>' ); ?></p>
-                                <textarea id="wpsl-map-style" name="wpsl_map[map_style]"><?php echo strip_tags( stripslashes( json_decode( $wpsl_settings['map_style'] ) ) ); ?></textarea>
+                                <p><?php echo sprintf( __( 'You can use existing map styles from %sSnazzy Maps%s and paste it in the textarea below, or you can generate a custom map style through the %sGoogle Maps Platform Styling Wizard%s.', 'wpsl' ), '<a target="_blank" href="http://snazzymaps.com">', '</a>', '<a target="_blank" href="https://mapstyle.withgoogle.com/">', '</a>' ); ?></p>
+                                <textarea id="wpsl-map-style" name="wpsl_map[map_style]"><?php echo $wpsl_admin->settings_page->get_map_style(); ?></textarea>
                                 <input type="submit" value="<?php _e( 'Preview Map Style', 'wpsl' ); ?>" class="button-primary" name="wpsl-style-preview" id="wpsl-style-preview">
                             </div>
                             <div id="wpsl-gmap-wrap" class="wpsl-styles-preview"></div>

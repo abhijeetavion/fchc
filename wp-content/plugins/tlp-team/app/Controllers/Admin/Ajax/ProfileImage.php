@@ -39,7 +39,7 @@ class ProfileImage {
 		$msg     = null;
 		$id      = isset( $_REQUEST['id'] ) ? absint( $_REQUEST['id'] ) : 0;
 		$post_id = isset( $_REQUEST['post_ID'] ) ? absint( $_REQUEST['post_ID'] ) : 0;
-		if ( $id && $post_id && Fns::verifyNonce() ) {
+		if ( $id && $post_id && wp_verify_nonce( Fns::getNonce(), Fns::nonceText()) ) {
 			if ( delete_post_meta( $post_id, 'tlp_team_gallery', $id ) ) {
 				$error = false;
 				$msg   = __( 'Successfully deleted', 'tlp-team' );

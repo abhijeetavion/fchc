@@ -2,8 +2,8 @@
 /**
  * Popup Maker Extension Updater
  *
- * @package   PUM
- * @copyright Copyright (c) 2023, Code Atlantic LLC
+ * @package   PopupMaker
+ * @copyright Copyright (c) 2024, Code Atlantic LLC
  */
 
 // Exit if accessed directly.
@@ -100,7 +100,7 @@ class PUM_Extension_Updater {
 		$this->api_data                 = $_api_data;
 		$this->plugin_file              = $_plugin_file;
 		$this->name                     = plugin_basename( $_plugin_file );
-		$this->slug                     = basename( $_plugin_file, '.php' );
+		$this->slug                     = basename( dirname( $_plugin_file ) );
 		$this->version                  = $_api_data['version'];
 		$this->wp_override              = isset( $_api_data['wp_override'] ) ? (bool) $_api_data['wp_override'] : false;
 		$this->beta                     = ! empty( $this->api_data['beta'] ) ? true : false;
@@ -119,7 +119,6 @@ class PUM_Extension_Updater {
 
 		// Set up hooks.
 		$this->init();
-
 	}
 
 	/**
@@ -150,9 +149,6 @@ class PUM_Extension_Updater {
 	 * @return array Modified update array with custom plugin data.
 	 */
 	public function check_update( $_transient_data ) {
-
-		global $pagenow;
-
 		if ( ! is_object( $_transient_data ) ) {
 			$_transient_data = new stdClass();
 		}
@@ -161,7 +157,7 @@ class PUM_Extension_Updater {
 			return $_transient_data;
 		}
 
-		$current = $this->get_repo_api_data();
+		$current = $this->get_update_transient_data();
 		if ( false !== $current && is_object( $current ) && isset( $current->new_version ) ) {
 			if ( version_compare( $this->version, $current->new_version, '<' ) ) {
 				$_transient_data->response[ $this->name ] = $current;
@@ -202,10 +198,46 @@ class PUM_Extension_Updater {
 			$version_info->id     = $this->name;
 			$version_info->tested = $this->get_tested_version( $version_info );
 
+			if ( ! isset( $version_info->requires ) ) {
+				$version_info->requires = '';
+			}
+			if ( ! isset( $version_info->requires_php ) ) {
+				$version_info->requires_php = '';
+			}
+
 			$this->set_version_info_cache( $version_info );
 		}
 
 		return $version_info;
+	}
+
+	/**
+	 * Gets a limited set of data from the API response.
+	 * This is used for the update_plugins transient.
+	 *
+	 * @since 3.8.12
+	 * @return \stdClass|false
+	 */
+	private function get_update_transient_data() {
+		$version_info = $this->get_repo_api_data();
+
+		if ( ! $version_info ) {
+			return false;
+		}
+
+		$limited_data               = new \stdClass();
+		$limited_data->slug         = $this->slug;
+		$limited_data->plugin       = $this->name;
+		$limited_data->url          = isset( $version_info->url ) ? $version_info->url : '';
+		$limited_data->package      = isset( $version_info->package ) ? $version_info->package : '';
+		$limited_data->icons        = isset( $version_info->icons ) ? $this->convert_object_to_array( $version_info->icons ) : [];
+		$limited_data->banners      = isset( $version_info->banners ) ? $this->convert_object_to_array( $version_info->banners ) : [];
+		$limited_data->new_version  = isset( $version_info->new_version ) ? $version_info->new_version : '';
+		$limited_data->tested       = isset( $version_info->tested ) ? $version_info->tested : '';
+		$limited_data->requires     = isset( $version_info->requires ) ? $version_info->requires : '';
+		$limited_data->requires_php = isset( $version_info->requires_php ) ? $version_info->requires_php : '';
+
+		return $limited_data;
 	}
 
 	/**
@@ -279,8 +311,8 @@ class PUM_Extension_Updater {
 
 		printf(
 			'<tr class="plugin-update-tr %3$s" id="%1$s-update" data-slug="%1$s" data-plugin="%2$s">',
-			$this->slug,
-			$file,
+			esc_attr( $this->slug ),
+			esc_attr( $file ),
 			in_array( $this->name, $this->get_active_plugins(), true ) ? 'active' : 'inactive'
 		);
 
@@ -378,15 +410,11 @@ class PUM_Extension_Updater {
 	public function plugins_api_filter( $_data, $_action = '', $_args = null ) {
 
 		if ( 'plugin_information' !== $_action ) {
-
 			return $_data;
-
 		}
 
 		if ( ! isset( $_args->slug ) || ( $_args->slug !== $this->slug ) ) {
-
 			return $_data;
-
 		}
 
 		$to_send = [
@@ -404,7 +432,6 @@ class PUM_Extension_Updater {
 
 		// If we have no transient-saved value, run the API, set a fresh transient with the API value, and return that value too right now.
 		if ( empty( $edd_api_request_transient ) ) {
-
 			$api_response = $this->api_request( 'plugin_information', $to_send );
 
 			// Expires in 3 hours.
@@ -439,6 +466,10 @@ class PUM_Extension_Updater {
 
 		if ( ! isset( $_data->plugin ) ) {
 			$_data->plugin = $this->name;
+		}
+
+		if ( ! isset( $_data->version ) && ! empty( $_data->new_version ) ) {
+			$_data->version = $_data->new_version;
 		}
 
 		return $_data;
@@ -481,7 +512,6 @@ class PUM_Extension_Updater {
 			$args['sslverify'] = $this->verify_ssl();
 		}
 		return $args;
-
 	}
 
 	/**
@@ -615,13 +645,13 @@ class PUM_Extension_Updater {
 		/**
 		 * Filters the parameters sent in the API request.
 		 *
-		 * @param array  $api_params        The array of data sent in the request.
-		 * @param array  $this->api_data    The array of data set up in the class constructor.
-		 * @param string $this->plugin_file The full path and filename of the file.
+		 * @param array  $api_params  The array of data sent in the request.
+		 * @param array  $api_data    The array of data set up in the class constructor.
+		 * @param string $plugin_file The full path and filename of the file.
 		 */
 		$api_params = apply_filters( 'edd_sl_plugin_updater_api_params', $api_params, $this->api_data, $this->plugin_file );
 
-		$request = wp_remote_post(
+		$request = wp_remote_get(// Uses wp_remote_post() in EDD Sample.
 			$this->api_url,
 			[
 				'timeout'   => 15,
@@ -665,7 +695,7 @@ class PUM_Extension_Updater {
 	 * Get the version info from the cache, if it exists.
 	 *
 	 * @param string $cache_key Cache key.
-	 * @return object
+	 * @return false|object
 	 */
 	public function get_cached_version_info( $cache_key = '' ) {
 
@@ -687,7 +717,6 @@ class PUM_Extension_Updater {
 		}
 
 		return $cache['value'];
-
 	}
 
 	/**
@@ -734,5 +763,4 @@ class PUM_Extension_Updater {
 
 		return 'edd_sl_' . md5( maybe_serialize( $string ) );
 	}
-
 }

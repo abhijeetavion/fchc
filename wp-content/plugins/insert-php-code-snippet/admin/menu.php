@@ -13,7 +13,7 @@ add_action('admin_menu', 'xyz_ips_menu');
 
 function xyz_ips_menu(){
 	
-	add_menu_page('insert-php-code-snippet', 'XYZ PHP Code', 'manage_options', 'insert-php-code-snippet-manage','xyz_ips_snippets',plugins_url('images/logo.png',XYZ_INSERT_PHP_PLUGIN_FILE));
+	add_menu_page('insert-php-code-snippet', 'Insert PHP Code Snippet', 'manage_options', 'insert-php-code-snippet-manage','xyz_ips_snippets',plugins_url('images/logo.png',XYZ_INSERT_PHP_PLUGIN_FILE));
 
 	add_submenu_page('insert-php-code-snippet-manage', 'PHPCode Snippets', 'PHPCode Snippets', 'manage_options', 'insert-php-code-snippet-manage','xyz_ips_snippets');
 	add_submenu_page('insert-php-code-snippet-manage', 'PHPCode Snippets - Manage settings', 'Settings', 'manage_options', 'insert-php-code-snippet-settings' ,'xyz_ips_settings');	

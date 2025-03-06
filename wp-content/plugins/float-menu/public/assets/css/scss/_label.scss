@@ -1,0 +1,30 @@
+.floating-menu {
+  --fm-label-size: 15;
+  --fm-label-font: inherit;
+  --fm-label-font-style: normal;
+  --fm-label-weight: normal;
+
+
+  &.fm-label-ready {
+    .fm-label {
+      visibility: visible;
+    }
+  }
+
+  .fm-label {
+    background-color: var(--fm-background);
+    color: var(--fm-color);
+    display: flex;
+    align-items: center;
+    height: calc(var(--fm-icon-box) * 1px);
+    white-space: nowrap;
+    padding-inline: 12px;
+    border-radius: var(--fm-label-radius);
+    opacity: 0;
+    font-size: calc(var(--fm-label-size) * 1px);
+    font-family: var(--fm-label-font);
+    font-style: var(--fm-label-font-style);
+    font-weight: var(--fm-label-weight);
+
+  }
+}

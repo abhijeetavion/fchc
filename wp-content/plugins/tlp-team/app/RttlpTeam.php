@@ -5,7 +5,7 @@
  * @package RT_Team
  */
 
-require_once __DIR__ . './../vendor/autoload.php';
+require_once TLP_TEAM_PATH . 'vendor/autoload.php';
 
 use RT\Team\Helpers as Helpers;
 use RT\Team\Controllers as Controllers;

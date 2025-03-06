@@ -12,10 +12,13 @@ if (!class_exists("wpdreamsCategories")) {
      * @copyright Copyright (c) 2014, Ernest Marcinko
      */
     class wpdreamsCategories extends wpdreamsType {
+	    private array $selected = array();
+		private array $types = array();
+
         function getType() {
             parent::getType();
-            global $wpdb;
             $this->processData();
+
             $args = array();
             if ($this->selected != "")
                 $args = array('exclude' => implode(",", $this->selected));
@@ -48,9 +51,9 @@ if (!class_exists("wpdreamsCategories")) {
             }
             echo "</ul></div>";
             echo "
-         <input isparam=1 type='hidden' value='" . $this->data . "' name='" . $this->name . "'>";
+         <input isparam=1 type='hidden' value='" . esc_attr($this->data) . "' name='" . esc_attr($this->name) . "'>";
             echo "
-         <input type='hidden' value='wpdreamsCategories' name='classname-" . $this->name . "'>";
+         <input type='hidden' value='wpdreamsCategories' name='classname-" . esc_attr($this->name) . "'>";
             echo "
         </fieldset>
       </div>";
@@ -58,11 +61,9 @@ if (!class_exists("wpdreamsCategories")) {
 
         function processData() {
             $this->data = str_replace("\n", "", $this->data);
-            if ($this->data != "")
-                $this->selected = explode("|", $this->data);
-            else
-                $this->selected = null;
-            //$this->css = "border-radius:".$this->topleft."px ".$this->topright."px ".$this->bottomright."px ".$this->bottomleft."px;";
+	        if ($this->data != "") {
+		        $this->selected = explode("|", $this->data);
+	        }
         }
 
         final function getData() {

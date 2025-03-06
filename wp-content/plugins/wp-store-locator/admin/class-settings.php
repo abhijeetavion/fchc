@@ -1217,5 +1217,28 @@ if ( !class_exists( 'WPSL_Settings' ) ) {
 			
 			return $dropdown;			
 		}
+
+        /**
+         * Get the map style code
+         *
+         * @since  2.2.241
+         * @return string $map_style The code to style the map
+         */
+        public function get_map_style() {
+
+            global $wpsl_settings;
+
+            $map_style = '';
+
+            if ( isset( $wpsl_settings['map_style'] ) ) {
+                $map_style = json_decode( $wpsl_settings['map_style'] );
+
+                if ( $map_style !== null ) {
+                    $map_style = strip_tags( stripslashes( $map_style ) );
+                }
+            }
+
+            return $map_style;
+        }
     }
 }

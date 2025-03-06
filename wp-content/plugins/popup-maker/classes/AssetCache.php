@@ -2,8 +2,8 @@
 /**
  * AssestCache class
  *
- * @package   PUM
- * @copyright Copyright (c) 2023, Code Atlantic LLC
+ * @package   PopupMaker
+ * @copyright Copyright (c) 2024, Code Atlantic LLC
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -167,11 +167,11 @@ class PUM_AssetCache {
 			// Prevents this from running again and set to show the admin notice.
 			update_option( 'pum_files_writeable', false );
 			update_option( '_pum_writeable_notice_dismissed', false );
-			if ( ! is_null( $results ) && is_wp_error( $wp_filesystem->errors ) && $wp_filesystem->errors->has_errors() ) {
+			if ( ! is_null( $results ) && isset( $wp_filesystem->errors ) && $wp_filesystem->errors->has_errors() ) {
 				$error = $wp_filesystem->errors->get_error_message();
-				PUM_Utils_Logging::instance()->log( sprintf( 'Cache directory is not writeable due to filesystem error. Error given: %s', esc_html( $error ) ) );
+				pum_log_message( sprintf( 'Cache directory is not writeable due to filesystem error. Error given: %s', esc_html( $error ) ) );
 			} else {
-				PUM_Utils_Logging::instance()->log( 'Cache directory is not writeable due to incorrect filesystem method.' );
+				pum_log_message( 'Cache directory is not writeable due to incorrect filesystem method.' );
 			}
 			return false;
 		}
@@ -509,7 +509,7 @@ class PUM_AssetCache {
 
 				if ( $popup->get_setting( 'zindex', false ) ) {
 					$zindex = esc_attr( $popup->get_setting( 'zindex' ) );
-					echo sprintf( "#pum-%d {z-index: %d}\r\n", esc_attr( $popup->ID ), esc_attr( $zindex ) );
+					printf( "#pum-%d {z-index: %d}\r\n", esc_attr( $popup->ID ), esc_attr( $zindex ) );
 				}
 
 				// Allow per popup CSS additions.
@@ -619,7 +619,7 @@ class PUM_AssetCache {
 			$theme_styles = pum_get_rendered_theme_styles( $theme->ID );
 
 			if ( '' !== $theme_styles ) {
-				$styles .= '/* Popup Theme ' . $theme->ID . ': ' . $theme->post_title . " */\r\n";
+				$styles .= '/* Popup Theme ' . esc_attr( $theme->ID ) . ': ' . esc_html( $theme->post_title ) . " */\r\n";
 				$styles .= $theme_styles . "\r\n";
 			}
 		}
@@ -669,7 +669,7 @@ class PUM_AssetCache {
 		<ul>
 			<li><a href="<?php echo esc_attr( $undo_url ); ?>"><strong><?php esc_html_e( 'Try to create cache again', 'popup-maker' ); ?></strong></a></li>
 			<li><a href="<?php echo esc_attr( $dismiss_url ); ?>" class="pum-dismiss"><?php esc_html_e( 'Keep current method', 'popup-maker' ); ?></a></li>
-			<li><a href="https://docs.wppopupmaker.com/article/521-debugging-filesystem-errors?utm_source=filesystem-error-alert&utm_medium=inline-doclink&utm_campaign=filesystem-error" target="_blank" rel="noreferrer noopener"><?php esc_html_e( 'Learn more', 'popup-maker' ); ?></a></li>
+			<li><a href="https://wppopupmaker.com/docs/problem-solving/popup-maker-detected-an-issue-with-your-file-system/?utm_source=filesystem-error-alert&utm_medium=inline-doclink&utm_campaign=filesystem-error" target="_blank" rel="noreferrer noopener"><?php esc_html_e( 'Learn more', 'popup-maker' ); ?></a></li>
 		</ul>
 		<?php
 		$html     = ob_get_clean();
@@ -720,17 +720,18 @@ class PUM_AssetCache {
 	 * Tests whether the file is accessible and returns 200 status code
 	 *
 	 * @param string $filename Filename of cache file to test.
+	 *
 	 * @return bool True if file exists and is accessible
 	 */
 	private static function is_file_accessible( $filename ) {
-		if ( ! $filename || empty( $filename ) || ! is_string( $filename ) ) {
+		if ( ! $filename || ! is_string( $filename ) ) {
 			// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_print_r
-			PUM_Utils_Logging::instance()->log( 'Cannot check if file is accessible. Filename passed: ' . print_r( $filename, true ) );
+			pum_log_message( 'Cannot check if file is accessible. Filename passed: ' . print_r( $filename, true ) );
 			return false;
 		}
 		$cache_url = PUM_Helpers::get_cache_dir_url();
 		if ( false === $cache_url ) {
-			PUM_Utils_Logging::instance()->log( 'Cannot access cache file when tested. Cache URL returned false.' );
+			pum_log_message( 'Cannot access cache file when tested. Cache URL returned false.' );
 		}
 		$protocol = is_ssl() ? 'https:' : 'http:';
 		$file     = $protocol . $cache_url . '/' . $filename;
@@ -745,7 +746,7 @@ class PUM_AssetCache {
 		// If it returned a WP_Error, let's log its error message.
 		if ( is_wp_error( $results ) ) {
 			$error = $results->get_error_message();
-			PUM_Utils_Logging::instance()->log( sprintf( 'Cannot access cache file when tested. Tested file: %s Error given: %s', esc_html( $file ), esc_html( $error ) ) );
+			pum_log_message( sprintf( 'Cannot access cache file when tested. Tested file: %s Error given: %s', esc_html( $file ), esc_html( $error ) ) );
 		}
 
 		// If it returned valid array...
@@ -756,7 +757,7 @@ class PUM_AssetCache {
 			if ( false !== $status_code && ( 200 <= $status_code && 300 > $status_code ) ) {
 				return true;
 			} else {
-				PUM_Utils_Logging::instance()->log( sprintf( 'Cannot access cache file when tested. Status code received was: %s', esc_html( $status_code ) ) );
+				pum_log_message( sprintf( 'Cannot access cache file when tested. Status code received was: %s', esc_html( $status_code ) ) );
 			}
 		}
 		return false;

@@ -47,9 +47,10 @@ if (!class_exists("WD_ASL_Search_Shortcode")) {
             self::$instanceCount++;
 
             extract(shortcode_atts(array(
-                'id' => 'something'
+                'id' => 'something',
+                'post_parent' => '',
+	            'include_styles' => '',
             ), $atts));
-
 
             $inst = wd_asl()->instances->get(0);
             $style = $inst['data'];
@@ -71,12 +72,48 @@ if (!class_exists("WD_ASL_Search_Shortcode")) {
 				$style['auto_populate_count'] = intval($style['maxresults']);
 			}
 
+            if ( $post_parent != '' ) {
+                $post_parent = array_unique( 
+                    array_map( 'intval', array_filter( explode(',', $post_parent), 'is_numeric' ) )
+                );
+                if ( !empty($post_parent) ) {
+					$current_instance = self::$instanceCount;
+                    add_action( 'asl_layout_in_form', function($search_id) use ($post_parent, $current_instance) {
+						if ( $current_instance != $search_id ) {
+							return;
+						}
+                        foreach( $post_parent as $pid ) {
+                            echo "<input type='hidden' name='post_parent[]' value='$pid'>";
+                        }
+                    });
+                }
+            }
+
+	        $out = "";
+			if ( $include_styles == 1 ) {
+				$styles = (new WD_ASL_Styles())->get();
+				ob_start();
+				foreach ($styles['src'] as $style_url):
+					?>
+					<link rel="stylesheet" href="<?php echo $style_url ?>?ver=<?php echo ASL_CURR_VER_STRING; ?>">
+					<?php
+				endforeach;
+				?>
+				<style>
+					<?php
+					// prevent any XSS
+					echo str_replace(array('</style', '</', '<'), '',$styles['inline']);
+					?>
+				</style>
+				<?php
+				$out = ob_get_clean();
+			}
+
             do_action('asl_layout_before_shortcode', $id);
 
-            $out = "";
             ob_start();
             include(ASL_PATH."includes/views/asl.shortcode.php");
-            $out = ob_get_clean();
+            $out .= ob_get_clean();
 
             do_action('asl_layout_after_shortcode', $id);
 

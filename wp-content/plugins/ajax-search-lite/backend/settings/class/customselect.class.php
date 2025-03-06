@@ -12,6 +12,9 @@ if (!class_exists("wpdreamsCustomSelect")) {
      * @copyright Copyright (c) 2014, Ernest Marcinko
      */
     class wpdreamsCustomSelect extends wpdreamsType {
+		private array $selects = array();
+		private string $selected = '';
+
         function getType() {
             parent::getType();
             $this->processData();
@@ -20,9 +23,9 @@ if (!class_exists("wpdreamsCustomSelect")) {
             echo "<select isparam=1 class='wpdreamscustomselect' id='wpdreamscustomselect_" . self::$_instancenumber . "' name='" . $this->name . "'>";
             foreach ($this->selects as $sel) {
                 if (($sel['value'] . "") == ($this->selected . ""))
-                    echo "<option value='" . $sel['value'] . "' selected='selected'>" . $sel['option'] . "</option>";
+                    echo "<option value='" . esc_attr($sel['value']) . "' selected='selected'>" . esc_attr($sel['option']) . "</option>";
                 else
-                    echo "<option value='" . $sel['value'] . "'>" . $sel['option'] . "</option>";
+                    echo "<option value='" . esc_attr($sel['value']) . "'>" . esc_attr($sel['option']) . "</option>";
             }
             echo "</select>";
             echo "<div class='triggerer'></div>
@@ -30,8 +33,6 @@ if (!class_exists("wpdreamsCustomSelect")) {
         }
 
         function processData() {
-            //$this->data = str_replace("\n","",$this->data);
-            $this->selects = array();
             $this->selects = $this->data['selects'];
             $this->selected = $this->data['value'];
         }

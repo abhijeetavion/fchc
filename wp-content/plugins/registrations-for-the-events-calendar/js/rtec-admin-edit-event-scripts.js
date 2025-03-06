@@ -5,10 +5,27 @@ jQuery(document).ready(function($){
         return Math.ceil( (a - b) / (1000 * 60 * 60 * 24) );
     }
 
+    var rtecDatepickerFormats = [
+        'yy-mm-dd',
+        'm/d/yy',
+        'mm/dd/yy',
+        'd/m/yy',
+        'dd/mm/yy',
+        'm-d-yy',
+        'mm-dd-yy',
+        'd-m-yy',
+        'dd-mm-yy',
+        'yy.mm.dd',
+        'mm.dd.yy',
+        'dd.mm.yy'
+    ];
+
     var deadlineDate = parseInt( $('.rtec-date-picker').attr('data-rtec-deadline') ) * 1000,
-        nowTime = Date.now();
+        nowTime = Date.now(),
+        format = typeof args !== 'undefined' ? args.format : 0;
 
     $('.rtec-date-picker').each(function() {
+        var $el = $(this);
         $(this).datepicker({
             defaultDate: rtecDiffInDays(deadlineDate, nowTime),
             dateFormat: 'yy-mm-dd',
@@ -18,6 +35,14 @@ jQuery(document).ready(function($){
 
                 // "Namespace" our CSS a bit so that our custom jquery-ui-datepicker styles don't interfere with other plugins'/themes'.
                 $dpDiv.addClass( 'tribe-ui-datepicker rtec-ui-datepicker' );
+            },
+            onSelect: function( selected_date, object ) {
+                var date     = $.datepicker.parseDate( rtecDatepickerFormats[format], selected_date);
+                if ($el.next('.rtec-datepicker-selected').length) {
+                    var d = new Date(date);
+
+                    $el.next('.rtec-datepicker-selected').val(d.getTime()/1000 - (d.getTimezoneOffset() * 60) )
+                }
             }
         });
     });
@@ -100,6 +125,26 @@ jQuery(document).ready(function($){
         } else {
             $wrapEl.find('.rtec-time-picker, .rtec-date-picker').addClass('rtec-fade');
         }
+
+
+        if ($wrapEl.find('input[name=_RTECdeadlineType]:checked').val() === 'other') {
+            $wrapEl.find('.rtec-time-picker, #rtec-date-picker-deadline').removeClass('rtec-fade');
+        } else {
+            $wrapEl.find('.rtec-time-picker, .rtec-date-picker').addClass('rtec-fade');
+        }
+        $wrapEl.find('.rtec-automess-send-date .rtec-time-picker, .rtec-automess-send-date .rtec-date-picker').removeClass('rtec-fade');
+
+        if ($wrapEl.find('input[name=_RTECopenType]:checked').val() === 'specific') {
+            $wrapEl.find('#rtec-time-picker-open, #rtec-date-picker-open').removeClass('rtec-fade');
+            $wrapEl.find('#rtec-open-rel-picker').slideUp();
+        } else {
+            $wrapEl.find('#rtec-time-picker-open, #rtec-date-picker-open').addClass('rtec-fade');
+            if ($wrapEl.find('input[name=_RTECopenType]:checked').val() === 'relative') {
+                $wrapEl.find('#rtec-open-rel-picker').slideDown();
+            } else {
+                $wrapEl.find('#rtec-open-rel-picker').slideUp();
+            }
+        }
     }
 
     $('.rtec-eventtable .rtec-hidden-option-wrap input').on('change', function() {
@@ -143,4 +188,10 @@ jQuery(document).ready(function($){
             $('.rtec-hidden-conf-email').slideUp();
         }
     });
+
+    if ($('.rtec-series-flag').length && $('table#EventInfo').length) {
+        $('table#EventInfo').find('td').first().prepend($('.rtec-series-flag'));
+    }
+
+
 });

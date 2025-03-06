@@ -65,16 +65,14 @@ class TeamWidget extends WP_Widget {
 		if ( $teamQuery->have_posts() ) {
 			while ( $teamQuery->have_posts() ) :
 				$teamQuery->the_post();
-
 				if ( has_post_thumbnail() ) {
-					$image = wp_get_attachment_image_src( get_post_thumbnail_id( get_the_ID() ), rttlp_team()->options['feature_img_size'] );
-					$img   = $image[0];
+                    $img = wp_get_attachment_image ( get_post_thumbnail_id( get_the_ID() ), rttlp_team()->options['feature_img_size'], false, array("class" => "tlp-team-img") );
 				} else {
-					$img = rttlp_team()->assets_url() . 'images/demo.jpg';
+                    $img = rttlp_team()->assets_url() . 'images/demo.jpg';
 				}
 
 				$bio         = get_post_meta( get_the_ID(), 'short_bio', true );
-				$designation = strip_tags(
+				$designation = wp_strip_all_tags(
 					get_the_term_list(
 						get_the_ID(),
 						rttlp_team()->taxonomies['designation'],
@@ -84,9 +82,10 @@ class TeamWidget extends WP_Widget {
 				);
 
 				$html .= "<div class='tlp-member rt-col-4'>
-						<div class='tlp-thum'><img src='" . esc_url( $img ) . "' /></div>
+                            <div class='tlp-thum'>
+                                $img
+                            </div>
 						<div class='widget_des'>";
-
 				if ( $fName && get_the_title() ) {
 					$html .= "<h2 class='name'><a href='" . get_the_permalink() . "'>" . get_the_title() . '</a></h2>';
 				}
@@ -109,14 +108,15 @@ class TeamWidget extends WP_Widget {
 				if ( ! empty( $sLink ) && is_array( $sLink ) && $fSocial ) {
 					$html .= '<ul class="tpl-social">';
 					foreach ( $sLink as $id => $link ) {
-						$html .= '<li><a class="fa fa-' . esc_attr( $link['id'] ) . '" href="' . esc_url( $link['url'] ) . '" title="' . esc_attr( $link['id'] ) . '" target="_blank"></a></li>';
+                        if ( is_array( $link ) && ! empty( $link['id'] ) && ! empty( $link['url'] ) ) {
+                            $html .= '<li><a class="fa fa-' . esc_attr($link['id']) . '" href="' . esc_url($link['url']) . '" title="' . esc_attr($link['id']) . '" target="_blank"></a></li>';
+                        }
 					}
 					$html .= '</ul>';
 				}
 
 				$html .= '</div>';
 			endwhile;
-
 			wp_reset_postdata();
 		} else {
 			$html .= '<p>' . __( 'No member found', 'tlp-team' ) . '</p>';
@@ -156,7 +156,7 @@ class TeamWidget extends WP_Widget {
 	public function update( $new_instance, $old_instance ) {
 
 		$instance           = [];
-		$instance['title']  = ( ! empty( $new_instance['title'] ) ) ? strip_tags( $new_instance['title'] ) : '';
+		$instance['title']  = ( ! empty( $new_instance['title'] ) ) ? wp_strip_all_tags( $new_instance['title'] ) : '';
 		$instance['member'] = ( ! empty( $new_instance['member'] ) ) ? (int) ( $new_instance['member'] ) : '';
 
 		return $instance;

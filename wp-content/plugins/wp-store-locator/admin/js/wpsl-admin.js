@@ -429,6 +429,18 @@ jQuery( document ).ready( function( $ ) {
         if ( $( "#wpsl-start-name" ).length ) {
             activateAutoComplete();
         }
+
+        // Handle the map style changes on the settings page.
+        if ( $( "#wpsl-map-style" ).val() ) {
+            tryCustomMapStyle();
+        }
+
+        // Handle clicks on the map style preview button.
+        $( "#wpsl-style-preview" ).on( "click", function() {
+            tryCustomMapStyle();
+
+            return false;
+        });
     }
 
     /**
@@ -1060,11 +1072,11 @@ jQuery( document ).ready( function( $ ) {
          * value is still set as selected after changing the hr format.
          */
         $( ".wpsl-current-period" ).each( function() {
-            periodBlock = $( this ),
-                hours 		= {
-                    "open": $( this ).find( ".wpsl-open-hour" ).val(),
-                    "close": $( this ).find( ".wpsl-close-hour" ).val()
-                };
+            periodBlock = $( this );
+            hours 		= {
+                "open": $( this ).find( ".wpsl-open-hour" ).val(),
+                "close": $( this ).find( ".wpsl-close-hour" ).val()
+            };
 
             // Set the new hour format for both dropdowns.
             $( this ).find( "select" ).html( optionList ).promise().done( function() {
@@ -1173,18 +1185,6 @@ jQuery( document ).ready( function( $ ) {
 
         map.setOptions({ styles: validStyle });
     }
-
-    // Handle the map style changes on the settings page.
-    if ( $( "#wpsl-map-style" ).val() ) {
-        tryCustomMapStyle();
-    }
-
-    // Handle clicks on the map style preview button.
-    $( "#wpsl-style-preview" ).on( "click", function() {
-        tryCustomMapStyle();
-
-        return false;
-    });
 
     /**
      * Make sure the JSON is valid.

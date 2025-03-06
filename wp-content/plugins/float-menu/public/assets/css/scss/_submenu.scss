@@ -1,0 +1,356 @@
+.floating-menu {
+  --fm-sub-space: 0px;
+  --fm-sub-box: calc(var(--fm-icon-box) * 1px);
+  --fm-sub-duration: 400;
+  --fm-sub-transition-duration: calc(var(--fm-sub-duration) * 1ms);
+  --fm-sub-function: cubic-bezier(0.25, 1, 0.5, 1);
+
+  &.-right .fm-has-sub {
+    &.fm-sub-side {
+      &:has( .fm-link:focus-within) .fm-sub,
+      &.-active .fm-sub {
+        top: calc(var(--fm-sub-box) + var(--fm-sub-space));
+        left: calc((var(--fm-sub-box) + var(--fm-sub-space)) * -1);
+      }
+
+      &.-sub-slide {
+        .fm-sub {
+          --_box: calc((var(--fm-icon-box) * 1px + var(--fm-sub-space)));
+        }
+      }
+    }
+  }
+
+  &.-sub-space {
+    --fm-sub-space: 2px;
+  }
+
+  .fm-sub {
+    position: absolute;
+    visibility: hidden;
+    opacity: 0;
+    top: -9999px;
+    left: -9999px;
+    z-index: 9;
+
+    &:after {
+      content: "";
+      position: absolute;
+      top: calc(var(--fm-sub-space) * -1);
+      left: calc(var(--fm-sub-space) * -1);
+      width: calc(100% + var(--fm-sub-space) * 2);
+      height: calc(100% + var(--fm-sub-space) * 2);
+    }
+  }
+
+
+  .fm-has-sub {
+    position: relative;
+    width: var(--fm-sub-box);
+
+    > .fm-link.-label-hidden {
+      z-index: 2;
+    }
+
+
+    & > .fm-link.-label-hidden .fm-label {
+      visibility: hidden;
+    }
+
+    &.fm-sub-circular {
+      --_offset: 0;
+
+      .fm-item {
+        position: absolute;
+        top: 0;
+        left: 0;
+
+        &:has(.fm-link:focus-visible),
+        &:hover {
+          z-index: 9;
+        }
+
+      }
+
+      
+      &.-active {
+        margin-bottom: calc(var(--_offset) * 1px + var(--fm-sub-space));
+
+        &:after {
+          content: "";
+          position: absolute;
+          top: calc(var(--_box) * 1px  * -1);
+          width: calc(var(--_box) * 1px + var(--fm-sub-box));
+          height: calc(var(--_box) * 1px * 2 + var(--fm-sub-box));
+        }
+
+        .fm-sub {
+          top: 0;
+          left: 0;
+          visibility: visible;
+          opacity: 1;
+        }
+
+        .fm-item {
+          --x: 0px;
+          --y: 0px;
+          transform: translate(var(--x), var(--y));
+        }
+      }
+
+      &.-sub-slide {
+        .fm-sub {
+          --_box: 0;
+
+          .fm-item {
+            transition: transform var(--_duration) var(--_function);
+          }
+        }
+      }
+
+      &.-sub-linear-fade {
+        .fm-sub {
+          .fm-item {
+            transition: opacity var(--_duration) var(--_function) calc(var(--_close_delay) * 1ms), transform 0s linear var(--_duration);
+          }
+        }
+
+        
+        &.-active {
+          .fm-sub {
+            .fm-item {
+              --_delay: 0;
+              --_close_delay: 0;
+              transition: opacity var(--_duration) var(--_function) calc(var(--_delay) * 1ms), transform 0s linear;
+            }
+
+          }
+        }
+      }
+
+      &.-sub-linear-slide {
+        .fm-sub {
+          .fm-item {
+            position: absolute;
+            top: 0;
+            transition-property: opacity, transform;
+            transition-duration: var(--_duration);
+            transition-timing-function: var(--_function);
+            transition-delay: calc(var(--_delay) * 1ms);
+          }
+        }
+
+        
+        &.-active {
+          .fm-sub {
+            .fm-item {
+              transition-property: opacity, transform;
+              transition-duration: var(--_duration);
+              transition-timing-function: var(--_function);
+              transition-delay: calc(var(--_delay) * 1ms);
+            }
+          }
+        }
+      }
+
+    }
+
+    &.fm-sub-side {
+      
+      &.-active {
+        .fm-sub {
+          top: calc(var(--fm-sub-box) + var(--fm-sub-space));
+          left: calc(var(--fm-sub-box) + var(--fm-sub-space));
+          visibility: visible;
+          opacity: 1;
+        }
+
+        & > .fm-link.-label-hidden + .fm-sub {
+          top: 0;
+        }
+      }
+
+    }
+
+    &.fm-sub-under {
+      --_offset: 0;
+
+      
+      &.-active {
+        margin-bottom: calc(var(--_offset) * 1px + var(--fm-sub-space));
+
+        .fm-sub {
+          position: absolute;
+          top: calc(100% + var(--fm-sub-space));
+          left: 0;
+          visibility: visible;
+          opacity: 1;
+        }
+      }
+    }
+
+    &.-sub-fade {
+      --_duration: var(--fm-sub-transition-duration);
+      --_function: var(--fm-sub-function);
+      transition: margin calc(var(--_duration) / 2) var(--_function);
+
+      .fm-sub {
+        transition: opacity var(--_duration) var(--_function),
+        visibility 0s linear var(--_duration),
+        top 0s linear var(--_duration),
+        left 0s linear var(--_duration);
+      }
+
+      
+      &.-active {
+
+        .fm-sub {
+          transition: opacity var(--_duration) var(--_function),
+          visibility 0s linear 0s,
+          left 0s linear 0s,
+          top 0s linear 0s;
+        }
+      }
+    }
+
+    &.-sub-slide {
+      --_duration: calc(var(--fm-sub-transition-duration) / 2);
+      --_function: var(--fm-sub-function);
+      transition: margin var(--fm-sub-transition-duration) var(--_function);
+
+      .fm-sub {
+        --_box: calc((var(--fm-icon-box) * 1px + var(--fm-sub-space)) * -1);
+        transform: translateX(var(--_box));
+        transition: opacity var(--_duration) var(--_function),
+        transform var(--_duration) var(--_function),
+        visibility 0s linear var(--_duration),
+        top 0s linear var(--_duration),
+        left 0s linear var(--_duration);
+      }
+
+      
+      &.-active {
+        .fm-sub {
+          transform: translateX(0);
+          transition: opacity var(--_duration) var(--_function),
+          transform var(--_duration) var(--_function),
+          visibility 0s linear 0s,
+          left 0s linear 0s,
+          top 0s linear 0s;
+        }
+      }
+
+      &.fm-sub-under {
+        .fm-sub {
+          transform: translateY(var(--_box));
+        }
+
+        
+        &.-active {
+          .fm-sub {
+            transform: translateY(0);
+          }
+        }
+      }
+    }
+
+    &.-sub-linear-fade {
+      --_duration: var(--fm-sub-transition-duration);
+      --_function: var(--fm-sub-function);
+      transition: margin var(--_duration) var(--_function);
+
+      .fm-sub {
+
+        transition: opacity 0s linear var(--_duration),
+        visibility 0s linear var(--_duration),
+        left 0s linear var(--_duration),
+        top 0s linear var(--_duration);
+
+        .fm-item {
+          --_delay: 0;
+          --_close_delay: 0;
+          opacity: 0;
+          transition: opacity var(--_duration) var(--_function) calc(var(--_close_delay) * 1ms);
+        }
+      }
+
+      
+      &.-active {
+        .fm-sub {
+          transition: opacity 0s linear 0s,
+          visibility 0s linear 0s,
+          left 0s linear 0s,
+          top 0s linear 0s;
+
+          .fm-item {
+            transition: opacity var(--_duration) var(--_function) calc(var(--_delay) * 1ms);
+            opacity: 1;
+
+          }
+
+        }
+      }
+    }
+
+    &.-sub-linear-slide {
+      --_duration: var(--fm-sub-transition-duration);
+      --_function: var(--fm-sub-function);
+      transition: margin var(--_duration) var(--_function);
+
+      .fm-sub {
+
+        transition: opacity 0s linear var(--_duration),
+        visibility 0s linear var(--_duration),
+        left 0s linear var(--_duration),
+        top 0s linear var(--_duration);
+
+        .fm-item {
+          --_delay: 0;
+          --_close_delay: 0;
+          --_top: -100%;
+          position: relative;
+          top: var(--_top);
+          opacity: 0;
+          transition-property: top, opacity, left;
+          transition-duration: var(--_duration);
+          transition-timing-function: var(--_function);
+          //transition-delay: calc(var(--_close_delay) * 1ms);
+        }
+      }
+
+      
+      &.-active {
+
+        .fm-sub {
+          transition: opacity 0s linear 0s,
+          visibility 0s linear 0s,
+          left 0s linear 0s,
+          top 0s linear 0s;
+
+          .fm-item {
+            opacity: 1;
+            top: 0;
+            transition-property: top, opacity, left;
+            transition-duration: var(--_duration);
+            transition-timing-function: var(--_function);
+          }
+        }
+      }
+
+    }
+
+  }
+
+}
+
+@keyframes fmItemSub {
+  0% {
+    overflow: unset;
+  }
+  90% {
+    overflow: unset;
+  }
+  100% {
+    overflow: hidden;
+  }
+}

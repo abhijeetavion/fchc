@@ -18,15 +18,20 @@ if($_POST)
             exit;
         }
     }
-    if(isset($_POST['textFieldButton2']))
-    {
-        if(!isset($_REQUEST['_wpnonce'])||!wp_verify_nonce($_REQUEST['_wpnonce'],'bulk_actions_ips') ){
+    // if(isset($_POST['textFieldButton2']))
+    // {
+    //     if(!isset($_REQUEST['_wpnonce'])||!wp_verify_nonce($_REQUEST['_wpnonce'],'bulk_actions_ips') ){
+    //         wp_nonce_ays( 'bulk_actions_ips' );
+    //         exit;
+    //     }
+    // }
+	if (isset($_POST['apply_ips_bulk_actions'])){
+		if (isset($_POST['ips_bulk_actions_snippet'])){
+			if(!isset($_REQUEST['_wpnonce'])||!wp_verify_nonce($_REQUEST['_wpnonce'],'bulk_actions_ips') )
+    	{
             wp_nonce_ays( 'bulk_actions_ips' );
             exit;
         }
-    }
-	if (isset($_POST['apply_ips_bulk_actions'])){
-		if (isset($_POST['ips_bulk_actions_snippet'])){
 			$ips_bulk_actions_snippet=$_POST['ips_bulk_actions_snippet'];
 			if (isset($_POST['xyz_ips_snippet_ids']))
 				$xyz_ips_snippet_ids = $_POST['xyz_ips_snippet_ids'];
@@ -205,7 +210,8 @@ if($xyz_ips_message == 8)
 	</thead>
 	<tbody>
 		<?php
-		if( count($entries)>0 ) {
+		if( !empty($entries) )//if( count($entries)>0 )
+		 {
 			$count=1;
 			$class = '';
 			foreach( $entries as $entry ) {

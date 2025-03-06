@@ -1,0 +1,93 @@
+.floating-menu {
+  --fm-z-index: 9999;
+  --fm-offset: 0;
+
+  --fm-color: #E86E2C;
+  --fm-hover-color: #ffffff;
+  --fm-background: #1b094f;
+  --fm-hover-background: #E86E2C;
+  --fm-border-radius: 0;
+
+  --fm-icon-size: 24;
+  --fm-icon-box: calc(var(--fm-icon-size) * 2);
+  --fm-icon-radius: 0;
+
+  --fm-label-radius: 0;
+  --fm-text-radius: 0;
+
+
+  position: fixed;
+  visibility: hidden;
+  pointer-events: none;
+  z-index: var(--fm-z-index);
+  box-sizing: border-box;
+
+  &.-left {
+    left: var(--fm-offset);
+  }
+
+  &.-right {
+    right: var(--fm-offset);
+  }
+
+  &.-top {
+    top: var(--fm-offset);
+  }
+
+  &.-bottom {
+    bottom: var(--fm-offset);
+  }
+
+  &.-center {
+    top: 50%;
+  }
+
+  &.-round {
+    --fm-border-radius: calc(var(--fm-icon-box) / 2 * 1px);
+    --fm-icon-radius: var(--fm-border-radius);
+    --fm-label-radius: var(--fm-border-radius);
+    --fm-text-radius: 5px;
+  }
+
+  &.-rounded {
+    --_radius: 5px;
+    --fm-border-radius: var(--_radius);
+    --fm-icon-radius: var(--fm-border-radius);
+    --fm-label-radius: var(--fm-border-radius);
+    --fm-text-radius: 5px;
+  }
+
+  &.-rounded-out {
+    --_radius: 5px;
+    --fm-border-radius: 0 var(--_radius) var(--_radius) 0;
+    --fm-icon-radius: var(--fm-border-radius);
+    --fm-label-radius: var(--_radius);
+    --fm-text-radius: 5px;
+  }
+
+  &.-right.-rounded-out {
+    --fm-border-radius: var(--_radius) 0 0 var(--_radius);
+  }
+
+  &.-side-space {
+    --fm-offset: 2px;
+  }
+
+  @media print {
+    display: none;
+  }
+
+  * {
+    box-sizing: border-box;
+  }
+
+  &.fm-ready {
+    visibility: visible;
+    pointer-events: auto;
+  }
+
+  &.fm-hidden {
+    display: none;
+  }
+
+}

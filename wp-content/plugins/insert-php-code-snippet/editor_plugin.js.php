@@ -14,7 +14,7 @@ $buttonName = 'xyz_ips_snippet_selecter';
 
 $xyz_snippets_arr=$wpdb->get_results($wpdb->prepare( "SELECT id,title FROM ".$wpdb->prefix."xyz_ips_short_code WHERE status=%d  ORDER BY id DESC",1),ARRAY_A );
 // 		print_r($xyz_snippets_arr);
-if(count($xyz_snippets_arr)==0)
+if(empty($xyz_snippets_arr))//if(count($xyz_snippets_arr)==0)
 die;
 
 if(floatval(get_bloginfo('version'))>=3.9)

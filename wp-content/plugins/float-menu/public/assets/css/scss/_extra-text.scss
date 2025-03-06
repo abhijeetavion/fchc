@@ -1,0 +1,30 @@
+.floating-menu {
+  --fm-text_width: max-content;
+  --fm-text_size: 16px;
+
+  .fm-extra-text {
+    --text_margin: 0;
+    position: absolute;
+    padding: calc(var(--fm-icon-box) * 1px + 5px) 12px 12px 12px;
+    opacity: 0;
+    visibility: hidden;
+    top: -9999px;
+    left: -9999px;
+    width: var(--fm-text_width);
+    font-size: var(--fm-text_size);
+    background-color: var(--fm-background);
+    color: var(--fm-color);
+    transition: opacity var(--fm-link-transition-duration) var(--fm-link-function);
+    border-radius: var(--fm-text-radius);
+    margin-inline: calc(var(--text_margin) * 1px);
+
+    p {
+      margin: 0;
+      line-height: 1.125;
+
+      + p {
+        margin-top: 12px
+      }
+    }
+  }
+}

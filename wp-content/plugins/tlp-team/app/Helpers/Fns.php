@@ -53,6 +53,12 @@ class Fns {
 		return true;
 	}
 
+	public static function getNonce(  ) {
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		return isset( $_REQUEST[ self::nonceID() ] ) ? sanitize_text_field( wp_unslash( $_REQUEST[ self::nonceID() ] ) ) : null;
+
+    }
+
 	/**
 	 * Nonce text.
 	 *
@@ -131,6 +137,7 @@ class Fns {
 			return new \WP_Error(
 				'brock',
 				sprintf(
+                        /* translators: %s is the file name */
 					__( '%s file not found', 'tlp-team' ),
 					esc_html( $resources_path )
 				)
@@ -166,7 +173,6 @@ class Fns {
 				$html .= $tlpField->Field( $fieldKey, $field );
 			}
 		}
-
 		return $html;
 	}
 
@@ -351,7 +357,6 @@ class Fns {
 				}
 			}
 		}
-
 		return $newValue;
 	}
 
@@ -435,8 +440,8 @@ class Fns {
 		$html     = null;
 		$settings = get_option( rttlp_team()->options['settings'] );
 		$fields   = isset( $settings['detail_page_fields'] ) ? $settings['detail_page_fields'] : [];
-
 		$image_ids = get_post_meta( $post_id, 'tlp_team_gallery' );
+
 		if ( ! empty( $image_ids ) && is_array( $image_ids ) ) {
 			$fID = get_post_thumbnail_id( $post_id );
 			if ( $fID && ! in_array( 'remove_feature_image', $fields ) ) {
@@ -450,11 +455,14 @@ class Fns {
 			foreach ( $image_ids as $id ) {
 				$img_alt  = trim( wp_strip_all_tags( get_post_meta( $id, '_wp_attachment_image_alt', true ) ) );
 				$alt_tag  = ! empty( $img_alt ) ? $img_alt : get_the_title( $post_id );
+                $image_html = wp_get_attachment_image( $id, 'large', false, [
+                    'alt' => $alt_tag
+                ]);
 				$full_url = wp_get_attachment_image_src( $id, 'large' );
 				if ( isset( $full_url[0] ) ) {
 					$html .= '<div class="swiper-slide">';
 					$html .= '<div class="profile-img-wrapper">';
-					$html .= "<img class='profile-img' src='{$full_url[0]}' alt='" . $alt_tag . "'>";
+					$html .=  $image_html;;
 					$html .= '</div>';
 					$html .= '</div>';
 				}
@@ -466,10 +474,11 @@ class Fns {
 			$html .= '</div>';
 		} else {
 			if ( has_post_thumbnail( $post_id ) ) {
+                $html .= '<div class="tlp-single-img-wrapper">';
 				$html .= get_the_post_thumbnail( $post_id, 'large' );
+                $html .='</div>';
 			}
 		}
-
 		return $html;
 	}
 
@@ -542,7 +551,7 @@ class Fns {
 					[
 						'taxonomy'   => $taxonomy,
 						'orderby'    => 'meta_value_num',
-						'meta_key'   => '_rt_order',
+						'meta_key'   => '_rt_order', // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_key
 						'order'      => 'ASC',
 						'hide_empty' => false,
 					]
@@ -633,7 +642,12 @@ class Fns {
 
 		$terms = [];
 		if ( $taxonomy ) {
-			$termList = get_terms( [ rttlp_team()->taxonomies[ $taxonomy ] ], [ 'hide_empty' => 0 ] );
+            /*old code*/
+//			$termList = get_terms( [ rttlp_team()->taxonomies[ $taxonomy ] ], [ 'hide_empty' => 0 ] );
+            $termList = get_terms( array(
+	            'taxonomy'   => rttlp_team()->taxonomies[ $taxonomy ],
+	            'hide_empty' => false,
+            ) );
 			if ( is_array( $termList ) && ! empty( $termList ) && empty( $termList['errors'] ) ) {
 				foreach ( $termList as $term ) {
 					$terms[ $term->term_id ] = $term->name;
@@ -795,14 +809,6 @@ class Fns {
 	}
 
 
-	// public static function get_ttp_short_description( $short_bio, $character_limit = null, $after_desc = null ) {
-	// return $character_limit && strlen( $short_bio ) > $character_limit ? substr(
-	// strip_tags( $short_bio ),
-	// 0,
-	// $character_limit
-	// ) . $after_desc : $short_bio; // apply_filters( 'the_content', $short_bio )
-	// }
-
 	public static function get_ttp_short_description( $short_bio, $character_limit, $after_desc ) {
 		if ( empty( $character_limit ) ) {
 			return $short_bio;
@@ -825,13 +831,13 @@ class Fns {
 		} else {
 			$text .= $short_bio;
 		}
-
 		$text = $text . $after_desc;
-
 		return $text;
 	}
 
+
 	public static function get_formatted_contact_info( $items, $fields ) {
+
 		$contact_info = null;
 		if ( ! empty( $items['email'] ) && in_array( 'email', $fields, true ) ) {
 			$contact_info .= '<li class="tlp-email"><i class="far fa-envelope"></i><a href="mailto:' . esc_attr( $items['email'] ) . '"><span class="tlp-email">' . esc_html( $items['email'] ) . '</span></a></li>';
@@ -851,8 +857,8 @@ class Fns {
 		if ( ! empty( $items['web_url'] ) && in_array( 'web_url', $fields, true ) ) {
 			$contact_info .= '<li class="tlp-website"><a target="_blank" href="' . esc_url( $items['web_url'] ) . '"><i class="fa fa-globe"></i><span class="tlp-url">' . esc_url( $items['web_url'] ) . '</span></a></li>';
 		}
-
 		return $contact_info ? '<div class="contact-info"><ul>' . $contact_info . '</ul></div>' : null;
+
 	}
 
 	public static function get_formatted_designation( $designation, $fields, $experience_year = null ) {
@@ -863,45 +869,61 @@ class Fns {
 		if ( in_array( 'designation', $fields ) && $designation ) {
 			$html .= '<div class="tlp-position">' . $designation . $exp . '</div>';
 		}
-
 		return $html;
 	}
 
 	public static function get_formatted_short_bio( $short_bio, $fields ) {
-		$html = null;
 
+		$html = null;
 		if ( $short_bio && in_array( 'short_bio', $fields, true ) ) {
+
 			if ( class_exists( 'Avada' ) ) {
 				$html .= '<div class="short-bio avada-support">' . apply_filters( 'the_content', self::htmlKses( $short_bio, 'basic' ) ) . '</div>';
 			} else {
 				$html .= '<div class="short-bio">' . self::htmlKses( wpautop( $short_bio ), 'basic' ) . '</div>';
 			}
 		}
-
 		return $html;
+	}
+
+    public static function get_formatted_readmore_text( $fields, $read_more_btn_text, $anchorClass, $mID, $target, $title, $pLink ) {
+        $html = '';
+        if (in_array('readmore_btn', $fields, true) && $read_more_btn_text) {
+            $html .= '<a class="rt-ream-me-btn' . esc_attr($anchorClass) . '" data-id="' . absint($mID) . '" target="' . esc_attr($target) . '" title="' . esc_attr($title) . '" href="' . esc_url($pLink) . '">' . esc_html($read_more_btn_text) . '</a>';
+        }
+        return $html;
+    }
+	public static function get_formatted_resume( $fields, $ttp_my_resume, $my_resume_text ) {
+        $html = '';
+        if (in_array('resume_btn', $fields, true) && $ttp_my_resume && $my_resume_text ) {
+            $html .= '<a href="' . esc_url($ttp_my_resume) . '" class="rt-resume-btn">' . esc_html($my_resume_text) . '</a>';
+        }
+        return $html;
+	}
+
+	public static function get_formatted_hire_me( $fields, $ttp_hire_me, $hire_me_text ) {
+        $html = '';
+        if (in_array('hire_me_btn', $fields, true) && $hire_me_text && $ttp_hire_me ) {
+            $html .= '<a href="' . esc_url($ttp_hire_me) . '" class="rt-hire-btn">' . esc_html($hire_me_text) . '</a>';
+        }
+        return $html;
 	}
 
 	public static function get_formatted_skill( $tlp_skill, $fields ) {
 		if ( ! rttlp_team()->has_pro() ) {
 			return;
 		}
-
 		$html = null;
-
 		if ( is_array( $tlp_skill ) && ! empty( $tlp_skill ) && in_array( 'skill', $fields, true ) ) {
 			$html .= '<div class="tlp-team-skill">';
-
 			foreach ( $tlp_skill as $id => $skill ) {
 				if ( ! isset( $skill['id'] ) ) {
 					continue;
 				}
-
-				$html .= '<div class="skill_name"> ' . esc_html( $skill['id'] ) . ' </div><div class="skill-prog tlp-tooltip" title="' . absint( $skill['percent'] ) . '%"><div class="fill" data-progress-animation="' . absint( $skill['percent'] ) . '%"></div></div>';
+				$html .= '<div class="skill_name"> ' . esc_html( $skill['id'] ) . ' </div><div class="skill-prog tlp-tooltip"><div class="fill" data-progress-animation="' . absint( $skill['percent'] ) . '%"><span class="percent-text">'. esc_html( $skill['percent'] ) .'%</span></div></div>';
 			}
-
 			$html .= '</div>';
 		}
-
 		return $html;
 	}
 
@@ -909,10 +931,12 @@ class Fns {
 		$html = null;
 
 		if ( ! empty( $sLink ) && is_array( $sLink ) && in_array( 'social', $fields, true ) ) {
+
 			$html .= '<div class="social-icons">';
 
 			foreach ( $sLink as $id => $itemLink ) {
-				$lURL = ! empty( $itemLink['url'] ) ? esc_url( $itemLink['url'] ) : null;
+
+				$lURL = ! empty( $itemLink['url'] ) ? esc_url( $itemLink['url'] ) : '#';
 				$lID  = ! empty( $itemLink['id'] ) ? esc_html( $itemLink['id'] ) : null;
 
 				if ( 'envelope-o' === $lID ) {
@@ -927,7 +951,7 @@ class Fns {
 						$icon_class = 'fab fa-facebook-f';
 						break;
 					case 'twitter':
-						$icon_class = 'fab fa-twitter';
+						$icon_class = 'fab fa-x-twitter';
 						break;
 					case 'linkedin':
 						$icon_class = 'fab fa-linkedin';
@@ -974,7 +998,7 @@ class Fns {
 				}
 
 				if ( 'google-plus' !== $lID && $icon_class ) {
-					$html .= '<a href="' . esc_url( $lURL ) . '" title="' . esc_attr( $lID ) . '" target="_blank"><i class="' . esc_attr( $icon_class ) . '"></i></a>';
+					$html .= '<a href="' . $lURL . '" title="' . esc_attr( $lID ) . '" target="_blank"><i class="' . esc_attr( $icon_class ) . '"></i></a>';
 				}
 			}
 			$html .= '</div>';
@@ -984,11 +1008,18 @@ class Fns {
 	}
 
 	public static function layoutStyleGenerator( $layoutID, $scMeta, $scID = null ) {
+
+
 		$css  = null;
 		$css .= '<style>';
+
 		// Variable
 		if ( $scID ) {
+
 			$primaryColor   = ( isset( $scMeta['primary_color'][0] ) ? $scMeta['primary_color'][0] : null );
+            $hireme_btn     = ! empty( $scMeta['hireme_btn_style'][0] ) ? unserialize( $scMeta['hireme_btn_style'][0] ) : null;
+            $resume_btn     = ! empty( $scMeta['resume_btn_style'][0] ) ? unserialize( $scMeta['resume_btn_style'][0] ) : null;
+            $readmore_btn   = ! empty( $scMeta['readmore_btn_style'][0] ) ? unserialize( $scMeta['readmore_btn_style'][0] ) : null;
 			$button         = ! empty( $scMeta['ttp_button_style'][0] ) ? unserialize( $scMeta['ttp_button_style'][0] ) : null;
 			$popupBg        = ! empty( $scMeta['ttp_popup_bg_color'][0] ) ? $scMeta['ttp_popup_bg_color'][0] : null;
 			$name           = ! empty( $scMeta['name'][0] ) ? unserialize( $scMeta['name'][0] ) : null;
@@ -1006,8 +1037,13 @@ class Fns {
 			$mObg           = ! empty( $scMeta['overlay_rgba_bg'][0] ) ? unserialize( $scMeta['overlay_rgba_bg'][0] ) : null;
 			$itemP          = ! empty( $scMeta['overlay_padding'][0] ) ? intval( $scMeta['overlay_padding'][0] ) : null;
 			$gutter         = ! empty( $scMeta['ttp_gutter'][0] ) ? absint( $scMeta['ttp_gutter'][0] ) : null;
+
 		} else {
+
 			$primaryColor   = ! empty( $scMeta['primary_color'] ) ? $scMeta['primary_color'] : null;
+            $hireme_btn     = ! empty( $scMeta['hireme_btn_style'] ) ? $scMeta['hireme_btn_style'] : null;
+            $resume_btn     = ! empty( $scMeta['resume_btn_style'] ) ? $scMeta['resume_btn_style'] : null;
+            $readmore_btn   = ! empty( $scMeta['readmore_btn_style'] ) ? $scMeta['readmore_btn_style'] : null;
 			$button         = ! empty( $scMeta['ttp_button_style'] ) ? $scMeta['ttp_button_style'] : null;
 			$popupBg        = ! empty( $scMeta['ttp_popup_bg_color'] ) ? $scMeta['ttp_popup_bg_color'] : null;
 			$name           = ! empty( $scMeta['name'] ) ? $scMeta['name'] : null;
@@ -1025,13 +1061,15 @@ class Fns {
 			$mObg           = ! empty( $scMeta['overlay_rgba_bg'] ) ? $scMeta['overlay_rgba_bg'] : null;
 			$itemP          = ! empty( $scMeta['overlay_padding'] ) ? intval( $scMeta['overlay_padding'] ) : null;
 			$gutter         = ! empty( $scMeta['ttp_gutter'] ) ? absint( $scMeta['ttp_gutter'] ) : null;
+
 		}
 		if ( $primaryColor ) {
 			$css .= "#{$layoutID} .single-team-area .overlay a.detail-popup,
 					#{$layoutID} .contact-info ul li i{";
 			$css .= 'color:' . $primaryColor . ';';
 			$css .= '}';
-			$css .= "#{$layoutID} .single-team-area .skill-prog .fill,.tlp-team #{$layoutID} .tlp-content,
+			$css .= "#{$layoutID} .single-team-area .skill-prog .fill,
+			         .tlp-team #{$layoutID} .tlp-content,
 					.tlp-tooltip + .tooltip > .tooltip-inner,
 					#{$layoutID} .layout1 .tlp-content,
 					#{$layoutID} .layout11 .single-team-area .tlp-title,
@@ -1084,8 +1122,8 @@ class Fns {
 			$css .= "#rt-smart-modal-container.rt-modal-{$scID} .rt-smart-modal-header a.rt-smart-modal-close{";
 			$css .= '-webkit-text-stroke: 6px ' . self::TLPhex2rgba( $primaryColor ) . ';';
 			$css .= '}';
-		}
 
+		}
 		/* button */
 		if ( ! empty( $button ) ) {
 			if ( ! empty( $button['bg'] ) ) {
@@ -1159,6 +1197,164 @@ class Fns {
 			}
 		}
 
+
+        // ReadMore Button.
+        if ( ! empty( $readmore_btn ) ) {
+            if ( ! empty( $readmore_btn['bg'] ) ) {
+                $css .= "#{$layoutID} .readmore-btn .rt-ream-me-btn{";
+                $css .= "background-color: {$readmore_btn['bg']};";
+                $css .= '}';
+            }
+
+            if ( ! empty( $readmore_btn['hover_bg'] ) ) {
+                $css .= "#{$layoutID} .readmore-btn .rt-ream-me-btn:hover{";
+                $css .= "background-color: {$readmore_btn['hover_bg']};";
+                $css .= '}';
+            }
+
+            if ( ! empty( $readmore_btn['border_color'] ) ) {
+                $css .= "#{$layoutID} .readmore-btn .rt-ream-me-btn{";
+                $css .= "border-color: {$readmore_btn['border_color']};";
+                $css .= '}';
+            }
+
+            if ( ! empty( $readmore_btn['text'] ) ) {
+                $css .= "#{$layoutID} .readmore-btn .rt-ream-me-btn{";
+                $css .= "color: {$readmore_btn['text']};";
+                $css .= '}';
+            }
+
+            if ( ! empty( $readmore_btn['hover_text'] ) ) {
+                $css .= "#{$layoutID} .readmore-btn .rt-ream-me-btn:hover{";
+                $css .= "color: {$readmore_btn['hover_text']};";
+                $css .= '}';
+            }
+
+            if ( ! empty( $readmore_btn['border_hover_color'] ) ) {
+                $css .= "#{$layoutID} .readmore-btn .rt-ream-me-btn:hover{";
+                $css .= "border-color: {$readmore_btn['border_hover_color']};";
+                $css .= '}';
+            }
+
+            if ( ! empty( $readmore_btn['border_width'] ) ) {
+                $css .= "#{$layoutID} .readmore-btn .rt-ream-me-btn{";
+                $css .= "border-width: {$readmore_btn['border_width']}px;";
+                $css .= '}';
+            }
+
+            if ( ! empty( $readmore_btn['border_radius'] ) ) {
+                $css .= "#{$layoutID} .readmore-btn .rt-ream-me-btn{";
+                $css .= "border-radius: {$readmore_btn['border_radius']}px;";
+                $css .= '}';
+            }
+
+        }
+
+        /*  Resume Button */
+
+        if ( ! empty( $hireme_btn ) ) {
+            if ( ! empty( $hireme_btn['bg'] ) ) {
+                $css .= "#{$layoutID} .readmore-btn .rt-hire-btn{";
+                $css .= "background-color: {$hireme_btn['bg']};";
+                $css .= '}';
+            }
+
+            if ( ! empty( $hireme_btn['hover_bg'] ) ) {
+                $css .= "#{$layoutID} .readmore-btn .rt-hire-btn:hover{";
+                $css .= "background-color: {$hireme_btn['hover_bg']};";
+                $css .= '}';
+            }
+
+            if ( ! empty( $hireme_btn['border_color'] ) ) {
+                $css .= "#{$layoutID} .readmore-btn .rt-hire-btn{";
+                $css .= "border-color: {$hireme_btn['border_color']};";
+                $css .= '}';
+            }
+
+            if ( ! empty( $hireme_btn['text'] ) ) {
+                $css .= "#{$layoutID} .readmore-btn .rt-hire-btn{";
+                $css .= "color: {$hireme_btn['text']};";
+                $css .= '}';
+            }
+
+            if ( ! empty( $hireme_btn['hover_text'] ) ) {
+                $css .= "#{$layoutID} .readmore-btn .rt-hire-btn:hover{";
+                $css .= "color: {$hireme_btn['hover_text']};";
+                $css .= '}';
+            }
+
+            if ( ! empty( $hireme_btn['border_hover_color'] ) ) {
+                $css .= "#{$layoutID} .readmore-btn .rt-hire-btn:hover{";
+                $css .= "border-color: {$hireme_btn['border_hover_color']};";
+                $css .= '}';
+            }
+
+            if ( ! empty( $hireme_btn['border_width'] ) ) {
+                $css .= "#{$layoutID} .readmore-btn .rt-hire-btn{";
+                $css .= "border-width: {$hireme_btn['border_width']}px;";
+                $css .= '}';
+            }
+
+            if ( ! empty( $hireme_btn['border_radius'] ) ) {
+                $css .= "#{$layoutID} .readmore-btn .rt-hire-btn{";
+                $css .= "border-radius: {$hireme_btn['border_radius']}px;";
+                $css .= '}';
+            }
+        }
+
+        /*  Hireme Button */
+
+        if ( ! empty( $resume_btn ) ) {
+            if ( ! empty( $resume_btn['bg'] ) ) {
+                $css .= "#{$layoutID} .readmore-btn .rt-resume-btn{";
+                $css .= "background-color: {$resume_btn['bg']};";
+                $css .= '}';
+            }
+
+            if ( ! empty( $resume_btn['hover_bg'] ) ) {
+                $css .= "#{$layoutID} .readmore-btn .rt-resume-btn:hover{";
+                $css .= "background-color: {$resume_btn['hover_bg']};";
+                $css .= '}';
+            }
+
+            if ( ! empty( $resume_btn['border_color'] ) ) {
+                $css .= "#{$layoutID} .readmore-btn .rt-resume-btn{";
+                $css .= "border-color: {$resume_btn['border_color']};";
+                $css .= '}';
+            }
+
+            if ( ! empty( $resume_btn['text'] ) ) {
+                $css .= "#{$layoutID} .readmore-btn .rt-resume-btn{";
+                $css .= "color: {$resume_btn['text']};";
+                $css .= '}';
+            }
+
+            if ( ! empty( $resume_btn['hover_text'] ) ) {
+                $css .= "#{$layoutID} .readmore-btn .rt-resume-btn:hover{";
+                $css .= "color: {$resume_btn['hover_text']};";
+                $css .= '}';
+            }
+
+            if ( ! empty( $resume_btn['border_hover_color'] ) ) {
+                $css .= "#{$layoutID} .readmore-btn .rt-resume-btn:hover{";
+                $css .= "border-color: {$resume_btn['border_hover_color']};";
+                $css .= '}';
+            }
+
+            if ( ! empty( $resume_btn['border_width'] ) ) {
+                $css .= "#{$layoutID} .readmore-btn .rt-resume-btn{";
+                $css .= "border-width: {$resume_btn['border_width']}px;";
+                $css .= '}';
+            }
+
+            if ( ! empty( $resume_btn['border_radius'] ) ) {
+                $css .= "#{$layoutID} .readmore-btn .rt-resume-btn{";
+                $css .= "border-radius: {$resume_btn['border_radius']}px;";
+                $css .= '}';
+            }
+        }
+
+
 		/* gutter */
 		if ( $gutter ) {
 			$css    .= "#{$layoutID} [class*='rt-col-'] {";
@@ -1193,6 +1389,7 @@ class Fns {
 		/* popup background color */
 		if ( $popupBg ) {
 			// $id = str_replace("rt-team-container-", "", $layoutID);
+
 			$css .= "#tlp-popup-wrap.tlp-popup-wrap-{$scID} .tlp-popup-navigation-wrap,
 					#tlp-modal.tlp-modal-{$scID} .md-content,
 					#tlp-modal.tlp-modal-{$scID} .md-content > .tlp-md-content-holder .tlp-md-content{";
@@ -1379,16 +1576,21 @@ class Fns {
 			require_once ABSPATH . '/wp-admin/includes/file.php';
 			WP_Filesystem();
 		}
-
 		$upload_dir     = wp_upload_dir();
 		$upload_basedir = $upload_dir['basedir'];
 		$cssFile        = $upload_basedir . '/tlp-team/team-sc.css';
 		if ( $css = self::render( 'sc-css', compact( 'scID' ), true ) ) {
+
 			$css = sprintf( '/*sc-%2$d-start*/%1$s/*sc-%2$d-end*/', $css, $scID );
+
 			if ( file_exists( $cssFile ) && ( $oldCss = $wp_filesystem->get_contents( $cssFile ) ) ) {
 				if ( strpos( $oldCss, '/*sc-' . $scID . '-start' ) !== false ) {
-					$oldCss = preg_replace( '/\/\*sc-' . $scID . '-start[\s\S]+?sc-' . $scID . '-end\*\//', '', $oldCss );
-					$oldCss = preg_replace( "/(^[\r\n]*|[\r\n]+)[\s\t]*[\r\n]+/", '', $oldCss );
+                    if (!empty($oldCss)) {
+                        $oldCss = preg_replace('/\/\*sc-' . $scID . '-start[\s\S]+?sc-' . $scID . '-end\*\//', '', $oldCss);
+                        $oldCss = preg_replace("/(^[\r\n]*|[\r\n]+)[\s\t]*[\r\n]+/", '', $oldCss);
+                    } else {
+                        $oldCss = '';
+                    }
 				}
 				$css = $oldCss . $css;
 			} elseif ( ! file_exists( $cssFile ) ) {
@@ -1396,6 +1598,7 @@ class Fns {
 				$wp_filesystem->mkdir( $upload_basedir_trailingslashit . 'tlp-team' );
 			}
 			if ( ! $wp_filesystem->put_contents( $cssFile, $css ) ) {
+                /*  phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log */
 				error_log( print_r( 'Team: Error Generated css file ', true ) );
 			}
 		}
@@ -1408,16 +1611,28 @@ class Fns {
 	 *
 	 * @return void
 	 */
-	public static function removeGeneratorShortcodeCss( $scID ) {
-		$upload_dir     = wp_upload_dir();
-		$upload_basedir = $upload_dir['basedir'];
-		$cssFile        = $upload_basedir . '/tlp-team/team-sc.css';
-		if ( file_exists( $cssFile ) && ( $oldCss = file_get_contents( $cssFile ) ) && strpos( $oldCss, '/*sc-' . $scID . '-start' ) !== false ) {
-			$css = preg_replace( '/\/\*sc-' . $scID . '-start[\s\S]+?sc-' . $scID . '-end\*\//', '', $oldCss );
-			$css = preg_replace( "/(^[\r\n]*|[\r\n]+)[\s\t]*[\r\n]+/", '', $css );
-			file_put_contents( $cssFile, $css );
-		}
-	}
+    public static function removeGeneratorShortcodeCss( $scID ) {
+        $upload_dir     = wp_upload_dir();
+        $upload_basedir = $upload_dir['basedir'];
+        $cssFile        = $upload_basedir . '/tlp-team/team-sc.css';
+        // phpcs:ignore WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents
+        if ( file_exists( $cssFile ) ) {
+            $oldCss = file_get_contents( $cssFile ); //phpcs:ignore WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents
+            if ( $oldCss !== false && strpos( $oldCss, '/*sc-' . $scID . '-start' ) !== false ) {
+                // Ensure $oldCss is a string before passing to preg_replace
+                $css = preg_replace('/\/\*sc-' . $scID . '-start[\s\S]+?sc-' . $scID . '-end\*\//', '', $oldCss);
+
+                // Ensure $css is a string before cleaning up line breaks
+                if (!empty($css)) {
+                    $css = preg_replace("/(^[\r\n]*|[\r\n]+)[\s\t]*[\r\n]+/", '', $css);
+                } else {
+                    $css = ''; // Default to an empty string if preg_replace returns null
+                }
+                // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_file_put_contents
+                file_put_contents( $cssFile, $css );
+            }
+        }
+    }
 
 	public static function rt_plugin_team_sc_pro_information() {
 		?>
@@ -1612,6 +1827,7 @@ class Fns {
 	 */
 	public static function print_html( $html, $allHtml = false ) {
 		if ( $allHtml ) {
+			// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 			echo stripslashes_deep( $html );
 		} else {
 			echo wp_kses_post( stripslashes_deep( $html ) );

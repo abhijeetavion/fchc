@@ -2,8 +2,8 @@
 /**
  * Functions
  *
- * @package   PUM
- * @copyright Copyright (c) 2023, Code Atlantic LLC
+ * @package   PopupMaker
+ * @copyright Copyright (c) 2024, Code Atlantic LLC
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -18,6 +18,7 @@ require_once 'functions/newsletter.php';
 
 /** Utility Functions */
 require_once 'functions/utils/cache.php';
+require_once 'functions/utils/filesystem.php';
 require_once 'functions/utils/format.php';
 require_once 'functions/utils/options.php';
 require_once 'functions/utils/template.php';

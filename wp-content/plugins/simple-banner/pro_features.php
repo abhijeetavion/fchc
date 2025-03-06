@@ -1,6 +1,7 @@
-<div style="padding: 0 10px;border: 1px solid #24282e;border-radius: 10px;background-color: #fafafa;">
+<!-- <span style="color: limegreen;">NEW</span> -->
+<div id="pro_section<?php echo $banner_id ?>" class="simple-banner-settings-section" style="<?php echo $banner_id === '' ? '' : 'display:none;' ?>padding: 0 10px;border: 2px solid gold;border-radius: 10px;background-color: #fafafa;">
 
-    <h2><span style="padding-right:10px">Pro Features<span>
+    <h2><span style="padding-right:10px">Pro Features</span>
         <?php
             if (!get_option('pro_version_enabled')) {
                 echo '<a class="button-primary" href="https://rpetersendev.gumroad.com/l/simple-banner" target="_blank">Purchase Pro License</a>';
@@ -18,63 +19,43 @@
                 <input type="text" style="border: 2px solid gold;border-radius: 5px;width:60%;" id="simple_banner_pro_license_key" name="simple_banner_pro_license_key" value="<?php echo esc_attr(get_option('simple_banner_pro_license_key')); ?>" />
             </td>
         </tr>
-        <!-- Permissions -->
-        <?php if ( in_array( 'administrator', (array) wp_get_current_user()->roles ) ): ?>
-            <tr valign="top">
-                <th scope="row">
-                    Permissions
-                    <div>Allow roles to edit Simple Banner.</div>
-                </th>
-                <td>
-                    <div id="simple_banner_pro_permissions">
-                        <?php
-                            $roles = get_editable_roles();
-                            $disabled = !get_option('pro_version_enabled');
-                            $permissions_array = get_option('permissions_array');
-                            foreach (get_editable_roles() as $role_name => $role_info) {
-                                if ($role_name == 'administrator') {
-                                    continue;
-                                }
-                                $allowed = current_user_can( 'manage_simple_banners' );
-                                $checkbox = '<input type="checkbox"';
-                                $checkbox .= $disabled ? 'disabled ' : '';
-                                $checkbox .= (!$disabled && in_array($role_name, explode(",", $permissions_array))) ? 'checked ' : '';
-                                $checkbox .= 'value="' . $role_name . '">';
-                                $checkbox .= $role_name;
-                                $checkbox .= '</input><br>';
-                                echo $checkbox;
-                            }
-                        ?>
-                        </dl>
-                    </div>
-                </td>
-            </tr>
-        <?php endif; ?>
-        <?php
-            if (get_option('pro_version_enabled')) {
-                echo '<input type="text" hidden id="permissions_array" name="permissions_array" value="'. get_option('permissions_array') . '" />';
-            }
-        ?>
         <!-- Insert After Element -->
         <tr valign="top">
             <th scope="row">
-                <span style="color: limegreen;">NEW</span>
                 Insert Inside Element
                 <div>
                     Insert the banner inside a specific element on your page.
-                    (e.g. <code>header</code> for the header element or <code>#main-navigation</code> for an id attribute). Default is <code>body</code>.
+                    (e.g. <code>header</code> for the header element or <code>#main-navigation</code> for an id attribute). This will override the <code>Prepend element</code> setting.
                 </div>
             </th>
             <td style="vertical-align:top;">
                 <?php
                     if (get_option('pro_version_enabled')) {
-                        echo '<input id="simple_banner_insert_inside_element" name="simple_banner_insert_inside_element" style="width:60%;" value="'. esc_attr(get_option('simple_banner_insert_inside_element')) . '" />';
+                        echo '<input name="simple_banner_insert_inside_element' . $banner_id . '" style="width:60%;" value="'. esc_attr(get_option('simple_banner_insert_inside_element' . $banner_id)) . '" />';
                         echo '<div>
                             <strong>
                                 Note: This feature uses <code>document.querySelector()</code> and will select the first element match.
-                                It will also except combinations of CSS selectors. More information <a target="_blank" href="https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_Selectors">here</a>.
+                                It will also accept combinations of CSS selectors. More information <a target="_blank" href="https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_Selectors">here</a>.
                             </strong>
                         </div>';
+                    } else {
+                        echo '<input style="width:60%;" disabled />';
+                    }
+                ?>
+            </td>
+        </tr>
+        <!-- Start After Date -->
+        <tr valign="top">
+            <th scope="row">
+                Start After Date
+                <div>
+                    This can start showing the banner after a given date. Use UTC time to avoid daylight savings time issues (e.g. <code>21 Feb 2022 15:53:22 UTC</code>).
+                </div>
+            </th>
+            <td style="vertical-align:top;">
+                <?php
+                    if (get_option('pro_version_enabled')) {
+                        echo '<input name="simple_banner_start_after_date' . $banner_id . '" style="width:60%;" value="'. esc_attr(get_option('simple_banner_start_after_date' . $banner_id)) . '" />';
                     } else {
                         echo '<input style="width:60%;" disabled />';
                     }
@@ -84,16 +65,15 @@
         <!-- Remove After Date -->
         <tr valign="top">
             <th scope="row">
-                <span style="color: limegreen;">NEW</span>
                 Remove After Date
                 <div>
-                    This can remove the banner after a given date. Enter the exact day and time (e.g. <code>21 Feb 2022 15:53:22 GMT</code>).
+                    This can stop showing the banner after a given date. Use UTC time to avoid daylight savings time issues (e.g. <code>21 Feb 2022 15:53:22 UTC</code>).
                 </div>
             </th>
             <td style="vertical-align:top;">
                 <?php
                     if (get_option('pro_version_enabled')) {
-                        echo '<input id="simple_banner_remove_after_date" name="simple_banner_remove_after_date" style="width:60%;" value="'. esc_attr(get_option('simple_banner_remove_after_date')) . '" />';
+                        echo '<input name="simple_banner_remove_after_date' . $banner_id . '" style="width:60%;" value="'. esc_attr(get_option('simple_banner_remove_after_date' . $banner_id)) . '" />';
                     } else {
                         echo '<input style="width:60%;" disabled />';
                     }
@@ -111,10 +91,40 @@
             <td style="padding-top:0;">
                 <?php
                     if (get_option('pro_version_enabled')) {
-                        $checked = get_option('disabled_on_posts') ? 'checked ' : '';
-                        echo '<input type="checkbox" id="disabled_on_posts" '. $checked . ' name="disabled_on_posts" />';
+                        $checked = get_option('disabled_on_posts' . $banner_id) ? 'checked ' : '';
+                        echo '<input type="checkbox" '. $checked . ' name="disabled_on_posts' . $banner_id . '" />';
                     } else {
                         echo '<input type="checkbox" disabled />';
+                    }
+                ?>
+            </td>
+        </tr>
+        <!-- Disable Page Paths -->
+        <tr valign="top">
+            <th scope="row">
+                Disable Page Paths
+                <div>
+                    Disable Simple Banner on pages by path, comma separated. Paths match <code>window.location.pathname</code>. Use wildcard <code>*</code> to match multiple paths. e.g.
+                    <li>
+                        disable on www.test.com/shop and www.test.com/cart: <code>/shop,/cart</code>
+                    </li>
+                    <li>
+                        disable on all www.test.com/shop paths: <code>/shop*</code>
+                    </li>
+                    <li>
+                        disable on paths ending with /shop: <code>*/shop</code>
+                    </li>
+                    <li>
+                        disable on paths containing shop: <code>*shop*</code>
+                    </li>
+                </div>
+            </th>
+            <td style="vertical-align:top;">
+                <?php
+                    if (get_option('pro_version_enabled')) {
+                        echo '<input name="simple_banner_disabled_page_paths' . $banner_id . '" style="width:60%;" value="'. esc_attr(get_option('simple_banner_disabled_page_paths' . $banner_id)) . '" />';
+                    } else {
+                        echo '<input style="width:60%;" disabled />';
                     }
                 ?>
             </td>
@@ -126,10 +136,10 @@
                 <div>Disable Simple Banner on the following pages.</div>
             </th>
             <td>
-                <div id="simple_banner_pro_disabled_pages">
+                <div id="simple_banner_pro_disabled_pages<?php echo $banner_id ?>">
                     <?php
                         $disabled = !get_option('pro_version_enabled');
-                        $disabled_pages_array = array_filter(explode(',', get_option('disabled_pages_array')));
+                        $disabled_pages_array = array_filter(explode(',', get_option('disabled_pages_array' . $banner_id)));
                         $frontpage_id = get_option( 'page_on_front' ); // page_on_front returns 0 if value hasn't been set
                         if ($frontpage_id == 0) {
                             $frontpage_id = 1;
@@ -167,7 +177,7 @@
             <td>
                 <?php
                     if (get_option('pro_version_enabled')) {
-                        echo '<textarea id="site_custom_css" style="height: 150px;width: 75%;" name="site_custom_css">'. esc_textarea(get_option('site_custom_css')) . '</textarea>';
+                        echo '<textarea style="height: 150px;width: 75%;" name="site_custom_css' . $banner_id . '">'. esc_textarea(get_option('site_custom_css' . $banner_id)) . '</textarea>';
                     } else {
                         echo '<textarea style="height: 150px;width: 75%;" disabled></textarea>';
                     }
@@ -181,8 +191,8 @@
             <td style="padding-top:0;">
                 <?php
                     if (get_option('pro_version_enabled')) {
-                        $checked = get_option('keep_site_custom_css') ? 'checked ' : '';
-                        echo '<input type="checkbox" id="keep_site_custom_css" '. $checked . ' name="keep_site_custom_css" />';
+                        $checked = get_option('keep_site_custom_css' . $banner_id) ? 'checked ' : '';
+                        echo '<input type="checkbox" '. $checked . ' name="keep_site_custom_css' . $banner_id . '" />';
                     } else {
                         echo '<input type="checkbox" disabled />';
                     }
@@ -198,7 +208,7 @@
             <td>
                 <?php
                     if (get_option('pro_version_enabled')) {
-                        echo '<textarea id="site_custom_js" style="height: 150px;width: 75%;" name="site_custom_js">'. esc_textarea(get_option('site_custom_js')) . '</textarea>';
+                        echo '<textarea style="height: 150px;width: 75%;" name="site_custom_js' . $banner_id . '">'. esc_textarea(get_option('site_custom_js' . $banner_id)) . '</textarea>';
                     } else {
                         echo '<textarea style="height: 150px;width: 75%;" disabled></textarea>';
                     }
@@ -212,25 +222,8 @@
             <td style="padding-top:0;">
                 <?php
                     if (get_option('pro_version_enabled')) {
-                        $checked = get_option('keep_site_custom_js') ? 'checked ' : '';
-                        echo '<input type="checkbox" id="keep_site_custom_js" '. $checked . ' name="keep_site_custom_js" />';
-                    } else {
-                        echo '<input type="checkbox" disabled />';
-                    }
-                ?>
-            </td>
-        </tr>
-        <!-- Debug Mode -->
-        <tr valign="top">
-            <th scope="row">
-                Debug Mode
-                <div>If enabled, will log all variables in the console of your browser</div>
-            </th>
-            <td>
-                <?php
-                    if (get_option('pro_version_enabled')) {
-                        $checked = get_option('debug_mode') ? 'checked ' : '';
-                        echo '<input type="checkbox" id="debug_mode" '. $checked . ' name="debug_mode" />';
+                        $checked = get_option('keep_site_custom_js' . $banner_id) ? 'checked ' : '';
+                        echo '<input type="checkbox" '. $checked . ' name="keep_site_custom_js' . $banner_id . '" />';
                     } else {
                         echo '<input type="checkbox" disabled />';
                     }
@@ -238,4 +231,9 @@
             </td>
         </tr>
     </table>
+    <?php
+        if (get_option('pro_version_enabled')) {
+            echo '<input type="text" hidden id="disabled_pages_array' . $banner_id . '" name="disabled_pages_array' . $banner_id . '" value="'. get_option('disabled_pages_array' . $banner_id) . '" />';
+        }
+    ?>
 </div>

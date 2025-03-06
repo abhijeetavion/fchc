@@ -45,7 +45,7 @@ if ( ! class_exists( 'SP_EAP_Metabox' ) ) {
 		/**
 		 * $sections variable
 		 *
-		 * @var string
+		 * @var array
 		 */
 		public $sections = array();
 		/**
@@ -54,6 +54,18 @@ if ( ! class_exists( 'SP_EAP_Metabox' ) ) {
 		 * @var string
 		 */
 		public $post_type = array();
+		/**
+		 * Post_formats
+		 *
+		 * @var array
+		 */
+		public $post_formats = array();
+		/**
+		 * Page_templates
+		 *
+		 * @var array
+		 */
+		public $page_templates = array();
 		/**
 		 * $args variable
 		 *
@@ -246,6 +258,8 @@ if ( ! class_exists( 'SP_EAP_Metabox' ) ) {
 					$meta  = get_post_meta( $post->ID, $this->unique, true );
 					$value = ( isset( $meta[ $field['id'] ] ) ) ? $meta[ $field['id'] ] : null;
 				}
+			} elseif ( 'tabbed' === $field['type'] ) {
+				$value = get_post_meta( $post->ID, $this->unique, true );
 			}
 
 			$default = ( isset( $field['id'] ) ) ? $this->get_default( $field ) : '';
@@ -288,7 +302,6 @@ if ( ! class_exists( 'SP_EAP_Metabox' ) ) {
 				echo '<ul>';
 				$tab_key = 1;
 				foreach ( $this->sections as $section ) {
-
 					$tab_error = ( ! empty( $errors['sections'][ $tab_key ] ) ) ? '<i class="eapro-label-error eapro-error">!</i>' : '';
 					$tab_icon  = ( ! empty( $section['icon'] ) ) ? '<i class="eapro-tab-icon ' . esc_attr( $section['icon'] ) . '"></i>' : '';
 
@@ -379,7 +392,8 @@ if ( ! class_exists( 'SP_EAP_Metabox' ) ) {
 		/**
 		 * Save metabox.
 		 *
-		 * @param int $post_id post_id.
+		 * @param int $post_id post id.
+		 * @return mixed
 		 */
 		public function save_meta_box( $post_id ) {
 
@@ -387,7 +401,7 @@ if ( ! class_exists( 'SP_EAP_Metabox' ) ) {
 			$data     = array();
 			$errors   = array();
 			$noncekey = 'eapro_metabox_nonce' . $this->unique;
-			$nonce    = ( ! empty( $_POST[ $noncekey ] ) ) ? sanitize_text_field( wp_unslash( $_POST[ $noncekey ] ) ) : '';
+			$nonce    = ( ! empty( $_POST[ $noncekey ] ) ) ? sanitize_text_field( wp_unslash( $_POST[ $noncekey ] ) ) : ''; // @codingStandardsIgnoreLine
 
 			if ( ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) || ! wp_verify_nonce( $nonce, 'eapro_metabox_nonce' ) ) {
 				return $post_id;
@@ -395,54 +409,23 @@ if ( ! class_exists( 'SP_EAP_Metabox' ) ) {
 
 			// XSS ok.
 			// No worries, This "POST" requests is sanitizing in the below foreach.
-			$request = ( ! empty( $_POST[ $this->unique ] ) ) ? $_POST[ $this->unique ] : array(); // phpcs:ignore
-
+			// @codingStandardsIgnoreLine
+			$request = ( ! empty( $_POST[ $this->unique ] ) ) ? $_POST[ $this->unique ] : array();
 			if ( ! empty( $request ) ) {
-
 				foreach ( $this->sections as $section ) {
-
 					if ( ! empty( $section['fields'] ) ) {
-
 						foreach ( $section['fields'] as $field ) {
-
-							if ( ! empty( $field['id'] ) ) {
-
-								$field_id    = $field['id'];
-								$field_value = isset( $request[ $field_id ] ) ? $request[ $field_id ] : '';
-								// Sanitize "post" request of field.
-								if ( ! empty( $field['sanitize'] ) ) {
-									$data[ $field_id ] = call_user_func( $field['sanitize'], $field_value );
-								} else {
-									$data[ $field_id ] = $field_value;
-								}
-
-								// Validate "post" request of field.
-								if ( isset( $field['validate'] ) && function_exists( $field['validate'] ) ) {
-
-									$has_validated = call_user_func( $field['validate'], $field_value );
-
-									if ( ! empty( $has_validated ) ) {
-
-										$errors['sections'][ $count ]  = true;
-										$errors['fields'][ $field_id ] = $has_validated;
-										$data[ $field_id ]             = $this->get_meta_value( $field );
-
-									}
-								}
-							}
+							$this->process_field( $field, $request, $count, $data, $errors );
 						}
 					}
-
 					$count++;
-
 				}
 			}
-
 			$data = apply_filters( "eapro_{$this->unique}_save", $data, $post_id, $this );
 
 			do_action( "eapro_{$this->unique}_save_before", $data, $post_id, $this );
 
-			if ( empty( $data ) || ! empty( $request['_restore'] ) ) {
+			if ( empty( $data ) || ! empty( $request['_reset'] ) ) {
 
 				if ( 'serialize' !== $this->args['data_type'] ) {
 					foreach ( $data as $key => $value ) {
@@ -452,7 +435,6 @@ if ( ! class_exists( 'SP_EAP_Metabox' ) ) {
 					delete_post_meta( $post_id, $this->unique );
 				}
 			} else {
-
 				if ( 'serialize' !== $this->args['data_type'] ) {
 					foreach ( $data as $key => $value ) {
 						update_post_meta( $post_id, $key, $value );
@@ -460,7 +442,6 @@ if ( ! class_exists( 'SP_EAP_Metabox' ) ) {
 				} else {
 					update_post_meta( $post_id, $this->unique, $data );
 				}
-
 				if ( ! empty( $errors ) ) {
 					update_post_meta( $post_id, '_eapro_errors_' . $this->unique, $errors );
 				}
@@ -470,6 +451,63 @@ if ( ! class_exists( 'SP_EAP_Metabox' ) ) {
 
 			do_action( "eapro_{$this->unique}_save_after", $data, $post_id, $this );
 
+		}
+
+		/**
+		 * Process a field, handling tabbed fields if applicable.
+		 *
+		 * @param array $field   The field configuration.
+		 * @param array $request The POST request data.
+		 * @param int   $count   The count value.
+		 * @param array $data    The data array to be populated.
+		 * @param array $errors  The errors array to be populated.
+		 */
+		public function process_field( $field, $request, $count, &$data, &$errors ) {
+			if ( 'tabbed' === $field['type'] && ! empty( $field['tabs'] ) ) {
+				foreach ( $field['tabs'] as $tab ) {
+					if ( ! empty( $tab['fields'] ) ) {
+						foreach ( $tab['fields'] as $tab_field ) {
+							$this->process_single_field( $tab_field, $request, $count, $data, $errors );
+						}
+					}
+				}
+			} else {
+				$this->process_single_field( $field, $request, $count, $data, $errors );
+			}
+		}
+
+		/**
+		 * Process a single field, sanitizing and validating its value.
+		 *
+		 * @param array $field   The field configuration.
+		 * @param array $request The POST request data.
+		 * @param int   $count   The count value.
+		 * @param array $data    The data array to be populated.
+		 * @param array $errors  The errors array to be populated.
+		 */
+		public function process_single_field( $field, $request, $count, &$data, &$errors ) {
+			if ( ! empty( $field['id'] ) && ! ( isset( $field['only_pro'] ) ) ) {
+				$field_id    = $field['id'];
+				$field_value = isset( $request[ $field_id ] ) ? $request[ $field_id ] : '';
+
+				// Sanitize "post" request of field.
+				if ( isset( $field['sanitize'] ) && is_callable( $field['sanitize'] ) ) {
+					$data[ $field_id ] = call_user_func( $field['sanitize'], $field_value );
+				} else {
+					$data[ $field_id ] = ( is_array( $field_value ) ) ? wp_kses_post_deep( $field_value ) : wp_kses_post( $field_value );
+				}
+
+				// Validate "post" request of field.
+				if ( isset( $field['validate'] ) && is_callable( $field['validate'] ) ) {
+					$has_validated = call_user_func( $field['validate'], $field_value );
+
+					if ( ! empty( $has_validated ) ) {
+						$errors['sections'][ $count ]  = true;
+						$errors['fields'][ $field_id ] = $has_validated;
+						$data[ $field_id ]             = $this->get_meta_value( $field );
+					}
+				}
+			}
 		}
 	}
 }

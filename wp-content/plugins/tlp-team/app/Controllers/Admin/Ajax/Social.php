@@ -37,24 +37,24 @@ class Social {
 	 */
 	
 	public function response() {
-		$count = absint( $_REQUEST['id'] );
-		$html  = null;
-
-		$html         .= '<div class="tlp-field-holder socialLink" id="slh-' . $count . '">';
+		if (wp_verify_nonce( Fns::getNonce(), Fns::nonceText())){
+			$count = isset( $_REQUEST['id'] ) ? absint( sanitize_text_field( wp_unslash( $_REQUEST['id'] ) ) ): '';
+			$html  = null;
+			$html         .= '<div class="tlp-field-holder socialLink" id="slh-' . $count . '">';
 			$html     .= '<div class="tlp-label">';
-				$html .= '<select name="social[' . $count . '][id]">';
-		foreach ( Options::socialLink() as $id => $name ) {
-			$html .= "<option value='$id'>$name</option>";
-		}
-				$html .= '</select>';
+			$html .= '<select name="social[' . $count . '][id]">';
+			foreach ( Options::socialLink() as $id => $name ) {
+				$html .= "<option value='$id'>$name</option>";
+			}
+			$html .= '</select>';
 			$html     .= '</div>';
 			$html     .= '<div class="tlp-field">';
-				$html .= '<input type="text" name="social[' . $count . '][url]" class="tlpfield" value="" placeholder="Example: http://facebook.com/username/">';
-				$html .= '<span data-id="' . $count . '" class="sRemove dashicons dashicons-trash"></span> <span class="dashicons dashicons-admin-settings"></span>';
+			$html .= '<input type="text" name="social[' . $count . '][url]" class="tlpfield" value="" placeholder="Example: http://facebook.com/username/">';
+			$html .= '<span data-id="' . $count . '" class="sRemove dashicons dashicons-trash"></span> <span class="dashicons dashicons-admin-settings"></span>';
 			$html     .= '</div>';
-		$html         .= '</div>';
-
-		Fns::print_html( $html, true );
+			$html         .= '</div>';
+			Fns::print_html( $html, true );
+		}
 
 		die();
 	}

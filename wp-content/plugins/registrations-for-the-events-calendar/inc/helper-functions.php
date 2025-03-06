@@ -24,50 +24,55 @@ function rtec_get_event_meta( $id = '' ) {
 	$venue_meta = isset( $meta['_EventVenueID'][0] ) ? get_post_meta( $meta['_EventVenueID'][0] ) : array();
 
 	$event_meta['post_id'] = isset( $id ) ? $id : '';
-	$event_meta['title'] = ! empty( $id ) ? get_the_title( $id ) : get_the_title();
-	$start_date = tribe_get_start_date( $event_meta['post_id'], false, 'Y-m-d H:i:s' );
-	$end_date = tribe_get_end_date( $event_meta['post_id'], false, 'Y-m-d H:i:s' );
+	$event_meta['title']   = ! empty( $id ) ? get_the_title( $id ) : get_the_title();
+	$start_date            = tribe_get_start_date( $event_meta['post_id'], false, 'Y-m-d H:i:s' );
+	$end_date              = tribe_get_end_date( $event_meta['post_id'], false, 'Y-m-d H:i:s' );
 
-	$event_meta['start_date'] = $start_date;
-	$event_meta['end_date'] = $end_date;
+	$event_meta['start_date']     = $start_date;
+	$event_meta['end_date']       = $end_date;
 	$event_meta['start_date_utc'] = isset( $meta['_EventStartDateUTC'][0] ) ? $meta['_EventStartDateUTC'][0] : '';
-	$event_meta['end_date_utc'] = isset( $meta['_EventEndDateUTC'][0] ) ? $meta['_EventEndDateUTC'][0] : '';
-	$event_meta['venue_id'] = isset( $meta['_EventVenueID'][0] ) ? $meta['_EventVenueID'][0] : '';
-	$venue = isset( $id ) ? rtec_get_venue( $id ) : array();
-	$event_meta['venue_title'] = ! empty( $venue ) ? $venue : '(no location)';
-	$event_meta['venue_address'] = isset( $venue_meta['_VenueAddress'][0] ) ? $venue_meta['_VenueAddress'][0] : '';
-	$event_meta['venue_city'] = isset( $venue_meta['_VenueCity'][0] ) ? $venue_meta['_VenueCity'][0] : '';
-	$event_meta['venue_state'] = isset( $venue_meta['_VenueStateProvince'][0] ) ? $venue_meta['_VenueStateProvince'][0] : '';
-	$event_meta['venue_zip'] = isset( $venue_meta['_VenueZip'][0] ) ? $venue_meta['_VenueZip'][0] : '';
+	$event_meta['end_date_utc']   = isset( $meta['_EventEndDateUTC'][0] ) ? $meta['_EventEndDateUTC'][0] : '';
+	$event_meta['venue_id']       = isset( $meta['_EventVenueID'][0] ) ? $meta['_EventVenueID'][0] : '';
+	$venue                        = isset( $id ) ? rtec_get_venue( $id ) : array();
+	$event_meta['venue_title']    = ! empty( $venue ) ? $venue : '(no location)';
+	$event_meta['venue_address']  = isset( $venue_meta['_VenueAddress'][0] ) ? $venue_meta['_VenueAddress'][0] : '';
+	$event_meta['venue_city']     = isset( $venue_meta['_VenueCity'][0] ) ? $venue_meta['_VenueCity'][0] : '';
+	$event_meta['venue_state']    = isset( $venue_meta['_VenueStateProvince'][0] ) ? $venue_meta['_VenueStateProvince'][0] : '';
+	$event_meta['venue_zip']      = isset( $venue_meta['_VenueZip'][0] ) ? $venue_meta['_VenueZip'][0] : '';
 
-	$default_disabled = isset( $rtec_options['disable_by_default'] ) ? $rtec_options['disable_by_default'] : false;
-	$event_meta['registrations_disabled'] = isset( $meta['_RTECregistrationsDisabled'][0] ) ? ( (int)$meta['_RTECregistrationsDisabled'][0] === 1 ) : $default_disabled;
-	$event_meta['show_registrants_data'] = isset( $rtec_options['show_registrants_data'] ) && ! $event_meta['registrations_disabled'] ? $rtec_options['show_registrants_data'] : false;
-	$default_limit_registrations = isset( $rtec_options['limit_registrations'] ) ? $rtec_options['limit_registrations'] : false;
-	$default_who_can_register = isset( $rtec_options['only_logged_in'] ) && $rtec_options['only_logged_in'] === true ? 'users' : 'any';
-	$event_meta['who_can_register'] = isset( $meta['_RTECwhoCanRegister'][0] ) ? $meta['_RTECwhoCanRegister'][0] : $default_who_can_register;
-	$event_meta['limit_registrations'] = isset( $meta['_RTEClimitRegistrations'][0] ) ? ( (int)$meta['_RTEClimitRegistrations'][0] === 1 ) : $default_limit_registrations;
-	$default_max_registrations = isset( $rtec_options['default_max_registrations'] ) ? (int)$rtec_options['default_max_registrations'] : 30;
-	$event_meta['max_registrations'] = isset( $meta['_RTECmaxRegistrations'][0] ) ? (int)$meta['_RTECmaxRegistrations'][0] : $default_max_registrations;
-	$event_meta['num_registered'] = isset( $meta['_RTECnumRegistered'][0] ) ? (int)$meta['_RTECnumRegistered'][0] : 0;
-	$event_meta['form_id'] = isset( $meta['_RTECformID'][0] ) ? (int)$meta['_RTECformID'][0] : 1;
+	$default_disabled                     = isset( $rtec_options['disable_by_default'] ) ? $rtec_options['disable_by_default'] : false;
+	$event_meta['registrations_disabled'] = isset( $meta['_RTECregistrationsDisabled'][0] ) ? ( (int) $meta['_RTECregistrationsDisabled'][0] === 1 ) : $default_disabled;
+	$event_meta['show_registrants_data']  = isset( $rtec_options['show_registrants_data'] ) && ! $event_meta['registrations_disabled'] ? $rtec_options['show_registrants_data'] : false;
+	$default_limit_registrations          = isset( $rtec_options['limit_registrations'] ) ? $rtec_options['limit_registrations'] : false;
+	$default_who_can_register             = isset( $rtec_options['only_logged_in'] ) && $rtec_options['only_logged_in'] === true ? 'users' : 'any';
+	$event_meta['who_can_register']       = isset( $meta['_RTECwhoCanRegister'][0] ) ? $meta['_RTECwhoCanRegister'][0] : $default_who_can_register;
+	$event_meta['limit_registrations']    = isset( $meta['_RTEClimitRegistrations'][0] ) ? ( (int) $meta['_RTEClimitRegistrations'][0] === 1 ) : $default_limit_registrations;
+	$default_max_registrations            = isset( $rtec_options['default_max_registrations'] ) ? (int) $rtec_options['default_max_registrations'] : 30;
+	$event_meta['max_registrations']      = isset( $meta['_RTECmaxRegistrations'][0] ) ? (int) $meta['_RTECmaxRegistrations'][0] : $default_max_registrations;
+	$event_meta['num_registered']         = isset( $meta['_RTECnumRegistered'][0] ) ? (int) $meta['_RTECnumRegistered'][0] : 0;
+	$event_meta['form_id']                = isset( $meta['_RTECformID'][0] ) ? (int) $meta['_RTECformID'][0] : 1;
 
 	if ( $event_meta['limit_registrations'] ) {
-		$registrations_left = max( $event_meta['max_registrations'] - $event_meta['num_registered'], 0 );
+		$registrations_left               = max( $event_meta['max_registrations'] - $event_meta['num_registered'], 0 );
 		$event_meta['registrations_left'] = $registrations_left;
 	} else {
 		$event_meta['registrations_left'] = '';
 	}
 
-	$default_deadline_type = isset( $rtec_options['default_deadline_type'] ) ? $rtec_options['default_deadline_type'] : 'start';
-	$event_meta['deadline_type'] = isset( $meta['_RTECdeadlineType'][0] ) ? $meta['_RTECdeadlineType'][0] : $default_deadline_type;
-	$event_meta['deadline_other_timestamp'] = isset( $meta['_RTECdeadlineTimeStamp'][0] ) ? $meta['_RTECdeadlineTimeStamp'][0] : strtotime( $event_meta['start_date'] );
-	$event_meta['registration_deadline'] = rtec_get_event_deadline_utc( $event_meta );
+	$default_open_type                  = isset( $rtec_options['default_open_type'] ) ? $rtec_options['default_open_type'] : 'immediate';
+	$event_meta['open_type']            = isset( $meta['_RTECopenType'][0] ) ? $meta['_RTECopenType'][0] : $default_open_type;
+	$event_meta['open_offset']          = isset( $meta['_RTECopenOffset'][0] ) ? $meta['_RTECopenOffset'][0] : 3;
+	$event_meta['open_other_timestamp'] = isset( $meta['_RTECopenTimeStamp'][0] ) ? $meta['_RTECopenTimeStamp'][0] : strtotime( $event_meta['start_date'] );
 
-	$db = new RTEC_Db();
+	$default_deadline_type                  = isset( $rtec_options['default_deadline_type'] ) ? $rtec_options['default_deadline_type'] : 'start';
+	$event_meta['deadline_type']            = isset( $meta['_RTECdeadlineType'][0] ) ? $meta['_RTECdeadlineType'][0] : $default_deadline_type;
+	$event_meta['deadline_other_timestamp'] = isset( $meta['_RTECdeadlineTimeStamp'][0] ) ? $meta['_RTECdeadlineTimeStamp'][0] : strtotime( $event_meta['start_date'] );
+	$event_meta['registration_deadline']    = rtec_get_event_deadline_utc( $event_meta );
+
+	$db                = new RTEC_Db();
 	$db_num_registered = $db->get_registration_count( $event_meta['post_id'], $event_meta['form_id'] );
 
-	if ( (int)$db_num_registered !== (int)$event_meta['num_registered'] ) {
+	if ( (int) $db_num_registered !== (int) $event_meta['num_registered'] ) {
 		$event_meta['num_registered'] = $db_num_registered;
 
 		update_post_meta( $event_meta['post_id'], '_RTECnumRegistered', $db_num_registered );
@@ -92,35 +97,31 @@ function rtec_get_event_deadline_utc( $event_meta ) {
 	$deadline_time = 'none';
 
 	if ( class_exists( 'Tribe__Events__Timezones' ) ) {
-		$start_date_utc = Tribe__Events__Timezones::to_utc( tribe_get_start_date( $event_meta['post_id'], true, Tribe__Date_Utils::DBDATETIMEFORMAT ), '', 'c' );
-		$end_date_utc  = Tribe__Events__Timezones::to_utc( tribe_get_end_date( $event_meta['post_id'], true, Tribe__Date_Utils::DBDATETIMEFORMAT ), '', 'c' );
+		$start_date_utc = Tribe__Events__Timezones::to_utc( tribe_get_start_date( $event_meta['post_id'], true, Tribe__Date_Utils::DBDATETIMEFORMAT ), 'UTC', 'c' );
+		$end_date_utc   = Tribe__Events__Timezones::to_utc( tribe_get_end_date( $event_meta['post_id'], true, Tribe__Date_Utils::DBDATETIMEFORMAT ), 'UTC', 'c' );
 
 		if ( $event_meta['deadline_type'] === 'start' ) {
 
 			if ( $event_meta['start_date'] !== '' ) {
 				$deadline_multiplier = isset( $rtec_options['registration_deadline'] ) ? intval( $rtec_options['registration_deadline'] ) : 0;
-				$deadline_unit = isset( $rtec_options['registration_deadline_unit'] ) ? intval( $rtec_options['registration_deadline_unit'] ) : 0;
-				$start_timestamp = strtotime( $start_date_utc );
-				$deadline_time = $start_timestamp - ($deadline_multiplier * $deadline_unit);
+				$deadline_unit       = isset( $rtec_options['registration_deadline_unit'] ) ? intval( $rtec_options['registration_deadline_unit'] ) : 0;
+				$start_timestamp     = strtotime( $start_date_utc );
+				$deadline_time       = $start_timestamp - ( $deadline_multiplier * $deadline_unit );
 			}
-
 		} elseif ( $event_meta['deadline_type'] === 'end' ) {
 			$deadline_time = strtotime( $end_date_utc );
 		} elseif ( $event_meta['deadline_type'] === 'other' ) {
 			$deadline_time = $event_meta['deadline_other_timestamp'];
 		}
-	} else {
-		if ( $event_meta['deadline_type'] === 'start' ) {
+	} elseif ( $event_meta['deadline_type'] === 'start' ) {
 
-			if ( $event_meta['start_date'] !== '' ) {
-				$deadline_time = strtotime( $event_meta['start_date'] );
-			}
-
-		} elseif ( $event_meta['deadline_type'] === 'end' ) {
-			$deadline_time = strtotime( $event_meta['end_date'] );
-		} elseif ( $event_meta['deadline_type'] === 'other' ) {
-			$deadline_time = $event_meta['deadline_other_timestamp'];
+		if ( $event_meta['start_date'] !== '' ) {
+			$deadline_time = strtotime( $event_meta['start_date'] );
 		}
+	} elseif ( $event_meta['deadline_type'] === 'end' ) {
+			$deadline_time = strtotime( $event_meta['end_date'] );
+	} elseif ( $event_meta['deadline_type'] === 'other' ) {
+		$deadline_time = $event_meta['deadline_other_timestamp'];
 	}
 
 	return $deadline_time;
@@ -136,7 +137,7 @@ function rtec_get_time_zone_offset() {
 
 		$timezone = isset( $options['timezone'] ) ? $options['timezone'] : 'America/New_York';
 		// use php DateTimeZone class to handle the date formatting and offsets
-		$date_obj = new DateTime( date( 'm/d g:i a' ), new DateTimeZone( "UTC" ) );
+		$date_obj = new DateTime( date( 'm/d g:i a' ), new DateTimeZone( 'UTC' ) );
 		$date_obj->setTimeZone( new DateTimeZone( $timezone ) );
 		$tz_offset = $date_obj->getOffset();
 	}
@@ -158,35 +159,38 @@ function rtec_format_phone_number( $raw_number ) {
 	$phone_option = isset( $rtec_options['phone_format'] ) ? $rtec_options['phone_format'] : '1';
 
 	if ( $phone_option === '4' ) {
-	    return $raw_number;
-    } else {
-	    $raw_number = preg_replace( '/[^0-9]/', '', $raw_number );
-    }
+		return $raw_number;
+	} else {
+		$raw_number = preg_replace( '/[^0-9]/', '', $raw_number );
+	}
 
 	$rules = array(
-		7 => array(
-			'pattern' => '/([0-9]{3})([0-9]{4})/',
-			'replacement' => '$1-$2'
+		7  => array(
+			'pattern'     => '/([0-9]{3})([0-9]{4})/',
+			'replacement' => '$1-$2',
 		),
 		10 => array(
-			'pattern' => '/([0-9]{3})([0-9]{3})([0-9]{4})/',
-			'replacement' => '($1) $2-$3'
+			'pattern'     => '/([0-9]{3})([0-9]{3})([0-9]{4})/',
+			'replacement' => '($1) $2-$3',
 		),
 		11 => array(
-			'pattern' => '/([0-9]{3})([0-9]{4})([0-9]{4})/',
-			'replacement' => '($1) $2-$3'
+			'pattern'     => '/([0-9]{3})([0-9]{4})([0-9]{4})/',
+			'replacement' => '($1) $2-$3',
 		),
 	);
 
 	if ( $phone_option === '2' ) {
-		$rules[10]['pattern'] = '/([0-9]{2})([0-9]{4})([0-9]{4})/';
+		$rules[10]['pattern']     = '/([0-9]{2})([0-9]{4})([0-9]{4})/';
 		$rules[10]['replacement'] = '$1 $2 $3';
 	} elseif ( $phone_option === '3' ) {
-		$rules[10]['pattern'] = '/([0-9]{2})([0-9]{4})([0-9]{4})/';
+		$rules[10]['pattern']     = '/([0-9]{2})([0-9]{4})([0-9]{4})/';
 		$rules[10]['replacement'] = '($1) $2 $3';
+	} elseif ( $phone_option === '5' ) {
+		$rules[10]['pattern']     = '/([0-9]{3})([0-9]{3})([0-9]{4})/';
+		$rules[10]['replacement'] = '+1-$1-$2-$3';
 	}
 
-	$rules = apply_filters( 'rtec_phone_formatting_rules', $rules );
+	$rules         = apply_filters( 'rtec_phone_formatting_rules', $rules );
 	$number_length = strlen( $raw_number );
 
 	if ( isset( $rules[ $number_length ] ) ) {
@@ -194,7 +198,6 @@ function rtec_format_phone_number( $raw_number ) {
 		if ( isset( $rules[ $number_length ]['pattern'] ) && isset( $rules[ $number_length ]['replacement'] ) ) {
 			return preg_replace( $rules[ $number_length ]['pattern'], $rules[ $number_length ]['replacement'], $raw_number );
 		}
-
 	}
 
 	return $raw_number;
@@ -208,7 +211,7 @@ function rtec_format_phone_number( $raw_number ) {
  *
  * @return string           venue title
  */
-function rtec_get_venue( $event_id = NULL ) {
+function rtec_get_venue( $event_id = null ) {
 	if ( function_exists( 'tribe_get_venue' ) && ! empty( $event_id ) ) {
 		$venue = tribe_get_venue( $event_id );
 
@@ -226,9 +229,9 @@ function rtec_get_events( $args, $show_hidden = true ) {
 	}
 
 	if ( function_exists( 'tribe_events' )
-		 && class_exists('TEC\Events\Custom_Tables\V1\WP_Query\Custom_Tables_Query' )
-		 && rtec_tec_is_migrated() ) {
-		//Tribe__Events__Pro__Repositories__Event
+		&& class_exists( 'TEC\Events\Custom_Tables\V1\WP_Query\Custom_Tables_Query' )
+		&& rtec_tec_is_migrated() ) {
+		// Tribe__Events__Pro__Repositories__Event
 		$events_wp_query = new RTEC_Events_Query( tribe_events(), $args, $show_hidden );
 		$events_wp_query->init_query();
 
@@ -250,7 +253,6 @@ function rtec_get_events( $args, $show_hidden = true ) {
  */
 function rtec_maybe_wp_post_id_for_event( $event_id ) {
 
-
 	if ( ! function_exists( 'tribe_get_events' ) ) {
 		// TODO: Add workaround when events calendar is inactive
 		return 0;
@@ -261,7 +263,7 @@ function rtec_maybe_wp_post_id_for_event( $event_id ) {
 	}
 
 	if ( function_exists( 'tribe_events' )
-		 && class_exists('TEC\Events\Custom_Tables\V1\WP_Query\Custom_Tables_Query' ) ) {
+		&& class_exists( 'TEC\Events\Custom_Tables\V1\WP_Query\Custom_Tables_Query' ) ) {
 
 		if ( (int) $event_id < 10000000 ) {
 			return $event_id;
@@ -273,11 +275,17 @@ function rtec_maybe_wp_post_id_for_event( $event_id ) {
 
 		$occurrence_id = (int) $event_id - 10000000;
 
-		$results = $wpdb->get_results( $wpdb->prepare( "
+		$results = $wpdb->get_results(
+			$wpdb->prepare(
+				"
 			SELECT * FROM
 			$table
 			WHERE occurrence_id = %d;
-		", $occurrence_id ), ARRAY_A );
+		",
+				$occurrence_id
+			),
+			ARRAY_A
+		);
 
 		if ( empty( $results ) ) {
 			return 0;
@@ -308,7 +316,7 @@ function rtec_maybe_series_id_for_event( $event_id ) {
 	}
 
 	if ( function_exists( 'tribe_events' )
-		 && class_exists('TEC\Events\Custom_Tables\V1\WP_Query\Custom_Tables_Query' ) ) {
+		&& class_exists( 'TEC\Events\Custom_Tables\V1\WP_Query\Custom_Tables_Query' ) ) {
 
 		if ( (int) $event_id < 10000000 ) {
 			$maybe_migrated_to = rtec_get_migrated_to( $event_id );
@@ -334,19 +342,25 @@ function rtec_maybe_series_id_for_event( $event_id ) {
 }
 
 function rtec_get_migrated_to( $event_id ) {
-	$cache_key = 'rtec_migrated_event_to_' . $event_id;
+	$cache_key         = 'rtec_migrated_event_to_' . $event_id;
 	$maybe_alias_cache = wp_cache_get( $cache_key );
 	if ( false === $maybe_alias_cache ) {
 
 		global $wpdb;
 		$table_name  = $wpdb->postmeta;
-		$result      = $wpdb->get_results( $wpdb->prepare( "
+		$result      = $wpdb->get_results(
+			$wpdb->prepare(
+				"
 			SELECT meta_value
 			FROM $table_name
 			WHERE meta_key = '_RTEC_Migration_migrated_to'
 			AND post_id = %d
 			LIMIT 1;
-			", $event_id ), ARRAY_A );
+			",
+				$event_id
+			),
+			ARRAY_A
+		);
 		$maybe_alias = ! empty( $result[0] ) ? $result[0]['meta_value'] : 'none';
 
 		wp_cache_set( $cache_key, $maybe_alias );
@@ -371,17 +385,23 @@ function rtec_event_id_for_series( $series_id ) {
 	}
 
 	if ( function_exists( 'tribe_events' )
-		 && class_exists('TEC\Events\Custom_Tables\V1\WP_Query\Custom_Tables_Query' ) ) {
+		&& class_exists( 'TEC\Events\Custom_Tables\V1\WP_Query\Custom_Tables_Query' ) ) {
 
 		global $wpdb;
 
 		$relationships_table = $wpdb->prefix . 'tec_series_relationships';
 
-		$results = $wpdb->get_results( $wpdb->prepare( "
+		$results = $wpdb->get_results(
+			$wpdb->prepare(
+				"
 			SELECT event_post_id FROM
 			$relationships_table
 			WHERE series_post_id = %d;
-		", $series_id ), ARRAY_A );
+		",
+				$series_id
+			),
+			ARRAY_A
+		);
 
 		if ( empty( $results ) ) {
 			return 0;
@@ -407,11 +427,11 @@ function rtec_maybe_series_html( $event_id, $before, $after ) {
 			return '';
 		}
 
-		$context = [
+		$context = array(
 			'series_relationship_label' => _x( 'Event Series:', 'Series relationship marker prefix, with colon.', 'icaltec' ),
 			'series_title'              => apply_filters( 'the_title', $series_post->post_title ),
 			'series_link'               => get_edit_post_link( $series_post->ID ),
-		];
+		);
 
 		return $before . '<a href="' . $context['series_link'] . '">' . esc_html( $context['series_relationship_label'] ) . ' ' . esc_html( $context['series_title'] ) . '</a>' . $after;
 	}
@@ -424,18 +444,24 @@ function rtec_get_migrated_event( $event_id ) {
 		return false;
 	}
 
-	$cache_key = 'rtec_migrated_event_' . $event_id;
+	$cache_key         = 'rtec_migrated_event_' . $event_id;
 	$maybe_alias_cache = wp_cache_get( $cache_key );
 	if ( false === $maybe_alias_cache ) {
 		global $wpdb;
 		$table_name  = $wpdb->postmeta;
-		$result      = $wpdb->get_results( $wpdb->prepare( "
+		$result      = $wpdb->get_results(
+			$wpdb->prepare(
+				"
 			SELECT meta_value
 			FROM $table_name
 			WHERE meta_key = '_RTEC_Migration_backwards_compat_event'
 			AND post_id = %d
 			LIMIT 1;
-			", $event_id ), ARRAY_A );
+			",
+				$event_id
+			),
+			ARRAY_A
+		);
 		$maybe_alias = ! empty( $result[0] ) ? $result[0]['meta_value'] : 'none';
 
 		wp_cache_set( $cache_key, $maybe_alias );
@@ -454,7 +480,14 @@ function rtec_get_migrated_event( $event_id ) {
 }
 
 function rtec_migrated_events_exist() {
-	$migration_status = get_option( 'rtec_migration_status', array( 'attempts' => 0, 'complete' => false, 'one_migration_done' => false ) );
+	$migration_status = get_option(
+		'rtec_migration_status',
+		array(
+			'attempts'           => 0,
+			'complete'           => false,
+			'one_migration_done' => false,
+		)
+	);
 
 	if ( empty( $migration_status['complete'] ) ) {
 		return false;
@@ -504,7 +537,7 @@ function rtec_tec_is_migrated() {
 		return false;
 	}
 
-	return class_exists('TEC\Events\Custom_Tables\V1\WP_Query\Custom_Tables_Query' );
+	return class_exists( 'TEC\Events\Custom_Tables\V1\WP_Query\Custom_Tables_Query' );
 }
 
 function rtec_doing_series() {
@@ -519,16 +552,16 @@ function rtec_all_event_aliases( $event_ids ) {
 	$return = array();
 	if ( is_array( $event_ids ) ) {
 		foreach ( $event_ids as $id ) {
-			$return[] = $id;
+			$return[]    = $id;
 			$maybe_alias = rtec_get_migrated_event( $id );
 			if ( $maybe_alias ) {
 				$return[] = $maybe_alias;
 			}
 		}
 	} else {
-		$return = array( $event_ids );
+		$return      = array( $event_ids );
 		$maybe_alias = rtec_get_migrated_event( $event_ids );
-		if ( ! empty( $maybe_alias ) && ! in_array( $maybe_alias, $return, true  ) ) {
+		if ( ! empty( $maybe_alias ) && ! in_array( $maybe_alias, $return, true ) ) {
 			$return[] = $maybe_alias;
 		}
 	}
@@ -549,14 +582,13 @@ function rtec_get_parsed_custom_field_data( $raw_data ) {
 	$parsed_data = array();
 	foreach ( $custom_field_names as $field ) {
 
-		if ( isset( $rtec_options[$field . '_label'] ) && isset( $custom_data[$rtec_options[$field . '_label']] ) ) {
-			$parsed_data[$rtec_options[$field . '_label']] = $custom_data[$rtec_options[$field . '_label']];
-		} elseif ( isset( $rtec_options[$field . '_label'] ) ) {
-			$parsed_data[$rtec_options[$field . '_label']] = '';
+		if ( isset( $rtec_options[ $field . '_label' ] ) && isset( $custom_data[ $rtec_options[ $field . '_label' ] ] ) ) {
+			$parsed_data[ $rtec_options[ $field . '_label' ] ] = $custom_data[ $rtec_options[ $field . '_label' ] ];
+		} elseif ( isset( $rtec_options[ $field . '_label' ] ) ) {
+			$parsed_data[ $rtec_options[ $field . '_label' ] ] = '';
 		} else {
 			$parsed_data = '';
 		}
-
 	}
 
 	return $parsed_data;
@@ -570,7 +602,7 @@ function rtec_get_parsed_custom_field_data_full_structure( $raw_data ) {
  * adding to the db
  *
  * @param $submission_data
- * @param bool $from_form
+ * @param bool            $from_form
  *
  * @return mixed
  */
@@ -582,15 +614,15 @@ function rtec_serialize_custom_data( $submission_data, $field_attributes, $from_
 		'phone',
 		'other',
 		'guests',
-		'recaptcha'
+		'recaptcha',
 	);
-	$custom_data = array();
+	$custom_data     = array();
 	if ( $from_form ) {
 		foreach ( $field_attributes as $field_name => $atts ) {
 			if ( ! in_array( $field_name, $standard_fields, true ) ) {
 				$custom_data[ $field_name ] = array(
 					'label' => $atts['label'],
-					'value' => $submission_data[ $field_name ]
+					'value' => $submission_data[ $field_name ],
 				);
 			}
 		}
@@ -599,66 +631,65 @@ function rtec_serialize_custom_data( $submission_data, $field_attributes, $from_
 			if ( isset( $field_attributes[ $key ] ) ) {
 				$custom_data[ $key ] = array(
 					'label' => $field_attributes[ $key ]['label'],
-					'value' => $value
+					'value' => $value,
 				);
 			}
 		}
-
 	}
 
 	return maybe_serialize( $custom_data );
 }
 
 
-function rtec_get_event_meta_confirmation_email( $event_meta, $user_data) {
+function rtec_get_event_meta_confirmation_email( $event_meta, $user_data ) {
 
 	$return_data['title'] = $event_meta['title'];
 
 	if ( $event_meta['mvt_enabled'] && isset( $user_data['venue'] ) ) {
-		$return_data['venue'] = sanitize_text_field( $user_data['venue'] );
+		$return_data['venue']     = sanitize_text_field( $user_data['venue'] );
 		$return_data['venue_mvt'] = sanitize_text_field( $user_data['venue'] );
 
 		if ( $event_meta['mvt_fields'][ $return_data['venue'] ]['type'] === 'venue' ) {
-			$venue_meta = rtec_get_venue_meta( $return_data['venue'] );
-			$return_data['venue_title'] = $venue_meta['venue_title'];
+			$venue_meta                   = rtec_get_venue_meta( $return_data['venue'] );
+			$return_data['venue_title']   = $venue_meta['venue_title'];
 			$return_data['venue_address'] = $venue_meta['venue_address'];
-			$return_data['venue_city'] = $venue_meta['venue_city'];
-			$return_data['venue_state'] = $venue_meta['venue_state'];
-			$return_data['venue_zip'] = $venue_meta['venue_zip'];
+			$return_data['venue_city']    = $venue_meta['venue_city'];
+			$return_data['venue_state']   = $venue_meta['venue_state'];
+			$return_data['venue_zip']     = $venue_meta['venue_zip'];
 		} else {
-			$return_data['venue_title'] = $event_meta['venue_title'];
+			$return_data['venue_title']   = $event_meta['venue_title'];
 			$return_data['venue_address'] = $event_meta['venue_address'];
-			$return_data['venue_city'] = $event_meta['venue_city'];
-			$return_data['venue_state'] = $event_meta['venue_state'];
-			$return_data['venue_zip'] = $event_meta['venue_zip'];
+			$return_data['venue_city']    = $event_meta['venue_city'];
+			$return_data['venue_state']   = $event_meta['venue_state'];
+			$return_data['venue_zip']     = $event_meta['venue_zip'];
 		}
 		$return_data['mvt_label'] = $event_meta['mvt_fields'][ $user_data['venue'] ]['label'];
 
 	} else {
-		$return_data['venue'] = $event_meta['venue_id'];
-		$return_data['venue_title'] = $event_meta['venue_title'];
+		$return_data['venue']         = $event_meta['venue_id'];
+		$return_data['venue_title']   = $event_meta['venue_title'];
 		$return_data['venue_address'] = $event_meta['venue_address'];
-		$return_data['venue_city'] = $event_meta['venue_city'];
-		$return_data['venue_state'] = $event_meta['venue_state'];
-		$return_data['venue_zip'] = $event_meta['venue_zip'];
+		$return_data['venue_city']    = $event_meta['venue_city'];
+		$return_data['venue_state']   = $event_meta['venue_state'];
+		$return_data['venue_zip']     = $event_meta['venue_zip'];
 	}
 
-	$return_data['ical_url'] = isset( $event_meta['ical_url'] ) ? $event_meta['ical_url']: '';
-	$return_data['date'] = $event_meta['start_date'];
+	$return_data['ical_url'] = isset( $event_meta['ical_url'] ) ? $event_meta['ical_url'] : '';
+	$return_data['date']     = $event_meta['start_date'];
 	$return_data['event_id'] = $user_data['event_id'];
 
 	$return_data = array_merge( $return_data, $user_data );
 
 	$return_data['first'] = $return_data['first_name'];
-	$return_data['last'] = $return_data['last_name'];
+	$return_data['last']  = $return_data['last_name'];
 
 	return $return_data;
 }
 
 function rtec_has_deprecated_data_structure( $custom ) {
 
-	if ( is_array($custom) ) {
-		foreach( $custom as $key ) {
+	if ( is_array( $custom ) ) {
+		foreach ( $custom as $key ) {
 			if ( ! isset( $key['value'] ) ) {
 				return true;
 			} else {
@@ -668,36 +699,39 @@ function rtec_has_deprecated_data_structure( $custom ) {
 	} else {
 		return false;
 	}
-
 }
 
 function rtec_generate_action_key() {
 	return sha1( uniqid( '', true ) );
 }
 
-function rtec_generate_unregister_link( $event_id, $action_key, $email, $unregister_link_text ) {
-	$permalink = get_permalink( $event_id );
-	$unregister_url = add_query_arg( 'action' , 'unregister', $permalink );
-	$unregister_url = add_query_arg( 'token' ,  $action_key, $unregister_url );
-	$unregister_url = add_query_arg( 'email' , $email, $unregister_url );
-
+function rtec_generate_unregister_link( $event_id, $action_key, $email, $unregister_link_text, $confirm_required = false ) {
+	$permalink      = get_permalink( $event_id );
+	$unregister_url = add_query_arg( 'action', 'unregister', $permalink );
+	$unregister_url = add_query_arg( 'token', $action_key, $unregister_url );
+	$unregister_url = add_query_arg( 'email', $email, $unregister_url );
+	if ( $confirm_required ) {
+		$unregister_url = add_query_arg( 'confirm_required' , '1', $unregister_url );
+	}
 	$should_escape = apply_filters( 'rtec_should_escape_url', true );
 
 	$final_url = $unregister_url;
 	if ( $should_escape ) {
-	    $final_url = esc_url( $unregister_url );
-    }
+		$final_url = esc_url( $unregister_url );
+	}
 
-	return '<span class="rtec-unregister-link-wrap"><a data-event-id="'.esc_attr( $event_id ).'" class="rtec-unregister-link" href="'. $final_url .'">' . $unregister_link_text . '</a></span>';
+	return '<span class="rtec-unregister-link-wrap"><a data-event-id="' . esc_attr( $event_id ) . '" class="rtec-unregister-link" href="' . $final_url . '">' . $unregister_link_text . '</a></span>';
 }
 
-function rtec_generate_unregister_button( $event_id, $action_key, $email ) {
+function rtec_generate_unregister_button( $event_id, $action_key, $email, $confirm_required = false ) {
 	global $rtec_options;
 	$permalink      = get_permalink( $event_id );
 	$unregister_url = add_query_arg( 'action', 'unregister', $permalink );
 	$unregister_url = add_query_arg( 'token', $action_key, $unregister_url );
 	$unregister_url = add_query_arg( 'email', $email, $unregister_url );
-
+	if ( $confirm_required ) {
+		$unregister_url = add_query_arg( 'confirm_required' , '1', $unregister_url );
+	}
 	$should_escape = apply_filters( 'rtec_should_escape_url', true );
 
 	$final_url = $unregister_url;
@@ -763,12 +797,10 @@ function rtec_send_unregistration_notification( $entry_ids ) {
 
 			if ( isset( $registration['entry_data_cache'] ) ) {
 				$registration = array_merge( $registration, rtec_convert_entry_data_cache_for_user( $registration['entry_data_cache'] ) );
-			} else {
-				if ( isset( $registration['custom'] ) ) {
+			} elseif ( isset( $registration['custom'] ) ) {
 					$registration          = array_merge( $registration, rtec_convert_entry_data_cache_for_user( $registration['custom'] ) );
 					$registration['first'] = isset( $registration['first_name'] ) ? $registration['first_name'] : '';
 					$registration['last']  = isset( $registration['last_name'] ) ? $registration['last_name'] : '';
-				}
 			}
 
 			if ( is_email( $email ) ) {
@@ -783,21 +815,21 @@ function rtec_send_unregistration_notification( $entry_ids ) {
 				$subject    = ! empty( $rtec_options['unregister_notification_subject'] ) ? $rtec_options['unregister_notification_subject'] : __( 'Notification of Unregistration', 'registrations-for-the-events-calendar' ) . ' {event-title}';
 				$subject    = rtec_get_text( $subject, __( 'Notification of Unregistration', 'registrations-for-the-events-calendar' ) );
 
-				$message = ! empty( $rtec_options['unregister_notification_message'] ) ? $rtec_options['unregister_notification_message'] : rtec_default_unregister_notification();
-				$message = rtec_get_text( $message, rtec_default_unregister_notification() );
+				$message               = ! empty( $rtec_options['unregister_notification_message'] ) ? $rtec_options['unregister_notification_message'] : rtec_default_unregister_notification();
+				$message               = rtec_get_text( $message, rtec_default_unregister_notification() );
 				$custom_template_pairs = rtec_get_custom_name_label_pairs();
-				$data    = array_merge( $event_meta, $registration );
+				$data                  = array_merge( $event_meta, $registration );
 
 				$args = array(
-					'template_type' => 'notification',
-					'content_type'  => 'html',
+					'template_type'         => 'notification',
+					'content_type'          => 'html',
 					'custom_template_pairs' => $custom_template_pairs,
-					'recipients'    => $recipients,
-					'subject'       => array(
+					'recipients'            => $recipients,
+					'subject'               => array(
 						'text' => $subject,
 						'data' => $data,
 					),
-					'body'          => array(
+					'body'                  => array(
 						'message' => $message,
 						'data'    => $data,
 					),
@@ -859,12 +891,10 @@ function rtec_send_unregistration_confirmation( $entry_ids ) {
 
 			if ( isset( $registration['entry_data_cache'] ) ) {
 				$registration = array_merge( $registration, rtec_convert_entry_data_cache_for_user( $registration['entry_data_cache'] ) );
-			} else {
-				if ( isset( $registration['custom'] ) ) {
+			} elseif ( isset( $registration['custom'] ) ) {
 					$registration          = array_merge( $registration, rtec_convert_entry_data_cache_for_user( $registration['custom'] ) );
 					$registration['first'] = isset( $registration['first_name'] ) ? $registration['first_name'] : '';
 					$registration['last']  = isset( $registration['last_name'] ) ? $registration['last_name'] : '';
-				}
 			}
 
 			if ( is_email( $email ) ) {
@@ -875,16 +905,16 @@ function rtec_send_unregistration_confirmation( $entry_ids ) {
 
 				$confirmation_message = new RTEC_Email();
 
-				$subject    = ! empty( $rtec_options['unregister_confirmation_subject'] ) ? $rtec_options['unregister_confirmation_subject'] : __( 'Cancellation Confirmed', 'registrations-for-the-events-calendar' ) . ' {event-title}';
-				$subject    = rtec_get_text( $subject, __( 'Cancellation Confirmed', 'registrations-for-the-events-calendar' ) );
+				$subject = ! empty( $rtec_options['unregister_confirmation_subject'] ) ? $rtec_options['unregister_confirmation_subject'] : __( 'Cancellation Confirmed', 'registrations-for-the-events-calendar' ) . ' {event-title}';
+				$subject = rtec_get_text( $subject, __( 'Cancellation Confirmed', 'registrations-for-the-events-calendar' ) );
 
-				$message = ! empty( $rtec_options['unregister_confirmation_message'] ) ? $rtec_options['unregister_confirmation_message'] : __( 'You are no longer registered for the event {event-title} on {start-date}.', 'registrations-for-the-events-calendar' );
-				$message = rtec_get_text( $message, __( 'You are no longer registered for the event {event-title} on {start-date}.', 'registrations-for-the-events-calendar' ) );
-				$sanitized_data    = array_merge( $event_meta, $registration );
+				$message        = ! empty( $rtec_options['unregister_confirmation_message'] ) ? $rtec_options['unregister_confirmation_message'] : __( 'You are no longer registered for the event {event-title} on {start-date}.', 'registrations-for-the-events-calendar' );
+				$message        = rtec_get_text( $message, __( 'You are no longer registered for the event {event-title} on {start-date}.', 'registrations-for-the-events-calendar' ) );
+				$sanitized_data = array_merge( $event_meta, $registration );
 
-				$header_image = isset( $rtec_options['html_email_header_img'] ) ? $rtec_options['html_email_header_img'] : false;
+				$header_image          = isset( $rtec_options['html_email_header_img'] ) ? $rtec_options['html_email_header_img'] : false;
 				$custom_template_pairs = rtec_get_custom_name_label_pairs();
-				$args         = array(
+				$args                  = array(
 					'template_type'         => 'confirmation',
 					'content_type'          => 'html',
 					'custom_template_pairs' => $custom_template_pairs,
@@ -954,7 +984,7 @@ function rtec_get_start_date( $event_id, $date_format = 'Y-m-d H:i:s' ) {
 }
 
 function rtec_get_capability() {
-    $capability = 'edit_posts';
+	$capability = 'edit_posts';
 
 	return $capability;
 }
@@ -977,7 +1007,6 @@ function rtec_get_text( $custom, $translation ) {
 	}
 
 	return $text;
-
 }
 
 function rtec_using_translations() {
@@ -992,97 +1021,97 @@ function rtec_using_translations() {
 
 function rtec_sanitize_outputted_html( $input ) {
 	$allowed_tags = array(
-		'a' => array(
+		'a'          => array(
 			'class' => array(),
 			'href'  => array(),
 			'rel'   => array(),
 			'title' => array(),
 		),
-		'abbr' => array(
+		'abbr'       => array(
 			'title' => array(),
 		),
-		'b' => array(),
+		'b'          => array(),
 		'blockquote' => array(
-			'cite'  => array(),
+			'cite' => array(),
 		),
-		'br' => array(),
-		'cite' => array(
+		'br'         => array(),
+		'cite'       => array(
 			'title' => array(),
 		),
-		'code' => array(),
-		'del' => array(
+		'code'       => array(),
+		'del'        => array(
 			'datetime' => array(),
-			'title' => array(),
+			'title'    => array(),
 		),
-		'dd' => array(),
-		'div' => array(
+		'dd'         => array(),
+		'div'        => array(
 			'class' => array(),
 			'title' => array(),
 			'style' => array(),
 		),
-		'dl' => array(),
-		'dt' => array(),
-		'em' => array(),
-		'h1' => array(),
-		'h2' => array(),
-		'h3' => array(),
-		'h4' => array(),
-		'h5' => array(),
-		'h6' => array(),
-		'i' => array(),
-		'img' => array(
+		'dl'         => array(),
+		'dt'         => array(),
+		'em'         => array(),
+		'h1'         => array(),
+		'h2'         => array(),
+		'h3'         => array(),
+		'h4'         => array(),
+		'h5'         => array(),
+		'h6'         => array(),
+		'i'          => array(),
+		'img'        => array(
 			'alt'    => array(),
 			'class'  => array(),
 			'height' => array(),
 			'src'    => array(),
 			'width'  => array(),
 		),
-		'li' => array(
+		'li'         => array(
 			'class' => array(),
 		),
-		'ol' => array(
+		'ol'         => array(
 			'class' => array(),
 		),
-		'p' => array(
+		'p'          => array(
 			'class' => array(),
 		),
-		'q' => array(
-			'cite' => array(),
+		'q'          => array(
+			'cite'  => array(),
 			'title' => array(),
 		),
-		'span' => array(
+		'span'       => array(
 			'class' => array(),
 			'title' => array(),
 			'style' => array(),
 		),
-		'strike' => array(),
-		'strong' => array(),
-		'ul' => array(
+		'strike'     => array(),
+		'strong'     => array(),
+		'ul'         => array(
 			'class' => array(),
 		),
-		'table' => array(
-			'style'  => array(),
-			'class'  => array(),
+		'table'      => array(
+			'style'       => array(),
+			'class'       => array(),
 			'cellpadding' => array(),
 			'cellspacing' => array(),
-			'border' => array(),
+			'border'      => array(),
 		),
-		'tbody' => array(
-			'style'  => array(),
-			'class'  => array(),
+		'tbody'      => array(
+			'style' => array(),
+			'class' => array(),
 		),
-		'td' => array(
-			'style'  => array(),
-			'class'  => array(),
+		'td'         => array(
+			'style' => array(),
+			'class' => array(),
 		),
-		'th' => array(
-			'style'  => array(),
-			'class'  => array(),
+		'th'         => array(
+			'style' => array(),
+			'class' => array(),
 		),
-		'tr' => array(
-			'style'  => array(),
-			'class'  => array(),
-		)
+		'tr'         => array(
+			'style' => array(),
+			'class' => array(),
+		),
 	);
 
 	return wp_kses( $input, $allowed_tags );
@@ -1090,13 +1119,13 @@ function rtec_sanitize_outputted_html( $input ) {
 
 function rtec_get_notification_email_recipients( $event_id, $blank = false ) {
 	global $rtec_options;
-	$always_include_organizer = isset( $rtec_options['notify_organizer'] ) ? $rtec_options['notify_organizer'] : false;
+	$always_include_organizer          = isset( $rtec_options['notify_organizer'] ) ? $rtec_options['notify_organizer'] : false;
 	$notification_recipients_for_event = get_post_meta( $event_id, '_RTECnotificationEmailRecipient' );
 
 	if ( ! empty( $notification_recipients_for_event[0] ) ) {
-		$notification_recipients = explode(',', str_replace( ' ', '', $notification_recipients_for_event[0] ) );
+		$notification_recipients = explode( ',', str_replace( ' ', '', $notification_recipients_for_event[0] ) );
 	} else {
-		$notification_recipients = isset( $rtec_options['recipients'] ) ? explode(',', str_replace( ' ', '', $rtec_options['recipients'] ) ) : array( get_option( 'admin_email' ) );
+		$notification_recipients = isset( $rtec_options['recipients'] ) ? explode( ',', str_replace( ' ', '', $rtec_options['recipients'] ) ) : array( get_option( 'admin_email' ) );
 	}
 
 	if ( $always_include_organizer ) {
@@ -1108,11 +1137,9 @@ function rtec_get_notification_email_recipients( $event_id, $blank = false ) {
 		if ( ! $multiple ) {
 			$organizer_email = tribe_get_organizer_email( $event_id, false );
 
-
 			if ( $organizer_email !== '' && ! in_array( $organizer_email, $notification_recipients, true ) ) {
 				$notification_recipients[] = $organizer_email;
 			}
-
 		} else {
 
 			$found_email = false;
@@ -1121,7 +1148,7 @@ function rtec_get_notification_email_recipients( $event_id, $blank = false ) {
 				$organizer_email = get_post_meta( $organizer, '_OrganizerEmail', true );
 				if ( is_email( $organizer_email ) && ! in_array( $organizer_email, $notification_recipients, true ) ) {
 					$notification_recipients[] = $organizer_email;
-					$found_email = true;
+					$found_email               = true;
 				}
 			}
 
@@ -1132,16 +1159,13 @@ function rtec_get_notification_email_recipients( $event_id, $blank = false ) {
 					$notification_recipients[] = $organizer_email;
 				}
 			}
-
 		}
-
-
 	}
 
 	$non_blank_recipients = array();
 
 	foreach ( $notification_recipients as $recipient ) {
-		if ( ! empty ( $recipient ) ) {
+		if ( ! empty( $recipient ) ) {
 			$non_blank_recipients[] = $recipient;
 		}
 	}
@@ -1154,15 +1178,14 @@ function rtec_get_confirmation_from_address( $event_id, $blank = false ) {
 
 	$confirmation_address = get_post_meta( $event_id, '_RTECconfirmationEmailFrom' );
 
-	if ( !empty( $confirmation_address[0] ) ) {
+	if ( ! empty( $confirmation_address[0] ) ) {
 		return $confirmation_address[0];
-	} elseif( $blank ) {
+	} elseif ( $blank ) {
 		return '';
 	} else {
 		$confirmation_address = isset( $rtec_options['confirmation_from_address'] ) ? $rtec_options['confirmation_from_address'] : get_option( 'admin_email' );
 		return $confirmation_address;
 	}
-
 }
 
 function rtec_time() {
@@ -1174,7 +1197,7 @@ function rtec_time() {
 
 function rtec_convert_entry_data_cache_for_user( $entry_data_cache_serialized ) {
 	$entry_data_cache = maybe_unserialize( $entry_data_cache_serialized );
-	$return = array();
+	$return           = array();
 
 	if ( $entry_data_cache ) {
 		foreach ( $entry_data_cache as $key => $value ) {
@@ -1191,7 +1214,7 @@ function rtec_get_standard_form_fields() {
 		'last',
 		'email',
 		'phone',
-		'other'
+		'other',
 	);
 
 	return $standard_fields;
@@ -1216,7 +1239,7 @@ function rtec_get_custom_name_label_pairs() {
 
 function rtec_get_no_template_fields() {
 	$no_template_fields = array(
-		'recaptcha'
+		'recaptcha',
 	);
 
 	return $no_template_fields;
@@ -1224,7 +1247,7 @@ function rtec_get_no_template_fields() {
 
 function rtec_get_no_backend_column_fields() {
 	$no_backend_column_fields = array(
-		'recaptcha'
+		'recaptcha',
 	);
 
 	return $no_backend_column_fields;
@@ -1233,7 +1256,7 @@ function rtec_get_no_backend_column_fields() {
 function rtec_normalize_id( $event_id ) {
 	if ( class_exists( '\TEC\Events\Custom_Tables\V1\Models\Occurrence' ) ) {
 		$normalized = \TEC\Events\Custom_Tables\V1\Models\Occurrence::normalize_id( $event_id );
-		if ( ! function_exists('tribe_is_recurring_event' ) ) {
+		if ( ! function_exists( 'tribe_is_recurring_event' ) ) {
 			return $normalized;
 		}
 		if ( ! tribe_is_recurring_event( $normalized ) ) {
@@ -1255,74 +1278,49 @@ function rtec_normalize_id( $event_id ) {
  */
 add_shortcode( 'rtec-registration-form', 'rtec_the_registration_form_shortcode' );
 function rtec_the_registration_form_shortcode( $atts ) {
-    if ( ! function_exists( 'tribe_is_event' ) ) {
-        return '';
-    }
-    global $rtec_options;
+	if ( ! function_exists( 'tribe_is_event' ) ) {
+		return '';
+	}
+	global $rtec_options;
 
-    $atts = is_array( $atts ) ? $atts : array();
+	$atts = is_array( $atts ) ? $atts : array();
 
-    $shortcode_only = isset( $rtec_options['template_location'] ) ? $rtec_options['template_location'] === 'shortcode' : false;
+	$shortcode_only = isset( $rtec_options['template_location'] ) ? $rtec_options['template_location'] === 'shortcode' : false;
 
 	$atts['doing_shortcode'] = true;
 
 	$can_always_use_shortcode = false;
-    if ( isset( $atts['tribe_flag'] ) ) {
-	    $shortcode_only = false;
-	    $can_always_use_shortcode = true;
-    }
+	if ( isset( $atts['tribe_flag'] ) ) {
+		$shortcode_only           = false;
+		$can_always_use_shortcode = true;
+	}
 
-	if ( ($shortcode_only && tribe_is_event() && is_single())
-            || $can_always_use_shortcode) {
-		$atts['event'] = get_the_ID();
-		$atts['doing_shortcode'] = false;
-		$atts['return_html'] = true;
+	if ( ( $shortcode_only && tribe_is_event() && is_single() )
+			|| $can_always_use_shortcode ) {
+		$atts['event']            = get_the_ID();
+		$atts['doing_shortcode']  = false;
+		$atts['return_html']      = true;
 		$can_always_use_shortcode = true;
 	} elseif ( ! isset( $atts['event'] ) ) {
 		$post_id = isset( $_GET['event_id'] ) ? (int) $_GET['event_id'] : false;
 
 		if ( $post_id && tribe_is_event( $post_id ) ) {
-			$atts['event'] = $post_id;
+			$atts['event']            = $post_id;
 			$can_always_use_shortcode = true;
 		}
 	} elseif ( isset( $atts['event'] ) ) {
-		$post_id = (int)$atts['event'];
+		$post_id = (int) $atts['event'];
 
 		if ( $post_id && tribe_is_event( $post_id ) ) {
-			$atts['event'] = $post_id;
+			$atts['event']            = $post_id;
 			$can_always_use_shortcode = true;
 		}
-
 	}
 
-	$post_id = isset( $atts['event'] ) ? (int)$atts['event'] : false;
+	$post_id = isset( $atts['event'] ) ? (int) $atts['event'] : false;
 
 	$error_html = '';
 	if ( $can_always_use_shortcode ) {
-
-	    if ( ! tribe_is_event( $post_id ) ) {
-		    if ( current_user_can( 'edit_posts' ) ) {
-			    $error_html .= '<div class="rtec-yellow-message">';
-			    $error_html .= '<span>This message is only visible to logged-in editors:<br /><strong>The event ID in the shortcode does not seem to be for a valid event. Please enter a valid event ID in the shortcode to show a registration form here.</strong></span>';
-			    $error_html .= ' <span>For example: </span><code>[rtec-registration-form event=321]</code>';
-			    $error_html .= '</div>';
-		    }
-        } elseif ( function_exists( 'rtec_the_registration_form' ) && $post_id !== false ) {
-			$html = rtec_the_registration_form( $atts );
-
-			return $html;
-		} else {
-
-			if ( current_user_can( 'edit_posts' ) ) {
-				$error_html .= '<div class="rtec-yellow-message">';
-				$error_html .= '<span>This message is only visible to logged-in editors:<br /><strong>Please enter a valid event ID in the shortcode to show a registration form here.</strong></span>';
-				$error_html .= ' <span>For example: </span><code>[rtec-registration-form event=321]</code>';
-				$error_html .= '</div>';
-			}
-
-		}
-
-	} else {
 
 		if ( ! tribe_is_event( $post_id ) ) {
 			if ( current_user_can( 'edit_posts' ) ) {
@@ -1335,16 +1333,30 @@ function rtec_the_registration_form_shortcode( $atts ) {
 			$html = rtec_the_registration_form( $atts );
 
 			return $html;
-		} else {
+		} elseif ( current_user_can( 'edit_posts' ) ) {
 
-			if ( current_user_can( 'edit_posts' ) ) {
 				$error_html .= '<div class="rtec-yellow-message">';
-				$error_html .= '<span>This message is only visible to logged-in editors:<br /><strong>Shortcode not used. There is already a registration form on this page for this event.</strong> If you want to display the registration form with a shortcode on this page, go to the "Form" tab and change the setting "Form Location" to "Shortcode"</span>';
+				$error_html .= '<span>This message is only visible to logged-in editors:<br /><strong>Please enter a valid event ID in the shortcode to show a registration form here.</strong></span>';
+				$error_html .= ' <span>For example: </span><code>[rtec-registration-form event=321]</code>';
 				$error_html .= '</div>';
-			}
-
 		}
+	} elseif ( ! tribe_is_event( $post_id ) ) {
 
+		if ( current_user_can( 'edit_posts' ) ) {
+			$error_html .= '<div class="rtec-yellow-message">';
+			$error_html .= '<span>This message is only visible to logged-in editors:<br /><strong>The event ID in the shortcode does not seem to be for a valid event. Please enter a valid event ID in the shortcode to show a registration form here.</strong></span>';
+			$error_html .= ' <span>For example: </span><code>[rtec-registration-form event=321]</code>';
+			$error_html .= '</div>';
+		}
+	} elseif ( function_exists( 'rtec_the_registration_form' ) && $post_id !== false ) {
+		$html = rtec_the_registration_form( $atts );
+
+		return $html;
+	} elseif ( current_user_can( 'edit_posts' ) ) {
+
+			$error_html .= '<div class="rtec-yellow-message">';
+			$error_html .= '<span>This message is only visible to logged-in editors:<br /><strong>Shortcode not used. There is already a registration form on this page for this event.</strong> If you want to display the registration form with a shortcode on this page, go to the "Form" tab and change the setting "Form Location" to "Shortcode"</span>';
+			$error_html .= '</div>';
 	}
 
 	if ( $error_html !== '' ) {
@@ -1360,44 +1372,44 @@ function rtec_the_registration_form_shortcode( $atts ) {
  */
 add_shortcode( 'rtec-attendee-list', 'rtec_the_attendee_list_shortcode' );
 function rtec_the_attendee_list_shortcode( $atts ) {
-	$post_id = isset( $atts['event'] ) ? (int)$atts['event'] : false;
+	$post_id = isset( $atts['event'] ) ? (int) $atts['event'] : false;
 
 	if ( ! $post_id ) {
-		$post_id = isset( $_GET['event_id'] ) ? (int)$_GET['event_id'] : false;
+		$post_id = isset( $_GET['event_id'] ) ? (int) $_GET['event_id'] : false;
 
 		if ( $post_id ) {
 			$atts['event'] = $post_id;
 		}
 	}
 
-	if ( (int)$post_id > 0 ) {
-		$rtec = RTEC();
-		$event_id = (int)$post_id;
+	if ( (int) $post_id > 0 ) {
+		$rtec     = RTEC();
+		$event_id = (int) $post_id;
 		$rtec->form->build_form( $event_id );
 		$fields_atts = $rtec->form->get_field_attributes();
 
 		$event_meta = $rtec->form->get_event_meta();
 
-		$to_include = apply_filters( 'rtec_attendee_list_fields', array() );
+		$to_include           = apply_filters( 'rtec_attendee_list_fields', array() );
 		$attendee_list_fields = apply_filters( 'rtec_attendee_list_fields', $to_include );
-		$registrants_data = $rtec->db_frontend->get_registrants_data( $event_meta, $attendee_list_fields );
+		$registrants_data     = $rtec->db_frontend->get_registrants_data( $event_meta, $attendee_list_fields );
 		ob_start();
 		echo '<div class="rtec-attendee-list-wrap rtec-shortcode-attendee-list">';
 		if ( isset( $atts['showheader'] ) && $atts['showheader'] === 'true' ) {
 			$rtec->form->the_event_header();
 		}
 
-		if ( !empty( $registrants_data ) ) {
+		if ( ! empty( $registrants_data ) ) {
 			do_action( 'rtec_the_attendee_list', $registrants_data );
 		} else {
 			global $rtec_options;
 
-			$f_text = isset( $rtec_options['attendance_text_none_yet'] ) ? $rtec_options['attendance_text_none_yet'] : __( 'Be the first!', 'registrations-for-the-events-calendar' );
-			$f_message = rtec_get_text( $f_text, __( 'Be the first!', 'registrations-for-the-events-calendar' ) );
+			$f_text      = isset( $rtec_options['attendance_text_none_yet'] ) ? $rtec_options['attendance_text_none_yet'] : __( 'Be the first!', 'registrations-for-the-events-calendar' );
+			$f_message   = rtec_get_text( $f_text, __( 'Be the first!', 'registrations-for-the-events-calendar' ) );
 			$text_string = $f_message;
 
 			$title = isset( $rtec_options['attendee_list_title'] ) ? $rtec_options['attendee_list_title'] : __( 'Currently Registered', 'registrations-for-the-events-calendar' );
-			$title = rtec_get_text( $title,  __( 'Currently Registered', 'registrations-for-the-events-calendar' ) );
+			$title = rtec_get_text( $title, __( 'Currently Registered', 'registrations-for-the-events-calendar' ) );
 			?>
 
 			<div class="tribe-events-event-meta rtec-event-meta"><h3 class="rtec-section-title"><?php esc_html_e( $title ); ?></h3>
@@ -1409,8 +1421,16 @@ function rtec_the_attendee_list_shortcode( $atts ) {
 		$html = ob_get_contents();
 		ob_get_clean();
 	} else {
-		$html = '<p>'.__( 'Please enter an Event ID to view the attendee list', 'registrations-for-the-events-calendar' ) . '</p>';
+		$html = '<p>' . __( 'Please enter an Event ID to view the attendee list', 'registrations-for-the-events-calendar' ) . '</p>';
 	}
 
 	return $html;
+}
+
+function rtec_tribe_get_option( $option_name ) {
+	if ( is_callable( 'tribe_get_option' ) ) {
+		return tribe_get_option( $option_name );
+	}
+
+	return false;
 }

@@ -109,20 +109,20 @@ if(get_option('xyz_ips_premium_version_ads')==1){ ?>
 <input class="xyz_ips_name"  type="text" placeholder="Name" name="field1" value="<?php
 if ($current_user->user_firstname != "" || $current_user->user_lastname != "")
 {
-    echo $current_user->user_firstname . " " . $current_user->user_lastname;
+    echo esc_html($current_user->user_firstname . " " . $current_user->user_lastname);
 }
 else if (strcasecmp($current_user->display_name, 'admin')!=0 && strcasecmp($current_user->display_name , "administrator")!=0 )
 {
-    echo $current_user->display_name;
+    echo esc_html($current_user->display_name);
 }
 else if (strcasecmp($current_user->user_login ,"admin")!=0 && strcasecmp($current_user->user_login , "administrator")!=0 )
 {
-    echo $current_user->user_login;
+    echo esc_html($current_user->user_login);
 }
 ?>"  >
 
 <input class="xyz_ips_email" name="email"
-type="text" placeholder="Email" value="<?php   echo $current_user->user_email; ?>" />
+type="text" placeholder="Email" value="<?php   echo esc_html($current_user->user_email); ?>" />
 
 <input id="xyz_ips_submit_ips_btn" type="submit" class="xyz_ips_sbmt_btn" value="Subscribe" name="Submit"  onclick="javascript: if(!verify_fields()) return false; " />
 

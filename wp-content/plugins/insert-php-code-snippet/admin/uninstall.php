@@ -31,6 +31,8 @@ delete_option("xyz_ips_limit");
 delete_option("xyz_ips_installed_date");
 delete_option('xyz_ips_credit_dismiss');
 delete_option("xyz_ips_exception_email");
+delete_option("xyz_ips_exec_in_editor");
+delete_option("xyz_ips_auto_insert");
 /* table delete*/
 $wpdb->query("DROP TABLE ".$wpdb->prefix."xyz_ips_short_code");
 

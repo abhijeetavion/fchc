@@ -64,6 +64,30 @@ Integrate PHP code seamlessly to your wordpress. This plugin lets you generate a
 		<td><img src="<?php echo plugins_url('images/tick.png',XYZ_INSERT_PHP_PLUGIN_FILE);?>">
 		</td>
 	</tr>
+	<tr>
+    <td rowspan="3"><h4>Snippet Placement Methods</h4></td>
+    <td>Shortcode (Manual)</td>
+    <td><img src="<?php echo plugins_url('images/tick.png',XYZ_INSERT_PHP_PLUGIN_FILE);?>"></td>
+    <td><img src="<?php echo plugins_url('images/tick.png',XYZ_INSERT_PHP_PLUGIN_FILE);?>"></td>
+</tr>
+<tr>
+    <td><b>Execute on Demand</b></td>
+    <td><img src="<?php echo plugins_url('images/cross.png',XYZ_INSERT_PHP_PLUGIN_FILE);?>"></td>
+    <td><img src="<?php echo plugins_url('images/tick.png',XYZ_INSERT_PHP_PLUGIN_FILE);?>"></td>
+</tr>
+<tr>
+    <td><b>Automatic Placement Locations: </b>
+        <ul style="margin: 4px; padding-left: 20px;">
+            <li><b>1. Global:</b> (Site-wide PHP snippet)</li>
+            <li><b>2. Admin Panel:</b> (Every Admin Page, Admin Header, Admin Footer, Admin Body)</li>
+            <li><b>3. Front End:</b> (All Pages, Front End Header, Front End Footer, Body of Front End)</li>
+            <li><b>4. Specific Page:</b> (Before Content, After Content, Before Paragraph, After Paragraph)</li>
+            <li><b>5. Archive Pages:</b> (Insert Before Excerpt, Insert After Excerpt, Between Posts, Before Post, After Post)</li>
+        </ul>
+</td>
+    <td><img src="<?php echo plugins_url('images/cross.png',XYZ_INSERT_PHP_PLUGIN_FILE);?>"></td>
+    <td><img src="<?php echo plugins_url('images/tick.png',XYZ_INSERT_PHP_PLUGIN_FILE);?>"></td>
+</tr>
 		<!-- Posting Options  -->
 	<tr>
 		<td rowspan="3"><h4>Third party code</h4></td>
@@ -151,7 +175,7 @@ Integrate PHP code seamlessly to your wordpress. This plugin lets you generate a
 	</tr>
 	<!-- Snippet Targeting  -->
 	<tr>
-	<td rowspan="4"><h4>Snippet Targeting</h4></td>
+	<td rowspan="5"><h4>Snippet Targeting</h4></td>
 		<td><b>Geographic Targeting</b></td>
 		<td><img src="<?php echo plugins_url('images/cross.png',XYZ_INSERT_PHP_PLUGIN_FILE);?>">
 		</td>
@@ -167,6 +191,13 @@ Integrate PHP code seamlessly to your wordpress. This plugin lets you generate a
 	</tr>
 	<tr>
 		<td><b>User Targeting</b></td>
+		<td><img src="<?php echo plugins_url('images/cross.png',XYZ_INSERT_PHP_PLUGIN_FILE);?>">
+		</td>
+		<td><img src="<?php echo plugins_url('images/tick.png',XYZ_INSERT_PHP_PLUGIN_FILE);?>">
+		</td>
+	</tr>
+	<tr>
+		<td><b>Role Targeting</b></td>
 		<td><img src="<?php echo plugins_url('images/cross.png',XYZ_INSERT_PHP_PLUGIN_FILE);?>">
 		</td>
 		<td><img src="<?php echo plugins_url('images/tick.png',XYZ_INSERT_PHP_PLUGIN_FILE);?>">

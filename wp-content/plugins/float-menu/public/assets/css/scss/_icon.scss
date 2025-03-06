@@ -1,0 +1,226 @@
+.floating-menu {
+  .fm-icon {
+    --_flip: 1;
+    --_rotate: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: calc(var(--fm-icon-box) * 1px);
+    height: calc(var(--fm-icon-box) * 1px);
+    font-size: calc(var(--fm-icon-size) * 1px);
+    padding: 0;
+    margin: 0;
+    z-index: 1;
+    color: var(--fm-color);
+    background-color: var(--fm-background);
+    border-radius: var(--fm-icon-radius);
+    transform-origin: center;
+
+    &.-full {
+      img {
+        width: calc(var(--fm-icon-box) * 1px);
+        height: calc(var(--fm-icon-box) * 1px);
+        border-radius: var(--fm-icon-radius);
+      }
+    }
+
+    img {
+      width: calc(var(--fm-icon-size) * 1px);
+      height: calc(var(--fm-icon-size) * 1px);
+      object-fit: cover;
+    }
+
+    img,
+    span {
+      rotate: calc(var(--_rotate) * 1deg);
+      scale: var(--_flip);
+      //transform: rotate(calc(var(--_rotate) * 1deg)) scale(var(--_flip));
+    }
+
+    &.-flip-horizontal {
+      --_flip: -1 1;
+    }
+
+    &.-flip-vertical {
+      --_flip: 1 -1;
+    }
+
+    &.-flip-both {
+      --_flip: -1 -1;
+    }
+
+    &.-beat,
+    &.-bounce,
+    &.-fade,
+    &.-beat-fade,
+    &.-flip,
+    &.-shake,
+    &.-spin {
+
+      --icon-delay: 0s;
+      --icon-duration: 1s;
+      --icon-count: infinite;
+
+      img,
+      span {
+        animation-delay: var(--icon-delay);
+        animation-direction: normal;
+        animation-duration: var(--icon-duration);
+        animation-iteration-count: var(--icon-count);
+      }
+
+    }
+
+    &.-beat {
+      img,
+      span {
+        animation-name: wowp-icon-beat;
+        animation-timing-function: ease-in-out;
+      }
+    }
+
+    &.-bounce {
+      img,
+      span {
+        animation-name: wowp-icon-bounce;
+        animation-timing-function: cubic-bezier(0.28, 0.84, 0.42, 1);
+      }
+    }
+
+    &.-fade {
+      img,
+      span {
+        animation-name: wowp-icon-fade;
+        animation-timing-function: cubic-bezier(0.4, 0, 0.6, 1);
+      }
+    }
+
+    &.-beat-fade {
+      img,
+      span {
+        animation-name: wowp-icon-beat-fade;
+        animation-timing-function: cubic-bezier(0.4, 0, 0.6, 1);
+      }
+    }
+
+    &.-flip {
+      img,
+      span {
+        animation-name: wowp-icon-flip;
+        animation-timing-function: ease-in-out;
+      }
+    }
+
+    &.-shake {
+      img,
+      span {
+        animation-name: wowp-icon-shake;
+        animation-timing-function: linear;
+      }
+    }
+
+    &.-spin {
+      img,
+      span {
+        animation-name: wowp-icon-spin;
+        animation-timing-function: linear;
+      }
+    }
+
+  }
+}
+
+@keyframes wowp-icon-beat {
+  0%, 90% {
+    transform: scale(1);
+  }
+  45% {
+    transform: scale(1.25);
+  }
+}
+
+@keyframes wowp-icon-bounce {
+  0% {
+    transform: scale(1, 1) translateY(0);
+  }
+  10% {
+    transform: scale(1.1, 0.9) translateY(0);
+  }
+  30% {
+    transform: scale(0.9, 1.1) translateY(-0.25em);
+  }
+  50% {
+    transform: scale(1.05, 0.95) translateY(0);
+  }
+  57% {
+    transform: scale(1, 1) translateY(-0.125em);
+  }
+  64% {
+    transform: scale(1, 1) translateY(0);
+  }
+  100% {
+    transform: scale(1, 1) translateY(0);
+  }
+}
+
+@keyframes wowp-icon-fade {
+  50% {
+    opacity: 0.4;
+  }
+}
+
+@keyframes wowp-icon-beat-fade {
+  0%, 100% {
+    opacity: 0.4;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.125);
+  }
+}
+
+@keyframes wowp-icon-flip {
+  50% {
+    transform: rotate3d(0, 1, 0, -180deg);
+  }
+}
+
+@keyframes wowp-icon-shake {
+  0% {
+    transform: rotate(-15deg);
+  }
+  4% {
+    transform: rotate(15deg);
+  }
+  8%, 24% {
+    transform: rotate(-18deg);
+  }
+  12%, 28% {
+    transform: rotate(18deg);
+  }
+  16% {
+    transform: rotate(-22deg);
+  }
+  20% {
+    transform: rotate(22deg);
+  }
+  32% {
+    transform: rotate(-12deg);
+  }
+  36% {
+    transform: rotate(12deg);
+  }
+  40%, 100% {
+    transform: rotate(0deg);
+  }
+}
+
+@keyframes wowp-icon-spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}

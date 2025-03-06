@@ -78,7 +78,7 @@ abstract class ElementorWidget extends Elementor {
 	public function __construct( $data = [], $args = null ) {
 		$this->elCategory = 'rttm-elementor-widgets';
 		$this->elPrefix   = 'rttm_el_';
-		$this->proLabel   = __( '<span class="rttm-pro-label">Pro</span>', 'tlp-team' );
+		$this->proLabel   =  '<span class="rttm-pro-label">'.__('Pro','tlp-team').'</span>';
 
 		parent::__construct( $data, $args );
 	}

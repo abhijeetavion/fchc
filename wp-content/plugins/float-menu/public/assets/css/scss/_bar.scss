@@ -1,0 +1,17 @@
+.floating-menu {
+  --fm-button-space: 0;
+
+  &.-button-space {
+    --fm-button-space: 2;
+  }
+
+  ul.fm-bar {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: calc(var(--fm-button-space) * 1px);
+  }
+
+}

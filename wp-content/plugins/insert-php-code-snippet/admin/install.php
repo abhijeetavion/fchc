@@ -65,7 +65,7 @@ if (is_plugin_active($pluginName)) {
     }
     add_option('xyz_ips_limit',20);
     add_option('xyz_ips_exception_email',"0");
-    
+    add_option('xyz_ips_exec_in_editor','0');
     $charset_collate = $wpdb->get_charset_collate();
     $queryInsertPhp = "CREATE TABLE IF NOT EXISTS  ".$wpdb->prefix."xyz_ips_short_code (
 `id` int NOT NULL AUTO_INCREMENT,

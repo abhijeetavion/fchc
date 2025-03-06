@@ -2,15 +2,13 @@
 /**
  * Subscribers DB Handler
  *
- * @package   PUM
- * @copyright Copyright (c) 2023, Code Atlantic LLC
+ * @package   PopupMaker
+ * @copyright Copyright (c) 2024, Code Atlantic LLC
+ *
+ * phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery
  */
+
 // Exit if accessed directly
-
-/*******************************************************************************
- * Copyright (c) 2019, Code Atlantic LLC
- ******************************************************************************/
-
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
@@ -72,7 +70,6 @@ class PUM_DB_Subscribers extends PUM_Abstract_Database {
 			'consent'      => 'no',
 			'created'      => current_time( 'mysql', 0 ),
 		];
-
 	}
 
 	/**
@@ -123,18 +120,26 @@ class PUM_DB_Subscribers extends PUM_Abstract_Database {
 		// Strip prefix to ensure it doesn't leak unintentionally.
 		$results = str_replace( $wpdb->prefix, '', implode( ',', $results ) );
 
-		PUM_Utils_Logging::instance()->log( 'Subscriber table results: ' . $results );
+		pum_log_message( 'Subscriber table results: ' . $results );
 
 		$previous_error = $wpdb->last_error; // The show tables query will erase the last error. So, record it now in case we need it.
-		if ( $wpdb->get_var( "SHOW TABLES LIKE '{$this->table_name()}'" ) !== $this->table_name() ) {
-			PUM_Utils_Logging::instance()->log( "Subscriber table exists check failed! Last error from wpdb: " . str_replace( $wpdb->prefix, '', $previous_error ) );
+
+		if ( $this->wp_version >= 6.2 ) {
+			$table_found = $wpdb->get_var( $wpdb->prepare( 'SHOW TABLES LIKE %i', $this->table_name() ) );
+		} else {
+			// Ignored because these are identifiersas we still support <=6.2
+			// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+			$table_found = $wpdb->get_var( "SHOW TABLES LIKE '{$this->table_name()}'" );
+		}
+
+		if ( $this->table_name() !== $table_found ) {
+			pum_log_message( 'Subscriber table exists check failed! Last error from wpdb: ' . str_replace( $wpdb->prefix, '', $previous_error ) );
 		}
 
 		update_option( $this->table_name . '_db_version', $this->version );
 	}
 
 	public function get_by_email( $email = '' ) {
-
 	}
 
 
@@ -179,13 +184,12 @@ class PUM_DB_Subscribers extends PUM_Abstract_Database {
 
 		// Build search query.
 		if ( $args['s'] && ! empty( $args['s'] ) ) {
-
 			$search = wp_unslash( trim( $args['s'] ) );
 
 			$search_where = [];
 
 			foreach ( $columns as $key => $type ) {
-				if ( in_array( $key, $fields ) ) {
+				if ( in_array( $key, $fields, true ) ) {
 					if ( '%s' === $type || ( '%d' === $type && is_numeric( $search ) ) ) {
 						$values[]       = '%' . $wpdb->esc_like( $search ) . '%';
 						$search_where[] = "`$key` LIKE '%s'";
@@ -201,7 +205,7 @@ class PUM_DB_Subscribers extends PUM_Abstract_Database {
 		$query .= " $where";
 
 		if ( ! empty( $args['orderby'] ) ) {
-			$query   .= ' ORDER BY %s';
+			$query   .= ' ORDER BY %i';
 			$values[] = wp_unslash( trim( $args['orderby'] ) );
 
 			switch ( $args['order'] ) {
@@ -232,10 +236,12 @@ class PUM_DB_Subscribers extends PUM_Abstract_Database {
 			$values[] = absint( $args['offset'] );
 		}
 
-		if ( strpos( $query, '%s' ) || strpos( $query, '%d' ) ) {
+		if ( strpos( $query, '%s' ) || strpos( $query, '%d' ) || strpos( $query, '%i' ) ) {
+			// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 			$query = $wpdb->prepare( $query, $values );
 		}
 
+		// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 		return $wpdb->get_results( $query, $return_type );
 	}
 

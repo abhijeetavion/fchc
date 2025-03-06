@@ -513,7 +513,7 @@ var cf7sgCustomHybridddTemplates = (function (cchddt) {return cchddt;}(cf7sgCust
       var $form= $(this), fid = $form.attr('id');
       if( !objEmpty( cf7sg[fid],['prefill'] ) ){
         Object.keys(cf7sg[fid].prefill).forEach(function(f){
-          var $f = $('.'+f+' :input', $form);
+          var $f = $('[data-name="'+f+'"] :input', $form);
           if(0==$f.length) $f = $(':input[name="'+f+'"]', $form); /* hidden field fix */
           $f.prefillCF7Field(cf7sg[fid].prefill[f], fid);
         })
@@ -939,7 +939,7 @@ var cf7sgCustomHybridddTemplates = (function (cchddt) {return cchddt;}(cf7sgCust
       if('undefined' == typeof max || max == false) return;
       $table.siblings('.cf7-sg-table-button').removeClass('disabled').children('.max-limit').remove();
     });
-    /** @since 4.11 reintroduce html response in CF7.*/
+    /** @since 4.15.5 reintroduce html response in CF7.*/
     $('form.wpcf7-form').each(function(){
       let cf7 = this;
       cf7.querySelectorAll( '.wpcf7-response-output' ).forEach(div=> {
@@ -953,10 +953,18 @@ var cf7sgCustomHybridddTemplates = (function (cchddt) {return cchddt;}(cf7sgCust
           // console.log(e.detail);
           cf7.querySelectorAll( '.cf7sg-response-output' ).forEach( div => {
             let msg = e.detail.apiResponse.message;
-            if(msg.indexOf('cf7sg->redirect:')==0){
-              location = msg.replace('cf7sg->redirect:', '');
+						if('undefined' != typeof e.detail.apiResponse.cf7sgResponse){
+							msg = e.detail.apiResponse.cf7sgResponse
+            if('undefined' != typeof msg.redirect ){
+              location = msg.redirect;
               return false; //exit forEach.
-      			}else div.innerHTML = `${msg}<div class="wpcf7-response-output"></div>`;
+      			}else if('undefined' != typeof msg[e.detail.apiResponse.status])
+							msg = msg[e.detail.apiResponse.status];
+						}else{
+							msg = e.detail.apiResponse.message;
+						}
+						div.innerHTML = `${msg}<div class="wpcf7-response-output"></div>`;
+
       		})
         }
       })

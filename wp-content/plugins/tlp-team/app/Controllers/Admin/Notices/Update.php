@@ -90,10 +90,10 @@ class Update {
 											.on('click', function (e) {
 												e.preventDefault();
 
-												$.post( '<?php echo admin_url( 'admin-ajax.php' ); ?>',
+												$.post( '<?php echo esc_url(admin_url( 'admin-ajax.php' )); ?>',
 													{
 														'action': 'rtteam_shortcodedismiss_admin_notice',
-														'nonce': <?php echo json_encode( wp_create_nonce( 'rtteam-rtshortcodedismissable' ) ); ?>
+														'nonce': <?php echo wp_json_encode( wp_create_nonce( 'rtteam-rtshortcodedismissable' ) ); ?>
 													},
 													function(data, status){
 														console.log( status )

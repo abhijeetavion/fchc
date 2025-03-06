@@ -42,19 +42,20 @@ class Shortcode {
 				'posts_per_page' => - 1,
 			]
 		);
+
 		if ( $scQ->have_posts() ) {
 			?>
 			<div class='mce-container mce-form'>
 				<div class='mce-container-body'>
 					<label class="mce-widget mce-label" style="padding: 20px;font-weight: bold;"
-						for="scid"><?php _e( 'Select Shortcode', 'tlp-team' ); ?></label>
+						for="scid"><?php esc_html_e( 'Select Shortcode', 'tlp-team' ); ?></label>
 					<select name='id' id='scid' style='width: 150px;margin: 15px;'>
-						<option value=''><?php _e( 'Default', 'tlp-team' ); ?></option>
+						<option value=''><?php esc_html_e( 'Default', 'tlp-team' ); ?></option>
 						<?php
 						while ( $scQ->have_posts() ) {
 							$scQ->the_post();
 							?>
-							<option value='<?php get_the_ID(); ?>'><?php get_the_title(); ?></option>
+							<option value='<?php echo esc_attr( get_the_ID() ); ?>'><?php echo esc_html( get_the_title() ); ?></option>
 							<?php
 						}
 						wp_reset_postdata();
@@ -65,7 +66,7 @@ class Shortcode {
 			<?php
 		} else {
 			?>
-			<div><?php _e( 'No shortCode found.', 'tlp-team' ); ?></div>
+			<div><?php esc_html_e( 'No shortCode found.', 'tlp-team' ); ?></div>
 			<?php
 		}
 		die();

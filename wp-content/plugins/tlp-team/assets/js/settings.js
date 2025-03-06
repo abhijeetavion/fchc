@@ -307,7 +307,7 @@
 				$.ajax({
 					type: "post",
 					url: ajaxurl,
-					data: order + "&action=tlp-team-update-menu-order",
+					data: order + "&action=tlp-team-update-menu-order&"+ ttp.nonceID + "=" + ttp.nonce,
 					beforeSend: function () {
 						$('body').append($("<div id='rt-loading'><span class='rt-loading'>Updating ...</span></div>"));
 					},

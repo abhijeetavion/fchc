@@ -15,20 +15,31 @@ class RTEC_Migration {
 	const MAX_ATTEMPTS = 100;
 
 	public function __construct() {
-		$migration_status = get_option( 'rtec_migration_status', array( 'attempts' => 0, 'complete' => false, 'one_migration_done' => false, 'secondary_check' => 'pending' ) );
+		$migration_status       = get_option(
+			'rtec_migration_status',
+			array(
+				'attempts'           => 0,
+				'complete'           => false,
+				'one_migration_done' => false,
+				'secondary_check'    => 'pending',
+			)
+		);
 		$this->migration_status = $migration_status;
 		if ( ! is_array( $migration_status ) ) {
-			$migration_status = array( 'attempts' => 0, 'complete' => false, 'one_migration_done' => false );
+			$migration_status = array(
+				'attempts'           => 0,
+				'complete'           => false,
+				'one_migration_done' => false,
+			);
 		}
 		if ( empty( $migration_status['attempts'] ) ) {
-			$this->migration_status['attempts'] = 0;
-			$this->migration_status['complete'] = false;
+			$this->migration_status['attempts']           = 0;
+			$this->migration_status['complete']           = false;
 			$this->migration_status['one_migration_done'] = false;
-			$this->migration_status['secondary_check'] = 'pending';
+			$this->migration_status['secondary_check']    = 'pending';
 		}
 		$this->migrations_attempts = $this->migration_status['attempts'];
-		$this->missed_ids = get_option( 'rtec_migration_missed', array() );
-
+		$this->missed_ids          = get_option( 'rtec_migration_missed', array() );
 	}
 
 	/**
@@ -93,7 +104,6 @@ class RTEC_Migration {
 			$this->missed_ids = $ids;
 			update_option( 'rtec_migration_missed', $ids );
 		}
-
 	}
 
 	public function get_missed_ids() {
@@ -109,11 +119,11 @@ class RTEC_Migration {
 
 	public function pause() {
 		$this->migration_status = array(
-			'paused' => true,
-			'attempts' => 0,
-			'complete' => false,
+			'paused'             => true,
+			'attempts'           => 0,
+			'complete'           => false,
 			'one_migration_done' => false,
-			'secondary_check' => 'pending'
+			'secondary_check'    => 'pending',
 		);
 
 		update_option( 'rtec_migration_status', $this->migration_status );
@@ -145,7 +155,6 @@ class RTEC_Migration {
 		}
 
 		$this->do_migration_batch();
-
 	}
 
 	public function migration_needed_alert() {
@@ -157,8 +166,8 @@ class RTEC_Migration {
 			return;
 		}
 		?>
-		<div class="rtec-notice rtec-top-notice">
-			<?php echo sprintf( __( 'Migration needed for some registrations! No action needed as this is being done automatically. Visit %sthis page%s if you would like to review progress.', 'registrations-for-the-events-calendar' ), '<a href="?page=rtec-support&tab=migration">', '</a>')?>
+		<div class="rtec-notice rtec-top-notice rtec-box-shadow">
+			<?php printf( __( 'Migration needed for some registrations! No action needed as this is being done automatically. Visit %1$sthis page%2$s if you would like to review progress.', 'registrations-for-the-events-calendar' ), '<a href="?page=rtec-support&tab=migration">', '</a>' ); ?>
 		</div>
 		<?php
 	}
@@ -178,7 +187,7 @@ class RTEC_Migration {
 				array(
 					'key'     => '_RTEC_Migration_Complete',
 					'compare' => 'NOT EXISTS',
-				)
+				),
 			),
 		);
 
@@ -194,12 +203,12 @@ class RTEC_Migration {
 		$args      = array(
 			'post_type'      => $post_type,
 			'posts_per_page' => 50,
-			'post_parent' => $parent_post,
+			'post_parent'    => $parent_post,
 			'meta_query'     => array(
 				array(
 					'key'     => '_RTEC_Migration_Complete',
 					'compare' => 'NOT EXISTS',
-				)
+				),
 			),
 		);
 
@@ -219,12 +228,13 @@ class RTEC_Migration {
 		$migration_start_date = date( 'Y-m-d H:i:s', strtotime( $migration_start_date ) );
 		global $wpdb;
 
-		$results = array();
+		$results        = array();
 		$results_failed = array();
 		if ( defined( 'RTEC_TABLENAME_ENTRIES' ) ) {
 			$entries_table_name = $wpdb->prefix . RTEC_TABLENAME_ENTRIES;
 
-			$results = $wpdb->get_col( "
+			$results = $wpdb->get_col(
+				"
 				SELECT entries.event_id FROM $entries_table_name as entries
 				LEFT JOIN $wpdb->postmeta as meta on entries.event_id = meta.post_id
 				WHERE NOT EXISTS (
@@ -235,9 +245,11 @@ class RTEC_Migration {
 				AND entries.event_id < 10000000
 				AND entries.registration_date < '$migration_start_date'
 				GROUP BY entries.event_id
-			");
+			"
+			);
 
-			$results_failed = $wpdb->get_col( "
+			$results_failed = $wpdb->get_col(
+				"
 				SELECT entries.event_id FROM $entries_table_name as entries
 				LEFT JOIN $wpdb->postmeta as meta on entries.event_id = meta.post_id
 				WHERE meta.meta_key = '_RTEC_Migration_Failed'
@@ -245,14 +257,16 @@ class RTEC_Migration {
 				AND entries.event_id < 10000000
 				AND entries.registration_date < '$migration_start_date'
 				GROUP BY entries.event_id
-			");
+			"
+			);
 		}
 
 		$results_backwards = array();
 		if ( defined( 'RTEC_TABLENAME' ) ) {
 			$entries_table_name = $wpdb->prefix . RTEC_TABLENAME;
 
-			$results_backwards = $wpdb->get_col( "
+			$results_backwards = $wpdb->get_col(
+				"
 				SELECT entries.event_id FROM $entries_table_name as entries
 				LEFT JOIN $wpdb->postmeta as meta on entries.event_id = meta.post_id
 				WHERE NOT EXISTS (
@@ -263,75 +277,89 @@ class RTEC_Migration {
 				AND entries.event_id < 10000000
 				AND entries.registration_date < '$migration_start_date'
 				GROUP BY entries.event_id
-			");
-			$results_failed = $wpdb->get_col( "
+			"
+			);
+			$results_failed    = $wpdb->get_col(
+				"
 				SELECT entries.event_id FROM $entries_table_name as entries
 				LEFT JOIN $wpdb->postmeta as meta on entries.event_id = meta.post_id
 				WHERE meta.meta_key = '_RTEC_Migration_Failed'
 				AND entries.event_id < 10000000
 				AND entries.registration_date < '$migration_start_date'
 				GROUP BY entries.event_id
-			");
+			"
+			);
 		}
 
-
 		return array_merge( $results, $results_backwards, $results_failed );
-
 	}
 
 	public function get_migration_data( $abandoned_recurrence_event_id, $series_id = 0, $bypass_series = false ) {
 		$migration_data = array(
 			'from' => $abandoned_recurrence_event_id,
-			'to' => false,
+			'to'   => false,
 		);
 
 		global $wpdb;
 
-		$occurrences_table = $wpdb->prefix . 'tec_occurrences';
+		$occurrences_table              = $wpdb->prefix . 'tec_occurrences';
 		$tec_series_relationships_table = $wpdb->prefix . 'tec_series_relationships';
-		$abandoned_event_start_date = get_post_meta( $abandoned_recurrence_event_id, '_EventStartDateUTC', true );
+		$abandoned_event_start_date     = get_post_meta( $abandoned_recurrence_event_id, '_EventStartDateUTC', true );
 
 		if ( $bypass_series ) {
-			$found_event_migration_data = $wpdb->get_results( $wpdb->prepare(
-				"SELECT * FROM $occurrences_table as o
+			$found_event_migration_data = $wpdb->get_results(
+				$wpdb->prepare(
+					"SELECT * FROM $occurrences_table as o
 					LEFT JOIN $tec_series_relationships_table as s ON s.event_post_id = o.post_id
 					WHERE o.start_date_utc = %s",
-				$abandoned_event_start_date ), ARRAY_A );
+					$abandoned_event_start_date
+				),
+				ARRAY_A
+			);
 
 			if ( ! empty( $found_event_migration_data ) && (int) $found_event_migration_data[0]['has_recurrence'] === 1 ) {
 				$found_event_migration_data = $this->best_found( $abandoned_recurrence_event_id, $found_event_migration_data );
-				$migration_data['to'] = 10000000 + (int) $found_event_migration_data[0]['occurrence_id'];
+				$migration_data['to']       = 10000000 + (int) $found_event_migration_data[0]['occurrence_id'];
 			} elseif ( ! empty( $found_event_migration_data ) ) {
 				$found_event_migration_data = $this->best_found( $abandoned_recurrence_event_id, $found_event_migration_data );
-				$migration_data['to'] = (int) $found_event_migration_data[0]['post_id'];
+				$migration_data['to']       = (int) $found_event_migration_data[0]['post_id'];
 			}
 		} elseif ( empty( $series_id ) ) {
-			$found_event_migration_data = $wpdb->get_results( $wpdb->prepare(
-				"SELECT * FROM $occurrences_table as o
+			$found_event_migration_data = $wpdb->get_results(
+				$wpdb->prepare(
+					"SELECT * FROM $occurrences_table as o
 					LEFT JOIN $tec_series_relationships_table as s ON s.event_post_id = o.post_id
 					WHERE o.start_date_utc = %s
 					AND o.has_recurrence = 0",
-				$abandoned_event_start_date ), ARRAY_A );
+					$abandoned_event_start_date
+				),
+				ARRAY_A
+			);
 
 			if ( ! empty( $found_event_migration_data ) ) {
 				$found_event_migration_data = $this->best_found( $abandoned_recurrence_event_id, $found_event_migration_data );
-				$migration_data['to'] = (int) $found_event_migration_data[0]['post_id'];
+				$migration_data['to']       = (int) $found_event_migration_data[0]['post_id'];
 			}
 		} else {
-			$found_event_migration_data = $wpdb->get_results( $wpdb->prepare(
-				"SELECT * FROM $occurrences_table as o
+			$found_event_migration_data = $wpdb->get_results(
+				$wpdb->prepare(
+					"SELECT * FROM $occurrences_table as o
 					LEFT JOIN $tec_series_relationships_table as s ON s.event_post_id = o.post_id
 					WHERE o.start_date_utc = %s
 					AND s.series_post_id = %d",
-				$abandoned_event_start_date, $series_id ), ARRAY_A );
+					$abandoned_event_start_date,
+					$series_id
+				),
+				ARRAY_A
+			);
 
 			if ( ! empty( $found_event_migration_data ) ) {
 				if ( ! empty( $found_event_migration_data ) && (int) $found_event_migration_data[0]['has_recurrence'] === 1 ) {
 					$found_event_migration_data = $this->best_found( $abandoned_recurrence_event_id, $found_event_migration_data );
-					$migration_data['to'] = 10000000 + (int) $found_event_migration_data[0]['occurrence_id'];
+					$migration_data['to']       = 10000000 + (int) $found_event_migration_data[0]['occurrence_id'];
 				} elseif ( ! empty( $found_event_migration_data ) ) {
 					$found_event_migration_data = $this->best_found( $abandoned_recurrence_event_id, $found_event_migration_data );
-					$migration_data['to'] = (int) $found_event_migration_data[0]['post_id'];
+					$migration_data['to']       = (int) $found_event_migration_data[0]['post_id'];
 				}
 			}
 		}
@@ -346,7 +374,7 @@ class RTEC_Migration {
 
 		foreach ( $found as $single_found ) {
 			if ( (int) $single_found['post_id'] === (int) $original
-				 && (int) $single_found['has_recurrence'] !== 1 ) {
+				&& (int) $single_found['has_recurrence'] !== 1 ) {
 				return array( $single_found );
 			}
 		}
@@ -368,20 +396,20 @@ class RTEC_Migration {
 
 	public function do_migration_batch() {
 		$this->update_migrations_attempts( 1 );
-		$num_migrations = 0;
+		$num_migrations         = 0;
 		$still_doing_migrations = true;
-		$migration_start_date = get_option( 'rtec_migration_date', false );
+		$migration_start_date   = get_option( 'rtec_migration_date', false );
 		if ( empty( $migration_start_date ) ) {
 			update_option( 'rtec_migration_date', date( 'Y-m-d H:i:s' ), false );
 		}
-		while( $still_doing_migrations && $num_migrations < self::MAX_BATCH ) {
+		while ( $still_doing_migrations && $num_migrations < self::MAX_BATCH ) {
 			$migrate_needed_events = $this->get_migration_needed_events();
 
 			if ( empty( $migrate_needed_events ) ) {
 				$still_doing_migrations = false;
 
 				if ( $this->migration_status['secondary_check'] === 'pending' ) {
-					$missing_ids = $this->get_missed_event_ids();
+					$missing_ids      = $this->get_missed_event_ids();
 					$missing_ids_live = $this->filter_existing_posts( $missing_ids );
 					if ( ! empty( $missing_ids_live ) ) {
 						$this->update_missed_ids( $missing_ids_live );
@@ -391,8 +419,7 @@ class RTEC_Migration {
 						$this->migration_status['secondary_check'] = 'complete';
 						$this->update_migrations_complete( false );
 					}
-
-				} elseif ($this->migration_status['secondary_check'] !== 'complete' ) {
+				} elseif ( $this->migration_status['secondary_check'] !== 'complete' ) {
 					$this->process_missed_ids();
 					if ( empty( $this->missed_ids ) ) {
 						$this->migration_status['secondary_check'] = 'complete';
@@ -411,9 +438,9 @@ class RTEC_Migration {
 				$post_meta               = get_post_meta( $migrate_needed_event_id );
 				$need_to_connect_series  = false;
 				if ( ! empty( $now_in_series ) &&
-					 ! empty( $post_meta['_RTECconnectedEvent'] )
-					 && is_array( $post_meta['_RTECconnectedEvent'] )
-					 && in_array( 'recurrences', $post_meta['_RTECconnectedEvent'] ) ) {
+					! empty( $post_meta['_RTECconnectedEvent'] )
+					&& is_array( $post_meta['_RTECconnectedEvent'] )
+					&& in_array( 'recurrences', $post_meta['_RTECconnectedEvent'] ) ) {
 					$need_to_connect_series = true;
 				}
 				if ( $need_to_connect_series ) {
@@ -438,10 +465,10 @@ class RTEC_Migration {
 
 						$this->do_migration( $to_migrate['from'], $to_migrate['to'] );
 						$this->update_one_migration_done( true );
-						$num_migrations ++;
+						++$num_migrations;
 					}
 				} else {
-					$num_migrations ++;
+					++$num_migrations;
 					update_post_meta( $migrate_needed_event_id, '_RTEC_Migration_Complete', 'yes' );
 				}
 			}
@@ -471,12 +498,12 @@ class RTEC_Migration {
 
 	public function process_missed_ids() {
 		$num_migrations = 0;
-		$missed_ids = $this->get_missed_ids();
+		$missed_ids     = $this->get_missed_ids();
 		foreach ( $missed_ids as $migrate_needed_event_id ) {
 			if ( $num_migrations >= self::MAX_BATCH ) {
 				break;
 			}
-			$num_migrations++;
+			++$num_migrations;
 			$now_in_series                   = rtec_maybe_series_id_for_event( $migrate_needed_event_id );
 			$migrate_needed_event_to_migrate = $this->get_migration_data( $migrate_needed_event_id, $now_in_series, true );
 
@@ -509,7 +536,7 @@ class RTEC_Migration {
 
 		if ( empty( $post_meta['_RTECregistrationsDisabled'] ) ) {
 			$default_disabled = isset( $rtec_options['disable_by_default'] ) ? $rtec_options['disable_by_default'] : false;
-			$value = 0;
+			$value            = 0;
 			if ( $default_disabled ) {
 				$value = 1;
 			}
@@ -522,19 +549,25 @@ class RTEC_Migration {
 	}
 
 	public function event_migration_complete( $event_id ) {
-		$cache_key = 'rtec_event_migration_complete_' . $event_id;
+		$cache_key         = 'rtec_event_migration_complete_' . $event_id;
 		$maybe_alias_cache = wp_cache_get( $cache_key );
 		if ( false === $maybe_alias_cache ) {
 
 			global $wpdb;
 			$table_name  = $wpdb->postmeta;
-			$result      = $wpdb->get_results( $wpdb->prepare( "
+			$result      = $wpdb->get_results(
+				$wpdb->prepare(
+					"
 			SELECT meta_value
 			FROM $table_name
 			WHERE meta_key = '_RTEC_Migration_Complete'
 			AND post_id = %d
 			LIMIT 1;
-			", $event_id ), ARRAY_A );
+			",
+					$event_id
+				),
+				ARRAY_A
+			);
 			$maybe_alias = ! empty( $result[0] ) ? $result[0]['meta_value'] : 'none';
 
 			wp_cache_set( $cache_key, $maybe_alias );
@@ -557,15 +590,22 @@ class RTEC_Migration {
 		global $wpdb;
 
 		$table_name = $wpdb->postmeta;
-		$result = $wpdb->query("
+		$result     = $wpdb->query(
+			"
 			DELETE
 			FROM $table_name
 			WHERE `meta_key` LIKE ('%_RTEC_Migration%')
-			");
+			"
+		);
 
 		delete_option( 'rtec_migration_status' );
 
-		$this->migration_status = array( 'attempts' => 0, 'complete' => false, 'one_migration_done' => false, 'secondary_check' => 'pending' );
+		$this->migration_status = array(
+			'attempts'           => 0,
+			'complete'           => false,
+			'one_migration_done' => false,
+			'secondary_check'    => 'pending',
+		);
 	}
 
 	public function ajax_undo_migration() {

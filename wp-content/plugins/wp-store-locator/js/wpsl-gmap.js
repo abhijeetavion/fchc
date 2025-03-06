@@ -32,20 +32,36 @@ function wpslCallback() {
 
 function initWpsl() {
 
-	// Create the maps
-	jQuery( ".wpsl-gmap-canvas" ).each( function ( mapIndex ) {
-		var mapId = jQuery( this ).attr( "id" );
-
-		wpsl.gmaps.init( mapId, mapIndex );
-	});
-
-	// Init JS from the WPSL add-ons.
-	if ( typeof wpslAddons === 'object' ) {
-		for ( const key in wpslAddons ) {
-			if ( wpslAddons.hasOwnProperty( key ) ) {
-				wpslAddons[key].init()
+	loadWpslFiles( function() {	// Create the maps
+		jQuery( ".wpsl-gmap-canvas" ).each( function ( mapIndex ) {
+			var mapId = jQuery( this ).attr( "id" );
+	
+			wpsl.gmaps.init( mapId, mapIndex );
+		});
+	
+		// Init JS from the WPSL add-ons.
+		if ( typeof wpslAddons === 'object' ) {
+			for ( const key in wpslAddons ) {
+				if ( wpslAddons.hasOwnProperty( key ) ) {
+					wpslAddons[key].init()
+				}
 			}
 		}
+	});
+}
+
+/**
+ * Temporary fix until the 3.0 update is released.
+ */
+function loadWpslFiles( callback ) {
+
+	if ( typeof wpslSettings.infoBox === 'object' && wpslSettings.infoWindowStyle == 'infobox' ) {
+		jQuery.getScript( wpslSettings.url + 'js/infobox.min.js' )
+			.done( function() {
+				callback();
+			});
+	} else {
+		callback();
 	}
 }
 
@@ -116,6 +132,9 @@ wpsl.gmaps.init = function( mapId, mapIndex ) {
         maxZoom = zoomLevel;
 	}
 
+	// Create a new infoWindow, either with the infobox libray or use the default one.
+	infoWindow = newInfoWindow();
+
     geocoder	      = new google.maps.Geocoder();
     directionsDisplay = new google.maps.DirectionsRenderer();
     directionsService = new google.maps.DirectionsService();
@@ -162,99 +181,93 @@ wpsl.gmaps.init = function( mapId, mapIndex ) {
 	 */
 	bindMoreInfo();
 
-	/**
-	 * Create a new infoWindow, either with the
-	 * infobox libray or the default one.
-	 */
-	prepareInfoWindow( function() {
-		infoWindow = newInfoWindow();
+	infoWindow = newInfoWindow();
 
-		if ( ( typeof window[ "wpslMap_" + mapIndex ] !== "undefined" ) && ( typeof window[ "wpslMap_" + mapIndex ].locations !== "undefined" ) ) {
-			bounds	= new google.maps.LatLngBounds(),
-			mapData = window[ "wpslMap_" + mapIndex ].locations;
+	if ( ( typeof window[ "wpslMap_" + mapIndex ] !== "undefined" ) && ( typeof window[ "wpslMap_" + mapIndex ].locations !== "undefined" ) ) {
+		bounds	= new google.maps.LatLngBounds(),
+		mapData = window[ "wpslMap_" + mapIndex ].locations;
 
-			// Loop over the map data, create the infowindow object and add each marker.
-			$.each( mapData, function( index ) {
-				latLng = new google.maps.LatLng( mapData[index].lat, mapData[index].lng );
-				addMarker( latLng, mapData[index].id, mapData[index], false, infoWindow );
-				bounds.extend( latLng );
-			});
+		// Loop over the map data, create the infowindow object and add each marker.
+		$.each( mapData, function( index ) {
+			latLng = new google.maps.LatLng( mapData[index].lat, mapData[index].lng );
+			addMarker( latLng, mapData[index].id, mapData[index], false, infoWindow );
+			bounds.extend( latLng );
+		});
 
-			// If we have more then one location on the map, then make sure to not zoom to far.
-			if ( mapData.length > 1 ) {
-				// Make sure we don't zoom to far when fitBounds runs.
-				attachBoundsChangedListener( map, maxZoom );
+		// If we have more than one location on the map, then make sure to not zoom to far.
+		if ( mapData.length > 1 ) {
+			// Make sure we don't zoom to far when fitBounds runs.
+			attachBoundsChangedListener( map, maxZoom );
 
-				// Make all the markers fit on the map.
-				map.fitBounds( bounds );
-			}
-
-			/*
-			 * If we need to apply the fix for the map showing up grey because
-			 * it's used in a tabbed nav multiple times, then collect the active maps.
-			 *
-			 * See the fixGreyTabMap function.
-			 */
-			if ( _.isArray( wpslSettings.mapTabAnchor ) ) {
-				mapDetails = {
-					map: map,
-					bounds: bounds,
-					maxZoom: maxZoom
-				};
-
-				mapsArray.push( mapDetails );
-			}
+			// Make all the markers fit on the map.
+			map.fitBounds( bounds );
 		}
 
-		// Only run this part if the store locator exist, and we don't just have a basic map.
-		if ( $( "#wpsl-gmap" ).length ) {
-			if ( wpslSettings.autoComplete == 1 ) {
-				activateAutocomplete();
-			}
+		/*
+		 * If we need to apply the fix for the map showing up grey because
+		 * it's used in a tabbed nav multiple times, then collect the active maps.
+		 *
+		 * See the fixGreyTabMap function.
+		 */
+		if ( _.isArray( wpslSettings.mapTabAnchor ) ) {
+			mapDetails = {
+				map: map,
+				bounds: bounds,
+				maxZoom: maxZoom
+			};
 
-			/*
-			 * Not the most optimal solution, but we check the useragent if we should enable the styled dropdowns.
-			 *
-			 * We do this because several people have reported issues with the styled dropdowns on
-			 * iOS and Android devices. So on mobile devices the dropdowns will be styled according
-			 * to the browser styles on that device.
-			 */
-			if ( !checkMobileUserAgent() && $( ".wpsl-dropdown" ).length && wpslSettings.enableStyledDropdowns == 1 ) {
-				createDropdowns();
+			mapsArray.push( mapDetails );
+		}
+	}
+
+	// Only run this part if the store locator exist, and we don't just have a basic map.
+	if ( $( "#wpsl-gmap" ).length ) {
+		if ( wpslSettings.autoComplete == 1 ) {
+			activateAutocomplete();
+		}
+
+		/*
+		 * Not the most optimal solution, but we check the useragent if we should enable the styled dropdowns.
+		 *
+		 * We do this because several people have reported issues with the styled dropdowns on
+		 * iOS and Android devices. So on mobile devices the dropdowns will be styled according
+		 * to the browser styles on that device.
+		 */
+		if ( !checkMobileUserAgent() && $( ".wpsl-dropdown" ).length && wpslSettings.enableStyledDropdowns == 1 ) {
+			createDropdowns();
+		} else {
+			$( "#wpsl-search-wrap select" ).show();
+
+			if ( checkMobileUserAgent() ) {
+				$( "#wpsl-wrap" ).addClass( "wpsl-mobile" );
 			} else {
-				$( "#wpsl-search-wrap select" ).show();
-
-				if ( checkMobileUserAgent() ) {
-					$( "#wpsl-wrap" ).addClass( "wpsl-mobile" );
-				} else {
-					$( "#wpsl-wrap" ).addClass( "wpsl-default-filters" );
-				}
+				$( "#wpsl-wrap" ).addClass( "wpsl-default-filters" );
 			}
-
-			// Check if we need to autolocate the user, or autoload the store locations.
-			if ( !$( ".wpsl-search" ).hasClass( "wpsl-widget" ) ) {
-				if ( wpslSettings.autoLocate == 1 ) {
-					checkGeolocation( settings.startLatLng, infoWindow );
-				} else if ( wpslSettings.autoLoad == 1 ) {
-					showStores( settings.startLatLng, infoWindow );
-				}
-			}
-
-			// Move the mousecursor to the store search field if the focus option is enabled.
-			if ( wpslSettings.mouseFocus == 1 && !checkMobileUserAgent() ) {
-				$( "#wpsl-search-input" ).focus();
-			}
-
-			// Bind store search button.
-			searchLocationBtn( infoWindow );
-
-			// Add the 'reload' and 'find location' icon to the map.
-			mapControlIcons( settings, map, infoWindow );
-
-			// Check if the user submitted a search through a search widget.
-			checkWidgetSubmit();
 		}
-	});
+
+		// Check if we need to autolocate the user, or autoload the store locations.
+		if ( !$( ".wpsl-search" ).hasClass( "wpsl-widget" ) ) {
+			if ( wpslSettings.autoLocate == 1 ) {
+				checkGeolocation( settings.startLatLng, infoWindow );
+			} else if ( wpslSettings.autoLoad == 1 ) {
+				showStores( settings.startLatLng, infoWindow );
+			}
+		}
+
+		// Move the mousecursor to the store search field if the focus option is enabled.
+		if ( wpslSettings.mouseFocus == 1 && !checkMobileUserAgent() ) {
+			$( "#wpsl-search-input" ).focus();
+		}
+
+		// Bind store search button.
+		searchLocationBtn( infoWindow );
+
+		// Add the 'reload' and 'find location' icon to the map.
+		mapControlIcons( settings, map, infoWindow );
+
+		// Check if the user submitted a search through a search widget.
+		checkWidgetSubmit();
+	}
 
 	/**
 	 * If the infobox and marker clusters are active,
@@ -453,23 +466,6 @@ function newInfoWindow() {
 	}
 
 	return infoWindow;
-}
-
-/**
- * Load the required infobox JS script.
- *
- * @since 2.2.240
- */
-function prepareInfoWindow( callback ) {
-
-	if ( typeof infoWindow === 'undefined' ) {
-		$.getScript( wpslSettings.url + 'js/infobox.min.js' )
-			.done( function() {
-				callback();
-			});
-	} else {
-		callback();
-	}
 }
 
 /**

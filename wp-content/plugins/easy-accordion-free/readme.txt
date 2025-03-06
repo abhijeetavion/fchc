@@ -1,13 +1,13 @@
-﻿=== Easy Accordion - Best Accordion FAQ Plugin for WordPress ===
+﻿=== Easy Accordion – Responsive Accordion FAQ Builder and Product FAQ ===
 Contributors: shapedplugin, khalilu, rubel_miah, shamimmiashuhagh
-Tags: accordion, accordions, accordion faq, vertical accordion, faq, faqs, faq widget, accordion widget, accordion menu, wordpress faq plugin, easy accordion, premium accordion, bootstrap accordion, horizontal accordion, responsive accordion, accordion jquery, css3 accordion, accordion shortcode, collapsible content, toggle, toggle accordion, wordpress accordion plugin, wordpress accordion, bootstrap collapse, post accordion, post faq, custom post accordion, accordion grid, accordion bar, product faq, woocommerce product accordion, woocommerce accordion, wordpress post accordion, content hide, hidden content, expand content
+Tags: nested accordion, faq, expand collapse, horizontal accordion, product faq
 Requires at least: 4.7
-Tested up to: 6.3
-Stable tag: 2.2.4
+Tested up to: 6.7.1
+Stable tag: 3.0.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
-The best responsive and drag & drop Accordion FAQ builder plugin. User-friendly, Highly Customizable & Intuitive Shortcode Generator.
+Easily create professional Accordion FAQs with this powerful and easy-to-use FAQ builder plugin. Fully drag & drop interface and highly customizable!
 
 
 == Description ==
@@ -19,22 +19,22 @@ We believe that you shouldn’t be a programmer or hire a developer to create a 
 [youtube https://www.youtube.com/watch?v=jQwLyM0Zb3M&list=PLoUb-7uG-5jPBSfjZalo6KKrc4jniAuix]
 
 
-[__Live Demo__](https://shapedplugin.com/easy-accordion/easy-accordion-free-demo/) | [__Docs__](https://docs.shapedplugin.com/docs/easy-accordion/introduction/) | [__Support__](https://shapedplugin.com/support/?user=lite) | [__Upgrade to Pro!__](https://shapedplugin.com/easy-accordion/pricing/?ref=1)
+[__Live Demo__](https://easyaccordion.io/easy-accordion-free-demo/) | [__Docs__](https://docs.shapedplugin.com/docs/easy-accordion/introduction/) | [__Support__](https://shapedplugin.com/support/?user=lite) | [__Upgrade to Pro!__](https://easyaccordion.io/pricing/?ref=1)
 
 
 = Easy Accordion 2.0 =
 
-**Easy Accordion 2.0** has completely been rebuilt and this provides you now many improvements and new amazing features. In this version, you get a totally usable accordion plugin with One Theme (Default Theme) which is the product of many hours development. 
+**Easy Accordion 2.0** has completely been rebuilt and this provides you now many improvements and new amazing features. In this version, you get a totally usable accordion plugin with One Theme (Default Theme) which is the product of many hours development.
 
-If you want [__16+ Extra Beautiful Premium Themes__](https://shapedplugin.com/easy-accordion/all-accordion-themes/) with their own customizable settings and lot of stunning features with excellent support, please purchase the [__PRO version__](https://shapedplugin.com/easy-accordion/pricing/?ref=1). 
+If you want [__16+ Extra Beautiful Premium Themes__](https://easyaccordion.io/all-accordion-themes/) with their own customizable settings and lot of stunning features with excellent support, please purchase the [__PRO version__](https://easyaccordion.io/pricing/?ref=1).
 
 
-= Key Features = 
+= Key Features =
 
 * Responsive & Mobile ready.
 * Lightweight, Fast and Robust.
 * Clean and intuitive admin panel.
-* Multiple Accordions. (Create unlimited accordions into the same page)    
+* Multiple Accordions. (Create unlimited accordions into the same page)
 * WP Classic Editor(WYSIWYG) for accordion content.
 * Multiple Accordions Collapsible or Toggle. (Open together)
 * Drag & drop Accordion sorting.
@@ -59,22 +59,22 @@ If you want [__16+ Extra Beautiful Premium Themes__](https://shapedplugin.com/ea
 * Custom CSS field to override styles.
 * Developer friendly & easy to customize.
 * SEO friendly & optimized for speed.
-* Semantic HTML5 design and CSS3 transitions. 
+* Semantic HTML5 design and CSS3 transitions.
 * Cross-browser Supported.
 * Mouse wheel support.
 * Keyboard navigation support.
 * Documentation and video tutorials.
-* And much more options. 
+* And much more options.
 
 
 = For Faster Support, Features Request, and Bug Reporting =
-  
+
 >Ask us at [__Support__](https://shapedplugin.com/support/?user=lite)
 
 
 = Easy Accordion Pro =
 
-[__Easy Accordion Pro__](https://shapedplugin.com/easy-accordion/?ref=1) is a highly flexible and customizable accordion plugin designed for everyone including designers & developers. The premium plugin vastly improves your styling & user experience and lets you create beautiful and touch-friendly accordion quickly in the easiest way.
+[__Easy Accordion Pro__](https://easyaccordion.io/?ref=1) is a highly flexible and customizable accordion plugin designed for everyone including designers & developers. The premium plugin vastly improves your styling & user experience and lets you create beautiful and touch-friendly accordion quickly in the easiest way.
 
 It comes with intuitive admin panel, horizontal and vertical layout and color picker for unlimited color & styling option with **16+ Modern Pre-designed Accordion Themes.** You can put the content of any type inside accordion expandable section including Shortcodes, Images, YouTube, Audio or any custom HTML code.
 
@@ -87,7 +87,7 @@ The Easy Accordion Pro plugin brings the best of both worlds, offering a modern,
 * Advanced Shortcode Generator.
 * 2 Layouts. (Horizontal and Vertical)
 * **Multi-level or Nested Accordion.**
-* **Accordion from Post & Category.** 
+* **Accordion from Post & Category.**
 * **Accordion from Custom Post Types & Taxonomy.**
 * **Group Accordion FAQs Showcase.**
 * Limit To Display Number of Accordion.
@@ -108,7 +108,7 @@ The Easy Accordion Pro plugin brings the best of both worlds, offering a modern,
 * Widget Supported.
 * Multi-site Supported.
 * **Lifetime Support & Automatic Updates.**
-* And much more options.  
+* And much more options.
 
 
 = Documentation =
@@ -205,11 +205,11 @@ For including on the template, copy and paste the PHP code into your template fi
 
 
 = Q. I’d like access to more features. How can I get them? =
-**A.** You can get access to more features when you purchase a license of the plugin. Purchasing a license of [__Easy Accordion Pro__](https://shapedplugin.com/easy-accordion/pricing/?ref=1) gets you to access the full version of Easy Accordion, including 16+ Premium Themes, Automatic Lifetime Updates, and Dedicated Support.
+**A.** You can get access to more features when you purchase a license of the plugin. Purchasing a license of [__Easy Accordion Pro__](https://easyaccordion.io/pricing/?ref=1) gets you to access the full version of Easy Accordion, including 16+ Premium Themes, Automatic Lifetime Updates, and Dedicated Support.
 
 
 = Q. What if I update to Premium version? =
-**A.** Your existing accordion content will work with [__Premium Version__](https://shapedplugin.com/easy-accordion/pricing/?ref=1). So you won’t lose your developed contents.
+**A.** Your existing accordion content will work with [__Premium Version__](https://easyaccordion.io/pricing/?ref=1). So you won’t lose your developed contents.
 
 
 = Q. Is Easy Accordion is totally responsive? =
@@ -252,7 +252,7 @@ Thank you!
 
 == Screenshots ==
 
-1. Live Demo. 
+1. Live Demo.
 2. Accordion Settings (Add New).
 3. Display Settings.
 4. Accordion Groups.
@@ -263,13 +263,100 @@ Thank you!
 
 == Changelog ==
 
+= Version 3.0.1 - Dec 10, 2024 =
+* Fix: The warnings found with PHP 7.2 or older versions.
+* Fix: The Schema markup warnings found in the plugin version 3.0.0
+* Updated: The language file.
+
+= Version 3.0.0 - Dec 04, 2024 =
+* New: The FAQ Custom Post Type feature.
+* New: The FAQ Custom Post Accordion feature.
+* New: The Export and Import feature for FAQ Custom Posts.
+* Improved: The Accordion Theme Style option has been moved to the Theme Settings tab.
+* Improved: The Display Settings options are reorganized into the nested tabs.
+* Improved: Accordion Item Title & Description options moved to the nested tab of the Display Settings.
+* Improved: Expand & Collapse Icon options moved to the nested tab of the Display Settings.
+* Improved: The Accordion Item Title and Description Color option moved to the Display Settings tab.
+* Updated: The Language (.pot) file.
+* Fix: The deprecated warning found with WordPress 6.7.1
+* Tested: WordPress 6.7.1 compatibility.
+
+= Version 2.3.12 - Nov 20, 2024 =
+* Fix: The plugin style issue for RTL sites.
+
+= Version 2.3.11 - Nov 10, 2024 =
+* Updated: The language (.pot) file.
+* Tested: WordPress 6.7 compatibility.
+
+= Version 2.3.10 - Oct 16, 2024 =
+* Fix: The PHP 7.2 compatibility issue.
+
+= Version 2.3.9 - Sep 21, 2024 =
+* New: The Add rel="nofollow" to the Link option.
+* Improved: The accordion item header button tag was replaced by the anchor tag as it was before.
+* Fix: The style issue found in the version 2.3.8
+
+= Version 2.3.8 - Sep 19, 2024 =
+* New: WooCommerce Product FAQ tab feature.
+* Improved: The plugin backend options have been enhanced.
+* Updated: The language (.pot) file.
+* Fix: Some strings translation issue.
+* Fix: The warning that Links are not crawlable even if using the nofollow attribute by using the button tag.
+* Removed: The Add rel="nofollow" to Link option as link tag replaced by button tag.
+* Tested: WordPress 6.6.2 compatibility.
+
+= 2.3.7 - Apr 02, 2024 =
+* Tested: WordPress 6.5 compatibility.
+
+= 2.3.6 - Mar 13, 2024 =
+* New: Focus Style for Accessibility option in the plugin settings page.
+* Improved: A few help texts have been improved.
+
+= 2.3.5 - Mar 04, 2024 =
+* Improved: The plugin security has been improved.
+* Improved: The plugin accessibility feature.
+* Fix: A warning was found when updating from a very older version.
+* Tested: WordPress 6.4.3 compatibility.
+
+= 2.3.4 - Feb 15, 2024 =
+* New: A hook 'sp_easy_accordion_ui_permission' was added to provide plugin panel access to the editor or other positions.
+* New: A hook 'sp_easy_accordion_title_allowed_tags' was added to modify allowed tags in the accordion item title.
+* New: A hook 'sp_easy_accordion_desc_allowed_tags' was added to modify allowed tags in the accordion item content.
+* Improved: The plugin security has been improved.
+* Fix: Some PHPCS-related warnings.
+
+= 2.3.3 - Jan 18, 2024 =
+* Fix: PHP version 5.6.40 compatibility issue.
+
+= 2.3.2 - Jan 18, 2024 =
+* Improved: The Help Page has been redesigned to make it more user-friendly.
+* Improved: The Shortcode field has been enhanced.
+
+= 2.3.1 - Jan 12, 2024 =
+* Fix: A CSS conflict issue with the div or section that does not contain an accordion.
+
+= 2.3.0 - Jan 08, 2024 =
+* New: The Space Between Accordion Items option.
+* New: The Custom JS option.
+* Improved: The Tooltip/Help text of the plugin options to make it more user-friendly.
+* Improved: The Margin Bottom of the Section Title option has moved to the Typography tab.
+* Improved: The Font Awesome asset has been replaced by the Fontello icon, as the light version used only two icons in the accordion layout.
+* Fix: The issue that the video iframe got changed into a tag automatically after updating the shortcode rarely.
+* Tested: WordPress 6.4.2 compatibility
+
+= 2.2.5 - Oct 26, 2023 =
+* New: Edit Accordion button in Gutenberg edit page.
+* Updated: WP CLI check for plugin activation redirect.
+* Fix: Few PHPCS warnings with PHP8.2.
+* Tested: WordPress 6.4 compatibility.
+
 = 2.2.4 - Aug 08, 2023 =
 * Fix: The plugin admin panel translation is not working if the language file is placed in the plugin language folder.
 * Updated: Minimum required version of WordPress for the plugin.
 * Tested: WordPress 6.3 compatibility.
 
 = 2.2.3 - Jun 08, 2023 =
-* Improved: The import feature with animation. 
+* Improved: The import feature with animation.
 * Fix: The custom CSS does not work after importing accordions from another site.
 * Tested: WordPress 6.2.2 compatibility.
 
@@ -339,7 +426,7 @@ Thank you!
 
 = 2.1.10 - Mar 10, 2022 =
 * Updated: Language pot file.
-* Improve: Cleaned unused codes and images. 
+* Improve: Cleaned unused codes and images.
 
 = 2.1.9 - Feb 25, 2022 =
 * Fix: Extra padding issue in live preview.

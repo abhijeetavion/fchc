@@ -1,4 +1,7 @@
 <?php
+if ( ! defined( 'ABSPATH' ) ) {
+	die( -1 );
+}
 ?>
 
 	<div class="rtec-single-event<?php $event_obj->the_single_event_classes(); ?>">

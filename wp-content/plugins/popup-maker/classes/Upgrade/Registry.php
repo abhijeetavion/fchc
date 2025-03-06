@@ -2,8 +2,8 @@
 /**
  * Upgrade Registry
  *
- * @package   PUM
- * @copyright Copyright (c) 2023, Code Atlantic LLC
+ * @package   PopupMaker
+ * @copyright Copyright (c) 2024, Code Atlantic LLC
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -61,7 +61,7 @@ class PUM_Upgrade_Registry extends PUM_Batch_Process_Registry {
 		/**
 		 * Fires during instantiation of the batch processing registry.
 		 *
-		 * @param PUM_Upgrade_Registry $this PUM_Abstract_Registry instance.
+		 * @param PUM_Upgrade_Registry $registry PUM_Abstract_Registry instance.
 		 */
 		do_action( 'pum_upgrade_process_init', $this );
 	}
@@ -75,7 +75,7 @@ class PUM_Upgrade_Registry extends PUM_Batch_Process_Registry {
 		/**
 		 * Fires during instantiation of the batch processing registry allowing proper registration of upgrades.
 		 *
-		 * @param PUM_Upgrade_Registry $this PUM_Abstract_Registry instance.
+		 * @param PUM_Upgrade_Registry $registry PUM_Abstract_Registry instance.
 		 */
 		do_action( 'pum_register_upgrades', $this );
 	}
@@ -106,7 +106,7 @@ class PUM_Upgrade_Registry extends PUM_Batch_Process_Registry {
 
 		// Log an error if it's too late to register the process.
 		if ( did_action( 'pum_upgrade_process_init' ) ) {
-			PUM_Utils_Logging::instance()->log( sprintf( 'The %s upgrade process was registered too late. Registrations must occur while/before <code>pum_upgrade_process_init</code> fires.', esc_html( $upgrade_id ) ) );
+			pum_log_message( sprintf( 'The %s upgrade process was registered too late. Registrations must occur while/before <code>pum_upgrade_process_init</code> fires.', esc_html( $upgrade_id ) ) );
 			return false;
 		}
 
@@ -130,5 +130,4 @@ class PUM_Upgrade_Registry extends PUM_Batch_Process_Registry {
 	public function get_upgrades() {
 		return parent::get_items();
 	}
-
 }

@@ -46,8 +46,10 @@ class AdminController extends Controller {
 	 */
 	private function notices() {
 		$this->admin[] = Admin\Notices\Update::class;
-		$this->admin[] = Admin\Notices\Review::class;
-		$this->admin[] = Admin\Notices\BlackFriday::class;
+		//$this->admin[] = Admin\Notices\Review::class;
+		if (! rttlp_team()->has_pro() ){
+			$this->admin[] = Admin\Notices\BlackFriday::class;
+		}
 
 		return $this;
 	}

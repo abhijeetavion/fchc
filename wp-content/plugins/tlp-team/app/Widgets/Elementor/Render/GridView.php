@@ -54,7 +54,9 @@ class GridView {
 		$scID          = 'elementor';
 
 		$metas = RenderHelpers::metaBuilder( $prefix, $scMeta );
+
 		$arg   = RenderHelpers::argBuilder( $metas );
+
 		$args  = ( new QueryArgs() )->buildArgs( $metas, false );
 
 		$layout     = $metas['layout'];
@@ -68,8 +70,10 @@ class GridView {
 			$layout = 'layout1';
 		}
 
-		$isIsotope  = preg_match( '/isotope/', $layout );
-		$isSpecial  = preg_match( '/special/', $layout );
+        $layout = isset($layout) && is_string($layout) ? $layout : '';
+        $isIsotope = preg_match('/isotope/', $layout);
+        $isSpecial = preg_match('/special/', $layout);
+
 		$isCarousel = 'popup' === $metas['linkType'] ? true : false;
 
 		$dCol = 0 === $metas['dCols'] ? RenderHelpers::defaultColumns( $layout ) : $metas['dCols'];
@@ -88,12 +92,12 @@ class GridView {
 		$preLoaderHtml = '<div class="rt-loading-overlay full-op"></div><div class="rt-loading rt-ball-clip-rotate"><div></div></div>';
 
 		$containerClass  = 'rt-team-container-' . $scID;
-		$containerClass .= $grayscale ? ' rt-grayscale' : null;
-		$containerClass .= ! empty( $animation ) ? ' rt-hover-' . esc_attr( $animation ) : null;
+		$containerClass .= $grayscale ? ' rt-grayscale' : '';
+		$containerClass .= ! empty( $animation ) ? ' rt-hover-' . esc_attr( $animation ) : '';
 
 		$containerAttr .= ' data-sc-id="' . $scID . '"';
 
-		$html .= '<div class="rt-elementor-container rt-pos-r ' . $containerClass . '" id="' . $layoutID . '" ' . $containerAttr . RenderHelpers::elPaginationData( $prefix, $scMeta ) . '>';
+		$html .= '<div class="rt-team-container rt-elementor-container rt-pos-r ' . $containerClass . '" id="' . $layoutID . '" ' . $containerAttr . RenderHelpers::elPaginationData( $prefix, $scMeta ) . '>';
 
 		$teamQuery = new WP_Query( $args );
 
@@ -213,7 +217,6 @@ class GridView {
 		if ( ! rttlp_team()->has_pro() ) {
 			return '';
 		}
-
 		return apply_filters( $prefix, $meta, $args );
 	}
 }

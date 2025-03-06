@@ -3,8 +3,8 @@ Plugin URI: https://wpstorelocator.co
 Contributors: tijmensmit
 Tags: google maps, store locator, business locations, geocoding, stores, geo, zipcode locator, dealer locater, geocode, gmaps, google map, google map plugin, location finder, map tools, shop locator, wp google map
 Requires at least: 3.7
-Tested up to: 6.2.2
-Stable tag: 2.2.240
+Tested up to: 6.3.1
+Stable tag: 2.2.241
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl.html
 
@@ -125,6 +125,12 @@ If you find a plugin or theme that causes a conflict, please report it on the [s
 4. The plugin settings
 
 == Changelog ==
+
+= 2.2.241
+* Fixed: Not all markers showing up when multiple [wpsl_map] shortcodes are used on the same page.
+* Fixed: PHP 8.2 compatiblity issues.
+* Fixed: The custom map style not being applied to the preview map on the WPSL settings page.
+* Changed: Removed broken links to map style examples from the settings page.
 
 = 2.2.240
 * New: To reduce the chance of seeing the 'wpslCallback is not a function' error in the browser console ( and the map breaking ), the required JS files are now automatically excluded from the SiteGround Optimizer, Autoptimize, LiteSpeed Cache and WP Rocket plugins.

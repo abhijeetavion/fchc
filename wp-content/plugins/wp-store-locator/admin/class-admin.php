@@ -23,6 +23,8 @@ if ( !class_exists( 'WPSL_Admin' ) ) {
          */
         public $metaboxes;
 
+        private $setting_warning;
+
         /**
          * @since 2.0.0
          * @var WPSL_Geocode

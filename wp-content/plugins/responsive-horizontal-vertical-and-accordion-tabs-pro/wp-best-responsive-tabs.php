@@ -5,7 +5,7 @@
  * Plugin URI:https://www.i13websolution.com
  * Description:This is beautiful responsive all in one tabs for wordpress sites/blogs. Add any number of tabs sets to your site. your tabs sets will be ready within few min. 
  * Author:I Thirteen Web Solution 
- * Version:2.22
+ * Version:2.27
  * Text Domain:responsive-horizontal-vertical-and-accordion-tabs
  * Domain Path: /languages
  */
@@ -19,7 +19,7 @@ if (!defined('I13_RTHV_PSLUG')) {
 
 if (!defined('I13_RTHV_PL_VERSION')) {
 
-     define('I13_RTHV_PL_VERSION', '2.22');
+     define('I13_RTHV_PL_VERSION', '2.27');
 
 }
 add_filter ( 'widget_text', 'do_shortcode' );
@@ -680,6 +680,7 @@ function rt_wp_responsive_wp_admin_options_func() {
                                                         <th><?php echo __("Manage Tabs",'responsive-horizontal-vertical-and-accordion-tabs');?></th>
                                                         <th><?php echo __("Edit",'responsive-horizontal-vertical-and-accordion-tabs');?></th>
                                                         <th><?php echo __("Delete",'responsive-horizontal-vertical-and-accordion-tabs');?></th>
+                                                        <th><?php echo __("Duplicate",'responsive-horizontal-vertical-and-accordion-tabs');?></th>
                                                 </tr>
                                         </thead>
 
@@ -734,6 +735,7 @@ function rt_wp_responsive_wp_admin_options_func() {
                                                                 $id = $row->id;
                                                                 $editlink = "admin.php?page=rt_wp_responsive_tabs&action=addedit&id=$id";
                                                                 $deletelink = "admin.php?page=rt_wp_responsive_tabs&action=delete&id=$id&nonce=$delRecNonce";
+                                                                $duplicatelink = "admin.php?page=rt_wp_responsive_tabs&action=duplicate&id=$id&nonce=$delRecNonce";
                                                                 $manageMedia = "admin.php?page=rt_wp_responsive_tabs_management&tabid=$id";
                                                                 ?>
                                                                       <tr valign="top" id="">
@@ -741,10 +743,11 @@ function rt_wp_responsive_wp_admin_options_func() {
                                                                             <td class="alignCenter" data-title="<?php echo __("Id",'responsive-horizontal-vertical-and-accordion-tabs');?>"><?php echo intval($row->id); ?></td>
                                                                             <td class="alignCenter" data-title="<?php echo __("Name",'responsive-horizontal-vertical-and-accordion-tabs');?>"><strong><?php echo esc_html($row->name); ?></strong></td>
                                                                             <td class="alignCenter" data-title="<?php echo __("Created On",'responsive-horizontal-vertical-and-accordion-tabs');?>"><?php echo esc_html($row->createdon); ?></td>
-                                                                            <td class="alignCenter" data-title="<?php echo __("ShortCode",'responsive-horizontal-vertical-and-accordion-tabs');?>" scope="col"><span><input type="text" spellcheck="false" onclick="this.focus(); this.select()" readonly="readonly" style="width: 100%; height: 29px; background-color: #EEEEEE" value='[wrt_print_rt_wp_responsive_tabs tabset_id="<?php echo intval($row->id); ?>"]'></span></td>
+                                                                            <td class="alignCenter" data-title="<?php echo __("ShortCode",'responsive-horizontal-vertical-and-accordion-tabs');?>" scope="col"><span><input type="text" spellcheck="false" onclick="this.focus(); this.select()" readonly="readonly" style="width: 100%; height: 29px; background-color: #EEEEEE" value='[wrt_print_rt_wp_responsive_tabs tabset_id="<?php echo intval($row->id); ?>" <?php if($row->type==2 || $row->type==5):?> scroll="1" <?php endif;?>]'></span></td>
                                                                             <td class="alignCenter" data-title="<?php echo __("Manage Tabs",'responsive-horizontal-vertical-and-accordion-tabs');?>" scope="col"><strong><a href='<?php echo $manageMedia; ?>' title="<?php echo __("Manage Tabs",'responsive-horizontal-vertical-and-accordion-tabs');?>"><?php echo __("Manage Tabs",'responsive-horizontal-vertical-and-accordion-tabs');?></a></strong></td>
                                                                             <td class="alignCenter" data-title="<?php echo __("Edit",'responsive-horizontal-vertical-and-accordion-tabs');?>"><strong><a href='<?php echo esc_html($editlink); ?>' title="<?php echo __("Edit",'responsive-horizontal-vertical-and-accordion-tabs');?>"><?php echo __("Edit",'responsive-horizontal-vertical-and-accordion-tabs');?></a></strong></td>
                                                                             <td class="alignCenter" data-title="<?php echo __("Delete",'responsive-horizontal-vertical-and-accordion-tabs');?>"><strong><a  href='<?php echo esc_html($deletelink); ?>' onclick="return confirmDelete();" title="<?php echo __("Delete",'responsive-horizontal-vertical-and-accordion-tabs');?>"><?php echo __("Delete",'responsive-horizontal-vertical-and-accordion-tabs');?></a> </strong></td>
+                                                                            <td class="alignCenter" data-title="<?php echo __("Duplicate",'responsive-horizontal-vertical-and-accordion-tabs');?>"><strong><a  href='<?php echo esc_html($duplicatelink); ?>' onclick="return confirmDuplicate();" title="<?php echo __("Duplicate",'responsive-horizontal-vertical-and-accordion-tabs');?>"><?php echo __("Duplicate",'responsive-horizontal-vertical-and-accordion-tabs');?></a> </strong></td>
                                                                        </tr>
                                                                             <?php
                                                         }
@@ -798,6 +801,14 @@ function rt_wp_responsive_wp_admin_options_func() {
                                 
                                     function  confirmDelete(){
                                     var agree=confirm("<?php echo __("Are you sure you want to delete this tab sets ? All tabs related to this sets also removed.",'responsive-horizontal-vertical-and-accordion-tabs');?>");
+                                    if (agree)
+                                        return true ;
+                                    else
+                                        return false;
+                                    }
+                                    
+                                    function  confirmDuplicate(){
+                                    var agree=confirm("<?php echo __("Are you sure you want to create copy of this tab sets ?",'responsive-horizontal-vertical-and-accordion-tabs');?>");
                                     if (agree)
                                         return true ;
                                     else
@@ -1434,6 +1445,142 @@ function rt_wp_responsive_wp_admin_options_func() {
 		echo "<script type='text/javascript'> location.href='$location';</script>";
 		exit ();
 	} 
+        else if (strtolower ( $action ) == strtolower ( 'duplicate' )) {
+		
+                 $retrieved_nonce = '';
+                 $dupId = intval(sanitize_text_field($_GET ['id']));
+                if (isset($_GET['nonce']) and $_GET['nonce'] != '') {
+
+                    $retrieved_nonce = sanitize_text_field($_GET['nonce']);
+                }
+                if (!wp_verify_nonce($retrieved_nonce, 'delete_tabset')) {
+
+
+                    wp_die('Security check fail');
+                }
+                
+                 if ( ! current_user_can( 'wrt_responsive_tabs_add_tab_set' ) ) {
+
+                    $location='admin.php?page=rt_wp_responsive_tabs';
+                    $wrt_responsive_tabs_msg=array();
+                    $wrt_responsive_tabs_msg['type']='err';
+                    $wrt_responsive_tabs_msg['message']=__('Access Denied. Please contact your administrator.','responsive-horizontal-vertical-and-accordion-tabs');
+                    update_option('wrt_responsive_tabs_msg', $wrt_responsive_tabs_msg);
+                    echo "<script type='text/javascript'> location.href='$location';</script>";     
+                    exit;   
+
+                 }
+                 
+                 
+              if($dupId>0){ 
+                    
+		global $wpdb;
+		$location = "admin.php?page=rt_wp_responsive_tabs";
+		
+		
+		try {
+			
+                            
+                                $tablename=$wpdb->prefix . 'wrt_tabs_settings';
+                                $setting_row = $wpdb->get_row($wpdb->prepare('select * from ' . esc_sql($tablename) . ' where id=%d', $dupId), ARRAY_A); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
+                                
+                                if (is_array($setting_row) && count($setting_row) > 0) {
+
+
+                                        //insert
+
+                                        $createdOn = gmdate('Y-m-d h:i:s');
+                                        if (function_exists('date_i18n')) {
+
+                                                $createdOn = date_i18n('Y-m-d ' . get_option('time_format'), false, false);
+                                                if (get_option('time_format') == 'H:i') {
+                                                        $createdOn = gmdate('Y-m-d H:i:s', strtotime($createdOn));
+                                                } else {
+                                                        $createdOn = gmdate('Y-m-d h:i:s', strtotime($createdOn));
+                                                }
+                                        }
+
+                                        $wpdb->insert(
+                                                $tablename,
+                                                array(
+                                                                'name' => 'Clone of ' . $setting_row['name'],
+                                                                'type' => $setting_row['type'],
+                                                                'activetab_bg' => $setting_row['activetab_bg'],
+                                                                'inactive_bg' => $setting_row['inactive_bg'],
+                                                                'ac_border_color' => $setting_row['ac_border_color'],
+                                                                'tab_fcolor' => $setting_row['tab_fcolor'],
+                                                                'tab_a_fcolor' => $setting_row['tab_a_fcolor'],
+                                                                'tab_ccolor' => $setting_row['tab_ccolor'],
+                                                                'scroll_edge' => $setting_row['scroll_edge'],
+                                                                'use_ajax' => $setting_row['use_ajax'],
+                                                                'additional_css' => $setting_row['additional_css'],
+                                                                'createdon' => $createdOn
+                                                ),
+                                                array(
+                                                                '%s',
+                                                                '%d',
+                                                                '%s',
+                                                                '%s',
+                                                                '%s',
+                                                                '%s',
+                                                                '%s',
+                                                                '%s',
+                                                                '%d',
+                                                                '%d',
+                                                                '%s',
+                                                                '%s',
+                                                )
+                                        );
+                                        
+                                        $insert_id=$wpdb->insert_id;
+                                        if($insert_id>0){
+                                            
+                                                $tablename2=$wpdb->prefix . 'wrt_tabs';
+                                                $datQuery='INSERT INTO '.$tablename2.' (tab_title, fonto_icon, tab_description,createdon,is_default,morder,gtab_id,is_link,link)
+                                                            SELECT tab_title, fonto_icon, tab_description,createdon,is_default,morder,'.$insert_id.',is_link,link
+                                                            FROM   '.$tablename2.'
+                                                            WHERE  gtab_id = '.$dupId;
+
+                                                $wpdb->query($datQuery);
+                                        
+                                        }
+                                        $wrt_responsive_tabs_msg = array ();
+                                        $wrt_responsive_tabs_msg ['type'] = 'succ';
+                                        $wrt_responsive_tabs_msg ['message'] = __('Tab sets duplicated successfully.','responsive-horizontal-vertical-and-accordion-tabs');
+                                        update_option ( 'wrt_responsive_tabs_msg', $wrt_responsive_tabs_msg );
+                                        echo "<script type='text/javascript'> location.href='$location';</script>";
+                                        exit ();
+                                        
+                                } else {
+
+                                        $wrt_responsive_tabs_msg = array();
+                                        $wrt_responsive_tabs_msg['type'] = 'err';
+                                        $wrt_responsive_tabs_msg['message'] = __('Could not find such tab sets.', 'woo-all-in-one-product-carousel-slider');
+                                        update_option('wrt_responsive_tabs_msg', $wrt_responsive_tabs_msg);
+                                        
+                                        echo "<script type='text/javascript'> location.href='$location';</script>";
+                                        exit ();
+                                }
+
+                        
+			
+                        
+		} catch ( Exception $e ) {
+			
+			$wrt_responsive_tabs_msg = array ();
+			$wrt_responsive_tabs_msg ['type'] = 'err';
+			$wrt_responsive_tabs_msg ['message'] = __('Error while duplicating tab set.','responsive-horizontal-vertical-and-accordion-tabs');
+			update_option ( 'wrt_responsive_tabs_msg', $wrt_responsive_tabs_msg );
+		}
+		
+                
+		echo "<script type='text/javascript'> location.href='$location';</script>";
+		exit ();
+                
+                }
+	}
+        
+        
         else if (strtolower ( $action ) == strtolower ( 'deleteselected' )) {
 		
                if (!check_admin_referer('action_settings_mass_delete', 'mass_delete_nonce')) {
@@ -1673,11 +1820,16 @@ function i13_responsive_tabs_update( $upgrader_object, $options ) {
 
 function rt_wp_responsive_tabs_data_management() {
     
+        global $wpdb;
         $tabid = 0;
 	if (isset ( $_GET ['tabid'] ) and $_GET ['tabid'] > 0) {
 		// do nothing
 		
 		$tabid = intval(sanitize_text_field( $_GET ['tabid'] ));
+                
+                $query="SELECT * FROM ".$wpdb->prefix."wrt_tabs_settings WHERE id=$tabid";
+                $settings  = $wpdb->get_row($query,ARRAY_A);
+               
                 
 	} else {
 		
@@ -2031,13 +2183,17 @@ function rt_wp_responsive_tabs_data_management() {
                 </div>
 		<h3><?php echo __('To print this tab sets into WordPress Post/Page use below code','responsive-horizontal-vertical-and-accordion-tabs');?></h3>
 		<input type="text"
-			value='[wrt_print_rt_wp_responsive_tabs tabset_id="<?php echo intval($tabid); ?>"] '
+			value='[wrt_print_rt_wp_responsive_tabs tabset_id="<?php echo intval($tabid); ?>" <?php if($settings['type']==2 || $settings['type']==5):?> scroll="1" <?php endif;?>] '
 			style="width: 400px; height: 30px"
 			onclick="this.focus(); this.select()" />
 		<div class="clear"></div>
 		<h3><?php echo __('To print this tab sets into WordPress theme/template PHP files use below code','responsive-horizontal-vertical-and-accordion-tabs');?></h3>
                 <?php
-		$shortcode = '[wrt_print_rt_wp_responsive_tabs tabset_id="'.intval($tabid).'"]';
+                 $scroll='';
+               if($settings['type']==2 || $settings['type']==5){ 
+                   $scroll='scroll="1"';
+               }
+		$shortcode = '[wrt_print_rt_wp_responsive_tabs tabset_id="'.intval($tabid).'" '.$scroll.']';
 		?>
                 <input type="text"
 			value="&lt;?php echo do_shortcode('<?php echo htmlentities($shortcode, ENT_QUOTES); ?>'); ?&gt;"
@@ -2810,13 +2966,21 @@ function wrt_rt_wp_responsive_tabs_preview_func(){
                 <div class="clear"></div>
                 </div>
                 <?php if(is_array($settings)){?>
-
+                    
+                     <?php 
+                        $query="SELECT * FROM ".$wpdb->prefix."wrt_tabs_settings WHERE id=$tabid";
+                        $settings  = $wpdb->get_row($query,ARRAY_A);
+                     ?>
                     <h3><?php echo __( 'To print this tab sets into WordPress Post/Page use below code','responsive-horizontal-vertical-and-accordion-tabs');?></h3>
-                    <input type="text" value='[wrt_print_rt_wp_responsive_tabs tabset_id="<?php echo $tabid;?>"] ' style="width: 400px;height: 30px" onclick="this.focus();this.select()" />
+                    <input type="text" value='[wrt_print_rt_wp_responsive_tabs tabset_id="<?php echo $tabid;?>" <?php if($settings['type']==2 || $settings['type']==5):?> scroll="1" <?php endif;?> ] ' style="width: 400px;height: 30px" onclick="this.focus();this.select()" />
                     <div class="clear"></div>
                     <h3><?php echo __( 'To print this tab sets into WordPress theme/template PHP files use below code','responsive-horizontal-vertical-and-accordion-tabs');?></h3>
                     <?php
-                        $shortcode='[wrt_print_rt_wp_responsive_tabs tabset_id="'.$tabid.'"]';
+                        $scroll='';
+                        if($settings['type']==2 || $settings['type']==5){ 
+                            $scroll='scroll="1"';
+                        }
+                         $shortcode = '[wrt_print_rt_wp_responsive_tabs tabset_id="'.intval($tabid).'" '.$scroll.']';
                     ?>
                     <input type="text" value="&lt;?php echo do_shortcode('<?php echo htmlentities($shortcode, ENT_QUOTES); ?>'); ?&gt;" style="width: 400px;height: 30px" onclick="this.focus();this.select()" />
 
@@ -2833,7 +2997,9 @@ function wrt_rt_wp_responsive_tabs_preview_func(){
 function wrt_print_rt_wp_responsive_tabs_func($atts){
 
         global $wpdb;
-        extract(shortcode_atts(array('tabset_id' => 0,), $atts));
+        extract(shortcode_atts(array('tabset_id' => 0,'scroll'=>1), $atts));
+        $tabset_id=intval($tabset_id);
+        $scroll=intval($scroll);
         $query="SELECT * FROM ".$wpdb->prefix."wrt_tabs_settings WHERE id=$tabset_id";
         $settings  = $wpdb->get_row($query,ARRAY_A);            
         
@@ -2987,52 +3153,7 @@ function wrt_print_rt_wp_responsive_tabs_func($atts){
                 ?>
                 
              <?php if($type==1 or $type==2 or $type==5):?>
-                <div  class="<?php echo $rand2;?> <?php echo $tabset_id;?>_Tab"  style="visibility: hidden">
-                    
-                     <div id="<?php echo $rand; ?>_overlay" class="overlay_" style="background: #fff url('<?php echo $loaderImg; ?>') no-repeat scroll 50% 50%;" ></div>
-                   
-                    <div id="<?php echo $rand;?>" class="<?php echo $rand;?>">
-                        
-                      <ul  class="<?php if($type==2):?>vresp-tabs-list<?php else:?>resp-tabs-list <?php endif;?> hor_<?php echo $rand;?>">
-                         <?php foreach($rows as $r):?>    
-                          <li data-isajaxloaded="0" data-tabid="<?php echo $r['id'];?>" <?php if($r['is_link']):?> onclick="window.location.href='<?php echo $r['link'];?>';" <?php endif;?>  >
-                                  <?php 
-                                  
-                                   $ic='';
-                                   if(trim($r['fonto_icon'])!=""){
-                                      
-                                      $selectedIcon=trim($r['fonto_icon']);
-                                      
-                                       if(in_array($selectedIcon,$font_os_brands)){
-                                           
-                                            $ic=  "<i  class='fa-additional-css fab fa-1x $selectedIcon'></i> ";
-                                                                                   
-                                        }   
-                                        else{
-                                                $ic=  "<i class='fa-additional-css fa far fas  $selectedIcon'></i> ";            
-                                                
-                                          }  
-                                   }
-                                  ?>
-                                  
-                                  <?php echo $ic.trim(wp_unslash($r['tab_title']));?>
-                              </li> 
-                          <?php endforeach;?>
-                      </ul>
-                      <div class="<?php if($type==2):?>vresp-tabs-container<?php else:?> resp-tabs-container<?php endif;?> hor_<?php echo $rand;?>">
-
-                          <?php foreach($rows as $r):?>  
-
-                              <div id="tab_<?php echo $rand;?>_<?php echo $r['id'];?>">
-                                 <?php echo wpautop(wp_unslash($r['tab_description']));?>
-                              </div>
-
-                          <?php endforeach;?>
-
-
-                      </div>
-              </div>
-            </div>         
+                <div  class="<?php echo $rand2;?> <?php echo $tabset_id;?>_Tab"  style="visibility: hidden"><div id="<?php echo $rand; ?>_overlay" class="overlay_" style="background: #fff url('<?php echo $loaderImg; ?>') no-repeat scroll 50% 50%;" ></div><div id="<?php echo $rand;?>" class="<?php echo $rand;?>"><ul  class="<?php if($type==2):?>vresp-tabs-list<?php else:?>resp-tabs-list <?php endif;?> hor_<?php echo $rand;?>"><?php foreach($rows as $r):?><li data-isajaxloaded="0" data-tabid="<?php echo $r['id'];?>" <?php if($r['is_link']):?> onclick="window.location.href='<?php echo $r['link'];?>';" <?php endif;?>  ><?php $ic='';if(trim($r['fonto_icon'])!=""){$selectedIcon=trim($r['fonto_icon']); if(in_array($selectedIcon,$font_os_brands)){ $ic=  "<i  class='fa-additional-css fab fa-1x $selectedIcon'></i> ";} else{ $ic=  "<i class='fa-additional-css fa far fas  $selectedIcon'></i> "; } } ?> <?php echo $ic.trim(wp_unslash($r['tab_title']));?> </li> <?php endforeach;?></ul> <div class="<?php if($type==2):?>vresp-tabs-container<?php else:?> resp-tabs-container<?php endif;?> hor_<?php echo $rand;?>"> <?php foreach($rows as $r):?>  <div id="tab_<?php echo $rand;?>_<?php echo $r['id'];?>"> <?php echo wpautop(wp_unslash($r['tab_description']));?></div><?php endforeach;?></div> </div></div>         
             <!-- wrt_print_rt_wp_responsive_tabs_script --><script type="text/javascript">
              
              
@@ -3128,13 +3249,14 @@ function wrt_print_rt_wp_responsive_tabs_func($atts){
                                             jQuery("#<?php echo $rand; ?>_overlay").css("height", "0px");
 
                                             jQuery(thisele).data("isajaxloaded","1"); 
+                                             <?php if($scroll=="1"):?>
+                                                if(jQuery(thisele).hasClass('resp-accordion')){
+                                                   jQuery('html, body').animate({
+                                                         scrollTop: (jQuery('.hor_<?php echo $rand;?> [data-tabid='+tabid+']').first().offset().top+200)
+                                                     },1500);
 
-                                            if(jQuery(thisele).hasClass('resp-accordion')){
-                                               jQuery('html, body').animate({
-                                                     scrollTop: (jQuery('.hor_<?php echo $rand;?> [data-tabid='+tabid+']').first().offset().top+200)
-                                                 },1500);
-
-                                             }  
+                                                 }  
+                                             <?php endif;?>   
 
                                       },
                                       error: function(XMLHttpRequest, textStatus, errorThrown) {
@@ -3147,12 +3269,14 @@ function wrt_print_rt_wp_responsive_tabs_func($atts){
 
                                   }else{
 
-                                       if(jQuery(thisele).hasClass('resp-accordion')){
-                                           jQuery('html, body').animate({
-                                                 scrollTop: (jQuery('.hor_<?php echo $rand;?> [data-tabid='+tabid+']').first().offset().top+200)
-                                             },1500);
+                                        <?php if($scroll==1):?>
+                                            if(jQuery(thisele).hasClass('resp-accordion')){
+                                                jQuery('html, body').animate({
+                                                      scrollTop: (jQuery('.hor_<?php echo $rand;?> [data-tabid='+tabid+']').first().offset().top+200)
+                                                  },1500);
 
-                                         } 
+                                              } 
+                                         <?php endif;?>     
                                   }
 
 
@@ -3384,55 +3508,7 @@ function wrt_print_rt_wp_responsive_tabs_func($atts){
                    .<?php echo $rand;?> .nav-tabs > li:first-child.active{top:0px}
             
                    </style><!-- end wrt_print_rt_wp_responsive_tabs_style -->
-                   <div class="btabs <?php echo $rand;?> <?php echo $tabset_id;?>_Tab" id="<?php echo $rand;?>" style="visibility: hidden">
-
-                    <div id="<?php echo $rand; ?>_overlay" class="overlay_" style="background: #fff url('<?php echo $loaderImg; ?>') no-repeat scroll 50% 50%;" ></div>
-                                
-                    <div class="tab-main-container">
-                    <ul class="nav nav-tabs btab" role="tablist">
-                        
-                        <?php foreach($rows as $k=>$r):?>    
-                             <?php if($defaultSelected==null){
-                                   
-                                 $r['is_default']=1;
-                                 $rows[$k]=$r;
-                                 $defaultSelected=$r['id'];
-                               }
-                               ?>
-                              <?php 
-
-                                $ic='';
-                                if(trim($r['fonto_icon'])!=""){
-
-                                   $selectedIcon=trim($r['fonto_icon']);
-
-                                    if(in_array($selectedIcon,$font_os_brands)){
-
-                                         $ic=  "<i  class='fa-additional-css fab fa-1x $selectedIcon'></i> ";
-
-                                     }   
-                                     else{
-                                             $ic=  "<i class='fa-additional-css fa far fas  $selectedIcon'></i> ";            
-
-                                       }  
-                                }
-                               ?>
-                              <li role="presentation" data-isajaxloaded="0"  data-tabid="<?php echo $r['id'];?>" <?php if($r['is_default']):?> <?php $flag=true;?>class="active LiTab" <?php else:?>class="LiTab" <?php endif;?>>
-                                 <a href="#tab_<?php echo $rand;?>_<?php echo $r['id'];?>" class="LiTab_Anchor" role="tab" data-toggle="tab" data-tabid="<?php echo $r['id'];?>"  <?php if($r['is_link']):?> onclick="window.location.href='<?php echo $r['link'];?>';" <?php endif;?> ><?php echo $ic.trim(wp_unslash($r['tab_title']));?></a>
-                             </li>
-                          <?php endforeach;?>  
-                      
-                    </ul>
-                    <!-- Tab panes -->
-                    <div class="bordered-tab-contents">
-                            <div class="tab-content">
-                                <?php foreach($rows as $r):?>  
-                                     <div role="tabpanel" class="tab-pane <?php if($r['is_default']):?> active <?php endif;?>" id="tab_<?php echo $rand;?>_<?php echo $r['id'];?>"><?php echo wpautop(wp_unslash($r['tab_description']));?></div>
-                                <?php endforeach;?>
-                            </div>
-                      </div>
-                     </div>
-                </div>
+                   <div class="btabs <?php echo $rand;?> <?php echo $tabset_id;?>_Tab" id="<?php echo $rand;?>" style="visibility: hidden"><div id="<?php echo $rand; ?>_overlay" class="overlay_" style="background: #fff url('<?php echo $loaderImg; ?>') no-repeat scroll 50% 50%;" ></div><div class="tab-main-container"><ul class="nav nav-tabs btab" role="tablist"><?php foreach($rows as $k=>$r):?> <?php if($defaultSelected==null){  $r['is_default']=1; $rows[$k]=$r; $defaultSelected=$r['id']; } ?> <?php $ic=''; if(trim($r['fonto_icon'])!=""){ $selectedIcon=trim($r['fonto_icon']);  if(in_array($selectedIcon,$font_os_brands)){ $ic=  "<i  class='fa-additional-css fab fa-1x $selectedIcon'></i> ";} else{ $ic=  "<i class='fa-additional-css fa far fas  $selectedIcon'></i> "; }  } ?><li role="presentation" data-isajaxloaded="0"  data-tabid="<?php echo $r['id'];?>" <?php if($r['is_default']):?> <?php $flag=true;?>class="active LiTab" <?php else:?>class="LiTab" <?php endif;?>>  <a href="#tab_<?php echo $rand;?>_<?php echo $r['id'];?>" class="LiTab_Anchor" role="tab" data-toggle="tab" data-tabid="<?php echo $r['id'];?>"  <?php if($r['is_link']):?> onclick="window.location.href='<?php echo $r['link'];?>';" <?php endif;?> ><?php echo $ic.trim(wp_unslash($r['tab_title']));?></a></li><?php endforeach;?> </ul><div class="bordered-tab-contents"> <div class="tab-content"> <?php foreach($rows as $r):?>   <div role="tabpanel" class="tab-pane <?php if($r['is_default']):?> active <?php endif;?>" id="tab_<?php echo $rand;?>_<?php echo $r['id'];?>"><?php echo wpautop(wp_unslash($r['tab_description']));?></div><?php endforeach;?> </div></div></div></div>
               
                 <!-- wrt_print_rt_wp_responsive_tabs_script --><script>
                     
@@ -3801,60 +3877,7 @@ function wrt_print_rt_wp_responsive_tabs_func($atts){
                     }
                    
                    </style><!-- end wrt_print_rt_wp_responsive_tabs_style -->
-                   <div class="resptabs btabs <?php echo $rand;?> <?php echo $tabset_id;?>_Tab" id="<?php echo $rand;?>" style="visibility: hidden">
-                    <div id="<?php echo $rand; ?>_overlay" class="overlay_" style="background: #fff url('<?php echo $loaderImg; ?>') no-repeat scroll 50% 50%;" ></div>
-                  
-                    <div class="tab-main-container">
-                    <ul class="nav nav-tabs btab ul<?php echo $rand;?>" role="tablist">
-                        
-                        <?php foreach($rows as $k=> $r):?>    
-                               <?php if($defaultSelected==null){
-                                   
-                                 $r['is_default']=1;
-                                 $rows[$k]=$r;
-                                 $defaultSelected=$r['id'];
-                               }
-                               ?>
-                               <?php 
-
-                                $ic='';
-                                if(trim($r['fonto_icon'])!=""){
-
-                                   $selectedIcon=trim($r['fonto_icon']);
-
-                                    if(in_array($selectedIcon,$font_os_brands)){
-
-                                         $ic=  "<i  class='fa-additional-css fab fa-1x $selectedIcon'></i> ";
-
-                                     }   
-                                     else{
-                                             $ic=  "<i class='fa-additional-css fa far fas  $selectedIcon'></i> ";            
-
-                                       }  
-                                }
-                               ?>
-                                <?php if($r['is_default']):?>
-                                    <?php $default=$rand."_".$r['id'];?>
-                                <?php endif;?>
-                                <li role="presentation"  data-isajaxloaded="0"  data-tabid="<?php echo $r['id'];?>" <?php if($r['is_default']):?> <?php $flag=true;?> class="<?php echo $rand."_".$r['id'];?> active LiTab <?php echo $li_tab_class;?>" <?php else:?>class="<?php echo $rand."_".$r['id'];?> LiTab <?php echo $li_tab_class;?>" <?php endif;?>>
-                                    <a href="#tab_<?php echo $rand;?>_<?php echo $r['id'];?>"  class="LiTab_Anchor" role="tab" data-toggle="tab" data-tabid="<?php echo $r['id'];?>"  <?php if($r['is_link']):?> onclick="window.location.href='<?php echo $r['link'];?>';" <?php endif;?> >
-                                        <?php echo $ic.trim(wp_unslash($r['tab_title']));?>
-                                    </a>
-                                </li>
-                          <?php endforeach;?>  
-                      
-                    </ul>
-
-                    <!-- Tab panes -->
-                    <div class="bordered-tab-contents">
-                            <div class="tab-content">
-                                <?php foreach($rows as $r):?>  
-                                     <div role="tabpanel" class=" tab-pane <?php if($r['is_default']):?> active <?php endif;?>" id="tab_<?php echo $rand;?>_<?php echo $r['id'];?>" ><?php echo wpautop(wp_unslash($r['tab_description']));?></div>
-                                <?php endforeach;?>
-                            </div>
-                      </div>
-                     </div>
-                </div>
+                   <div class="resptabs btabs <?php echo $rand;?> <?php echo $tabset_id;?>_Tab" id="<?php echo $rand;?>" style="visibility: hidden"><div id="<?php echo $rand; ?>_overlay" class="overlay_" style="background: #fff url('<?php echo $loaderImg; ?>') no-repeat scroll 50% 50%;" ></div><div class="tab-main-container"> <ul class="nav nav-tabs btab ul<?php echo $rand;?>" role="tablist"> <?php foreach($rows as $k=> $r):?> <?php if($defaultSelected==null){ $r['is_default']=1; $rows[$k]=$r;  $defaultSelected=$r['id']; }?> <?php  $ic=''; if(trim($r['fonto_icon'])!=""){ $selectedIcon=trim($r['fonto_icon']);  if(in_array($selectedIcon,$font_os_brands)){ $ic=  "<i  class='fa-additional-css fab fa-1x $selectedIcon'></i> "; }  else{ $ic=  "<i class='fa-additional-css fa far fas  $selectedIcon'></i> ";  }    } ?><?php if($r['is_default']):?><?php $default=$rand."_".$r['id'];?><?php endif;?><li role="presentation"  data-isajaxloaded="0"  data-tabid="<?php echo $r['id'];?>" <?php if($r['is_default']):?> <?php $flag=true;?> class="<?php echo $rand."_".$r['id'];?> active LiTab <?php echo $li_tab_class;?>" <?php else:?>class="<?php echo $rand."_".$r['id'];?> LiTab <?php echo $li_tab_class;?>" <?php endif;?>><a href="#tab_<?php echo $rand;?>_<?php echo $r['id'];?>"  class="LiTab_Anchor" role="tab" data-toggle="tab" data-tabid="<?php echo $r['id'];?>"  <?php if($r['is_link']):?> onclick="window.location.href='<?php echo $r['link'];?>';" <?php endif;?> >  <?php echo $ic.trim(wp_unslash($r['tab_title']));?> </a></li><?php endforeach;?> </ul><div class="bordered-tab-contents"><div class="tab-content"><?php foreach($rows as $r):?> <div role="tabpanel" class=" tab-pane <?php if($r['is_default']):?> active <?php endif;?>" id="tab_<?php echo $rand;?>_<?php echo $r['id'];?>" ><?php echo wpautop(wp_unslash($r['tab_description']));?></div><?php endforeach;?></div></div></div></div>
               
                 <!-- wrt_print_rt_wp_responsive_tabs_script --><script>
                     
@@ -3888,18 +3911,10 @@ function wrt_print_rt_wp_responsive_tabs_func($atts){
                                           jQuery(this).remove();
                                           if(flag==false){
 
-                                                var rtdropdownMarkup = '<li class="rtdropdown responsivetabs rtdropdown">'
-                                              + '<a href="#" class="rtdropdown-toggle" data-toggle="rtdropdown"><span class="arrowdown"></span></a>'
-                                              + '<ul class="rtdropdown-menu ';
-                                              if(index==0){
-                                                  
-                                                    rtdropdownMarkup+=' rtdropdown-menu-left rtdropdown-menu<?php echo $rand;?>">'
-                                                   + '</ul></li>';
-                                                }
+                                                var rtdropdownMarkup = `<li class="rtdropdown responsivetabs rtdropdown">`+ `<a href="#" class="rtdropdown-toggle" data-toggle="rtdropdown"><span class="arrowdown"></span></a>`+ `<ul class="rtdropdown-menu `;if(index==0){ rtdropdownMarkup+=` rtdropdown-menu-left rtdropdown-menu<?php echo $rand;?>">` + `</ul></li>`;}
                                               else{
                                                   
-                                                     rtdropdownMarkup+=' rtdropdown-menu-right rtdropdown-menu<?php echo $rand;?>">'
-                                                   + '</ul></li>';
+                                                     rtdropdownMarkup+=` rtdropdown-menu-right rtdropdown-menu<?php echo $rand;?>">`+ `</ul></li>`;
                                               }  
                                               $rtdropdown = jQuery(rtdropdownMarkup);
                                               jQuery( "#<?php echo $rand;?> .nav-tabs").append($rtdropdown);
@@ -4211,4 +4226,14 @@ function wrt_wp_responsive_full_tabs_admin_scripts_init() {
   
   //remove_filter('the_content', 'wpautop');
   //add_filter('the_content', 'wpautop', 12);
-?>
+  
+function i13_rhvts_pro_render_block_defaults($block_content, $block) { 
+
+    $block_content=wrt_responsive_tabs_remove_extra_p_tags($block_content);
+    return $block_content; 
+
+}
+
+
+add_filter( 'render_block', 'i13_rhvts_pro_render_block_defaults', 10, 2 );
+

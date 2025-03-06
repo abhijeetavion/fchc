@@ -55,6 +55,17 @@ jQuery(document).ready(function($) {
                     $('.tribe-events-single h1').first().after($moveEl);
                 } else if ($('.tribe-events-single h2').length) {
                     $('.tribe-events-single h2').first().after($moveEl);
+                } else if ($('.elementor-widget-theme-post-content').length) {
+                    if (rtecLocation === 'tribe_events_single_event_after_the_content') {
+                        $('.elementor-widget-theme-post-content').first().after($moveEl);
+                    } else {
+                        $('.elementor-widget-theme-post-content').first().before($moveEl);
+                    }
+                    $moveEl.addClass('elementor-element');
+
+                } else if ($('.tec-events-elementor-event-widget__title').length) {
+                    $('.tec-events-elementor-event-widget__title').first().after($moveEl);
+                    $moveEl.addClass('elementor-element');
                 }
 
                 if ($('.rtec-login-wrap').length) {
@@ -124,6 +135,49 @@ jQuery(document).ready(function($) {
                     });
 
                 }
+
+                $rtec.find('.rtec-unregister-link').on('click',function(event) {
+                    event.preventDefault();
+                    if ( $(this).hasClass('rtec-processing') ) {
+                        return;
+                    }
+                    $(this).addClass('rtec-processing');
+
+                    let $spinnerImg = $('.rtec-spinner').length ? $('.rtec-spinner').html() : '',
+                    $spinner = '<div class="rtec-spinner-wrap">' + $spinnerImg + '</div>';
+
+
+                    var $wrapEl = $(this).closest('.rtec-already-registered-options'),
+                        submittedData = {
+                            'event_id': $(this).attr('data-event-id'),
+                            'action': 'rtec_unregister_by_event_id_for_logged_in_user'
+                        };
+
+                    $wrapEl.append($spinner);
+
+
+                    $.ajax({
+                        url : rtec.ajaxUrl,
+                        type : 'post',
+                        data : submittedData,
+                        success : function(data) {
+                            var $rtecWrap = $wrapEl.closest('.rtec-outer-wrap'),
+                                $rtecAttendanceNearest = $rtecWrap.find('.rtec-attendance');
+
+                            if ( !$wrapEl.closest('.rtec-outer-wrap').length) {
+                                $rtecWrap = $('.rtec').closest('div');
+                            }
+
+                            $rtecWrap.find('.rtec').fadeOut(400,'linear', function() {
+                                $(this).remove();
+                                $rtecWrap.html(data.data.html)
+                            });
+                            $rtecAttendanceNearest.fadeOut(400,'linear', function() {
+                                $(this).remove();
+                            });
+                        }
+                    }); // ajax
+                });
 
                 //rtec-outer-wrap
             });
@@ -439,7 +493,7 @@ jQuery(document).ready(function($) {
                             RtecForm.validateLength($input, 1, 10000);
                         }
                     } else if ($(this).find('.g-recaptcha').length) {
-                        var recaptchaVal = typeof grecaptcha !== 'undefined' ? grecaptcha.getResponse() : '';
+                        var recaptchaVal = typeof grecaptcha !== 'undefined' ? grecaptcha.getResponse($(this).find('.rtec-g-recaptcha').first().attr('id')) : '';
                         RtecForm.validateRecapthca(recaptchaVal, $(this));
                     }
                 });
@@ -529,9 +583,15 @@ jQuery(document).ready(function($) {
 
             function rtecToggleModal() {
                 $('body').toggleClass('rtec-modal-is-open');
+                $('.rtec-modal').each(function(){
+                    if ( ! $(this).hasClass('rtec-form-modal') ) {
+                        $(this).hide();
+                    }
+                });
+                $('.rtec-form-modal').show();
 
-                $('.rtec-modal-backdrop, .rtec-media-modal-close').on('click',function () {
-                    var $modalRtec = $('.rtec-modal-content').find('.rtec');
+                $('.rtec-modal-backdrop, .rtec-action-modal-close').on('click',function () {
+                    var $modalRtec = $('.rtec-form-modal .rtec-modal-content').find('.rtec');
                     $modalRtec.find('.rtec-form-wrapper').hide();
                     $('.rtec-modal-placeholder').replaceWith($modalRtec);
                     $('.rtec-register-button').show();
@@ -539,6 +599,73 @@ jQuery(document).ready(function($) {
                     $('body').removeClass('rtec-modal-is-open');
                 });
             }
+
+            function rtecToggleActionModal() {
+                $('.rtec-modal').each(function(){
+                    if ( $(this).hasClass('rtec-form-modal') ) {
+                        $(this).hide();
+                    }
+                });
+                $('body').toggleClass('rtec-modal-is-open');
+
+                $('.rtec-modal-backdrop, .rtec-action-modal-close').on('click',function () {
+                    $('.rtec-modal').hide();
+
+                    $('body').removeClass('rtec-modal-is-open');
+
+                    var evt = $.Event('rtecAfterModalClose');
+                    evt.el = $(this);
+
+                    $(window).trigger(evt);
+                });
+            }
+
+            function rtecMaybeModalInit() {
+                if ( $('.rtec-modal').length) {
+                    $('.rtec-modal').each(function(){
+                        if (! $(this).hasClass('rtec-form-modal') ) {
+                            rtecToggleActionModal();
+
+                            var evt = $.Event('rtecAfterModalInit');
+                            evt.el = $(this);
+
+                            $(window).trigger(evt);
+                        }
+                    });
+                }
+            }rtecMaybeModalInit();
+
+            $('#rtec-confirm-unregister-form').on('submit',function(event) {
+                event.preventDefault();
+                var $form = $(this);
+                $form.after($('.rtec-spinner').clone());
+                $form.next('.rtec-spinner').show();
+                $form.fadeTo(500,.1);
+                $form.find('button').prop('disabled',true).css('opacity', .1);
+
+                var submittedData = {
+                    'action': 'rtec_confirm_unregistration',
+                    'event_id': $form.find('input[name=event_id]').val(),
+                    'rtec_unregister_confirm': $form.find('input[name=rtec_unregister_confirm]').val()
+                };
+
+                $.ajax({
+                    url: rtec.ajaxUrl,
+                    type: 'post',
+                    data: submittedData,
+                    success: function (data) {
+                        $('.rtec-spinner').hide();
+                        $form.fadeTo(500,1);
+                        $form.find('button').prop('disabled',false).css('opacity', 1);
+                        if (data.trim().indexOf('<') > -1) {
+                            $form.empty().append(data);
+                            $('#rtec-confirm-unregister').find('.rtec-attendance').fadeIn();
+                        }
+
+                    }
+                }); // ajax
+
+            });
 
             $(window).on('rtecsubmissionajax', function (event) {
                 var $rtecEl = event.el.closest('.rtec-outer-wrap').length ? event.el.closest('.rtec-outer-wrap') : event.el;
@@ -574,6 +701,17 @@ jQuery(document).ready(function($) {
 
     if($('.rtec').length && !$('.rtec').hasClass('rtec-initialized')) {
         rtecInit();
+    }
+
+    window.rtecRecaptchaCallback = function() {
+        window.rtec.recaptchas = {};
+        $('.rtec-form-field.rtec-recaptcha').each(function(index) {
+            $(this).find('.rtec-g-recaptcha').attr('id', 'rtec-recaptcha-' + index);
+            window.rtec.recaptchas['rtec-recaptcha-' + index] = grecaptcha.render('rtec-recaptcha-' + index, {
+                sitekey : $('.rtec-form-field.rtec-recaptcha').first().find('.rtec-g-recaptcha').attr('data-sitekey'),
+                'theme' : 'light'
+            } );
+        });
     }
 
 });

@@ -40,64 +40,61 @@ class RTEC_Admin_Registrations {
 	 * @param array $settings
 	 */
 	public function build_admin_registrations( $tab, $settings = array() ) {
-		$this->tab = $tab;
-		$this->settings = $settings;
+		$this->tab          = $tab;
+		$this->settings     = $settings;
 		$this->current_user = wp_get_current_user();
 
 		$this->current_user_is_author = in_array( 'author', (array) $this->current_user->roles );
-		$capability = 'edit_posts';
+		$capability                   = 'edit_posts';
 
 		if ( $this->tab === 'my-registrations' && current_user_can( $capability ) && isset( $_POST['rtec_email'] ) && is_email( $_POST['rtec_email'] ) ) {
-			$db            = new RTEC_Db_Admin();
-			$event_id_args['where'] = array(
+			$db                             = new RTEC_Db_Admin();
+			$event_id_args['where']         = array(
 				array( 'email', sanitize_text_field( $_POST['rtec_email'] ), '=', 'string' ),
-				array( 'status', '"x"', '!=', 'string' )
+				array( 'status', '"x"', '!=', 'string' ),
 			);
-			$this->events_user_is_attending     = $db->get_event_ids( $event_id_args, $arrange = 'DESC' );
+			$this->events_user_is_attending = $db->get_event_ids( $event_id_args, $arrange = 'DESC' );
 		} else {
-			$this->events_user_is_attending = array(0);
+			$this->events_user_is_attending = array( 0 );
 		}
 	}
 
 	/**
 	 * @param $id
 	 */
-	public function add_event_id_on_page( $id )
-	{
+	public function add_event_id_on_page( $id ) {
 		$this->ids_on_page[] = $id;
 	}
 
 	/**
 	 * @return array
 	 */
-	public function get_ids_on_page()
-	{
+	public function get_ids_on_page() {
 		return $this->ids_on_page;
 	}
 
 	public function get_settings() {
-	    return $this->settings;
-    }
+		return $this->settings;
+	}
 
 	/**
 	 * @return array
 	 */
-	public function get_events( $full = false )
-	{
+	public function get_events( $full = false ) {
 		global $rtec_options;
 		$settings = $this->settings;
 
 		if ( $settings['qtype'] === 'all' ) {
 			$args = array(
 				'posts_per_page' => $this->posts_per_page,
-				'start_date' => '2000-10-01 00:01',
-				'offset' => $settings['off']
+				'start_date'     => '2000-10-01 00:01',
+				'offset'         => $settings['off'],
 			);
 		} elseif ( $settings['qtype'] === 'start' ) {
 			$args = array(
 				'posts_per_page' => $this->posts_per_page,
-				'start_date' => $settings['start'],
-				'offset' => $settings['off']
+				'start_date'     => $settings['start'],
+				'offset'         => $settings['off'],
 			);
 		} elseif ( $settings['qtype'] === 'past' ) {
 			$args = array(
@@ -187,12 +184,12 @@ class RTEC_Admin_Registrations {
 			}
 
 			if ( ! current_user_can( 'edit_others_tribe_events' )
-			     && ! current_user_can( 'edit_others_rtec_registrations' ) ) {
+				&& ! current_user_can( 'edit_others_rtec_registrations' ) ) {
 				$args['author'] = $this->current_user->data->ID;
 			}
 
 			return get_posts( $args );
-		}  elseif ( $settings['qtype'] === 'hid' ) {
+		} elseif ( $settings['qtype'] === 'hid' ) {
 
 			$post_type = defined( 'Tribe__Events__Main::POSTTYPE' ) ? Tribe__Events__Main::POSTTYPE : 'tribe_events';
 			$args      = array(
@@ -200,7 +197,7 @@ class RTEC_Admin_Registrations {
 				'post_status'    => 'publish',
 				'posts_per_page' => 100,
 				'orderby'        => 'meta_value',
-				'order'          => 'ASC'
+				'order'          => 'ASC',
 			);
 
 			$compare = '>=';
@@ -214,13 +211,13 @@ class RTEC_Admin_Registrations {
 						'key'     => '_EventStartDate',
 						'value'   => $start_date,
 						'compare' => $compare,
-						'type'    => 'DATE'
+						'type'    => 'DATE',
 					),
 					array(
 						'key'     => '_EventHideFromUpcoming',
 						'value'   => 'yes',
-						'compare' => '='
-					)
+						'compare' => '=',
+					),
 				);
 			} else {
 				$args['meta_query'] = array(
@@ -229,39 +226,38 @@ class RTEC_Admin_Registrations {
 						'key'     => '_EventStartDate',
 						'value'   => $start_date,
 						'compare' => $compare,
-						'type'    => 'DATE'
+						'type'    => 'DATE',
 					),
 					array(
 						'key'     => '_EventHideFromUpcoming',
 						'value'   => 'yes',
-						'compare' => '='
-					)
+						'compare' => '=',
+					),
 				);
 			}
 
 			if ( $this->settings['with'] === 'with' ) {
 				if ( isset( $rtec_options['disable_by_default'] ) && $rtec_options['disable_by_default'] === true ) {
 					$args['meta_query'][] = array(
-						'key' => '_RTECregistrationsDisabled',
-						'value' => '0',
-						'compare' => '='
+						'key'     => '_RTECregistrationsDisabled',
+						'value'   => '0',
+						'compare' => '=',
 					);
 				} else {
 					$args['meta_query'][] = array(
 						'relation' => 'OR',
 						array(
-							'key' => '_RTECregistrationsDisabled',
-							'compare' => 'NOT EXISTS'
+							'key'     => '_RTECregistrationsDisabled',
+							'compare' => 'NOT EXISTS',
 						),
 						array(
-							'key' => '_RTECregistrationsDisabled',
-							'value' => '1',
-							'compare' => '!='
-						)
+							'key'     => '_RTECregistrationsDisabled',
+							'value'   => '1',
+							'compare' => '!=',
+						),
 					);
 				}
 			}
-
 		} else {
 			$args = array(
 				'posts_per_page' => $this->posts_per_page,
@@ -272,45 +268,44 @@ class RTEC_Admin_Registrations {
 		}
 
 		if ( $this->tab === 'my-registrations' ) {
-			$event_ids = $this->events_user_is_attending;
+			$event_ids      = $this->events_user_is_attending;
 			$posts_per_page = $full ? 100 : $this->posts_per_page;
-			if ( ! empty ( $event_ids ) ) {
+			if ( ! empty( $event_ids ) ) {
 				if ( $settings['qtype'] === 'all' ) {
 					$start_date = '2000-10-01 00:01';
 				} else {
-					$start_date = date( 'Y-m-d H:i', (time() + rtec_get_utc_offset() - 6 *  HOUR_IN_SECONDS) );
+					$start_date = date( 'Y-m-d H:i', ( time() + rtec_get_utc_offset() - 6 * HOUR_IN_SECONDS ) );
 				}
 				$args = array(
 					'posts_per_page' => $posts_per_page,
-					'start_date' => $start_date,
-					'offset' => $settings['off'],
-					'post__in' => $event_ids,
+					'start_date'     => $start_date,
+					'offset'         => $settings['off'],
+					'post__in'       => $event_ids,
 				);
 			} else {
 				$args = false;
 			}
-
 		}
 
 		if ( $this->settings['with'] === 'with' ) {
 			if ( isset( $rtec_options['disable_by_default'] ) && $rtec_options['disable_by_default'] === true ) {
 				$args['meta_query'][] = array(
-					'key' => '_RTECregistrationsDisabled',
-					'value' => '0',
-					'compare' => '='
+					'key'     => '_RTECregistrationsDisabled',
+					'value'   => '0',
+					'compare' => '=',
 				);
 			} else {
 				$args['meta_query'][] = array(
 					'relation' => 'OR',
 					array(
-						'key' => '_RTECregistrationsDisabled',
-						'compare' => 'NOT EXISTS'
+						'key'     => '_RTECregistrationsDisabled',
+						'compare' => 'NOT EXISTS',
 					),
 					array(
-						'key' => '_RTECregistrationsDisabled',
-						'value' => '1',
-						'compare' => '!='
-					)
+						'key'     => '_RTECregistrationsDisabled',
+						'value'   => '1',
+						'compare' => '!=',
+					),
 				);
 			}
 		}
@@ -327,8 +322,7 @@ class RTEC_Admin_Registrations {
 	/**
 	 *
 	 */
-	public function the_registrations_overview()
-	{
+	public function the_registrations_overview() {
 		add_action( 'rtec_registrations_tab_after_the_title', array( $this, 'the_toolbar' ) );
 		if ( $this->settings['v'] === 'list' ) {
 			add_action( 'rtec_registrations_tab_events', array( $this, 'the_events_list' ) );
@@ -346,8 +340,7 @@ class RTEC_Admin_Registrations {
 	/**
 	 *
 	 */
-	public function the_registrations_detailed_view()
-	{
+	public function the_registrations_detailed_view() {
 		add_action( 'rtec_registrations_tab_event_meta', array( $this, 'the_event_meta' ), 10, 1 );
 		add_action( 'rtec_registrations_tab_events_loaded', array( $this, 'update_status_for_event_ids' ), 10, 1 );
 	}
@@ -370,7 +363,7 @@ class RTEC_Admin_Registrations {
 	 *
 	 */
 	public function the_events_list_table_body() {
-		$events = $this->get_events();
+		$events   = $this->get_events();
 		$settings = $this->settings;
 
 		foreach ( $events as $event ) {
@@ -378,17 +371,15 @@ class RTEC_Admin_Registrations {
 
 			$event_obj = new RTEC_Admin_Event();
 			$event_obj->build_admin_event( $event->ID, 'list', '' );
-			$event_meta = $event_obj->event_meta;
-			$venue = $event_meta['venue_title'];
-			$row_class = 'class="rtec-highlight"';
+			$event_meta     = $event_obj->event_meta;
+			$venue          = $event_meta['venue_title'];
+			$row_class      = 'class="rtec-highlight"';
 			$num_registered = $event_obj->event_meta['max_registrations'];
 
 			if ( rtec_should_show( $settings['with'], $event_meta['registrations_disabled'] ) ) {
 				include RTEC_PLUGIN_DIR . 'inc/admin/templates/partials/registrations-list-table-body.php';
 			}
-
 		}
-
 	}
 
 	/**
@@ -398,27 +389,27 @@ class RTEC_Admin_Registrations {
 		$settings = $this->settings;
 		$events   = $this->get_events();
 
-		$should_show_create_event_prompt = (empty( $events ) && $settings['qtype'] === 'upcoming' && $settings['with'] === 'with');
+		$should_show_create_event_prompt = ( empty( $events ) && $settings['qtype'] === 'upcoming' && $settings['with'] === 'with' );
 
 		if ( $should_show_create_event_prompt ) {
 			?>
-			<div class="rtec-notice">
-				<p><?php echo sprintf( __( "Looks like you there weren't any upcoming events allowing registration found. %sCreate an event%s to get started!", 'registrations-for-the-events-calendar' ), '<a href="' . admin_url( 'post-new.php?post_type=tribe_events' ) .'" class="button button-primary">', '</a>'); ?></p>
+			<div class="rtec-notice rtec-box-shadow">
+				<p><?php printf( __( "Looks like you there weren't any upcoming events allowing registration found. %1\$sCreate an event%2\$s to get started!", 'registrations-for-the-events-calendar' ), '<a href="' . admin_url( 'post-new.php?post_type=tribe_events' ) . '" class="button button-primary rtec-cta">', '</a>' ); ?></p>
 			</div>
 			<?php
 			$args = array(
 				'posts_per_page' => $this->posts_per_page,
-				'start_date' => '2000-10-01 00:01',
-				'offset' => 0
+				'start_date'     => '2000-10-01 00:01',
+				'offset'         => 0,
 			);
 			$args = apply_filters( 'rtec_registration_overview_query_args', $args, $this->settings );
 
 			$events = rtec_get_events( $args );
 			if ( ! empty( $events ) ) :
-			?>
-                <p><?php _e( "Here are some events that didn't fit your filters:", 'registrations-for-the-events-calendar' ); ?></p>
-            <?php
-            endif;
+				?>
+				<p><?php _e( "Here are some events that didn't fit your filters:", 'registrations-for-the-events-calendar' ); ?></p>
+				<?php
+			endif;
 
 		}
 
@@ -435,11 +426,8 @@ class RTEC_Admin_Registrations {
 					}
 					include RTEC_PLUGIN_DIR . 'inc/admin/templates/partials/registrations-overview-view.php';
 				}
-
 			}
-        }
-
-
+		}
 	}
 
 	/**
@@ -453,7 +441,7 @@ class RTEC_Admin_Registrations {
 	 * @param $event_obj
 	 */
 	public function the_hidden_event_options( $event_obj ) {
-		//include RTEC_PLUGIN_DIR . 'inc/admin/templates/partials/registrations-hidden-event-options.php';
+		// include RTEC_PLUGIN_DIR . 'inc/admin/templates/partials/registrations-hidden-event-options.php';
 	}
 
 	/**
@@ -488,9 +476,9 @@ class RTEC_Admin_Registrations {
 	 * @param $value
 	 */
 	public function the_toolbar_href( $var, $value ) {
-		$href = admin_url( 'admin.php?page=registrations-for-the-events-calendar' );
-		$settings = $this->settings;
-		$settings['tab'] = $this->tab;
+		$href             = admin_url( 'admin.php?page=registrations-for-the-events-calendar' );
+		$settings         = $this->settings;
+		$settings['tab']  = $this->tab;
 		$settings[ $var ] = $value;
 		$query_args_array = $settings;
 
@@ -503,14 +491,14 @@ class RTEC_Admin_Registrations {
 	 * @param $context
 	 */
 	public function the_pagination_href( $context ) {
-		$href = admin_url( 'admin.php?page=registrations-for-the-events-calendar' );
-		$settings = $this->settings;
+		$href            = admin_url( 'admin.php?page=registrations-for-the-events-calendar' );
+		$settings        = $this->settings;
 		$settings['tab'] = $this->tab;
 
 		if ( $context === 'back' ) {
-			$settings['off'] = (int)$this->settings['off'] - $this->posts_per_page;
+			$settings['off'] = (int) $this->settings['off'] - $this->posts_per_page;
 		} else {
-			$settings['off'] = (int)$this->settings['off'] + $this->posts_per_page;
+			$settings['off'] = (int) $this->settings['off'] + $this->posts_per_page;
 		}
 
 		$query_args_array = $settings;
@@ -525,10 +513,10 @@ class RTEC_Admin_Registrations {
 	 * @param string $mvt
 	 */
 	public function the_detailed_view_href( $id, $mvt = '' ) {
-		$href = admin_url( 'admin.php?page=registrations-for-the-events-calendar' );
-		$settings = $this->settings;
+		$href            = admin_url( 'admin.php?page=registrations-for-the-events-calendar' );
+		$settings        = $this->settings;
 		$settings['tab'] = 'single';
-		$settings['id'] = $id;
+		$settings['id']  = $id;
 
 		$query_args_array = $settings;
 
@@ -547,7 +535,6 @@ class RTEC_Admin_Registrations {
 		} else {
 			return false;
 		}
-
 	}
 
 	/**
@@ -557,38 +544,38 @@ class RTEC_Admin_Registrations {
 
 		if ( ! empty( $ids_on_page ) ) {
 			$rtec = RTEC();
-			$db = $rtec->db_frontend->instance();
+			$db   = $rtec->db_frontend->instance();
 
 			$db->update_statuses( $ids_on_page );
 		}
-
 	}
 
 	/**
 	 * @param string $status
-	 * @param bool $is_user
+	 * @param bool   $is_user
 	 *
 	 * @return string
 	 */
 	public function get_registrant_tr_classes( $status = 'c', $is_user = false ) {
 
 		$classes = '';
-		switch( $status ) {
-			case 'c' :
+		switch ( $status ) {
+			case 'c':
 				$classes .= '';
 				break;
-			case 'p' :
+			case 'p':
 				$classes .= ' rtec-unconfirmed';
 				break;
-			case 'n' :
+			case 'n':
 				$classes .= '';
 				break;
-			default :
+			default:
 				$classes .= '';
 		}
 
 		if ( $is_user ) {
-			$classes .= ' rtec-is-user';;
+			$classes .= ' rtec-is-user';
+
 		}
 
 		return $classes;
@@ -596,24 +583,24 @@ class RTEC_Admin_Registrations {
 
 	/**
 	 * @param string $status
-	 * @param bool $is_user
+	 * @param bool   $is_user
 	 *
 	 * @return string
 	 */
 	public function get_registrant_icons( $status = 'c', $is_user = false ) {
 
 		$html = '';
-		switch( $status ) {
-			case 'c' :
+		switch ( $status ) {
+			case 'c':
 				$html .= '';
 				break;
-			case 'p' :
+			case 'p':
 				$html .= '<span class="rtec-notice-new rtec-unconfirmed"><i class="fa fa-flag" aria-hidden="true"></i></span>';
 				break;
-			case 'n' :
+			case 'n':
 				$html .= '<span class="rtec-notice-new"><i class="fa fa-tag" aria-hidden="true"></i></span>';
 				break;
-			default :
+			default:
 				$html .= '';
 		}
 

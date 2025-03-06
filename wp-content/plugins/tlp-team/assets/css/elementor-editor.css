@@ -83,7 +83,6 @@ body .elementor-panel .elementor-tab-control-settings a::before {
     top: 45%;
     left: 50%;
     -webkit-transition: 0.5s;
-    -o-transition: 0.5s;
     transition: 0.5s;
     color: #93003c;
     border-radius: 3px;

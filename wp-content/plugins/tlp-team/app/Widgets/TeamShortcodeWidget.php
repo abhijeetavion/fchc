@@ -37,6 +37,7 @@ class TeamShortcodeWidget extends WP_Widget {
 		echo $before_widget; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 
 		if ( ! empty( $instance['title'] ) ) {
+			// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 			echo $args['before_title'] . apply_filters(
 				'widget_title',
 				! empty( $instance['title'] ) ? esc_html( $instance['title'] ) : esc_html__( 'TLP Team', 'tlp-team' )
@@ -84,7 +85,7 @@ class TeamShortcodeWidget extends WP_Widget {
 	public function update( $new_instance, $old_instance ) {
 
 		$instance          = [];
-		$instance['title'] = ( ! empty( $new_instance['title'] ) ) ? strip_tags( $new_instance['title'] ) : '';
+		$instance['title'] = ( ! empty( $new_instance['title'] ) ) ? wp_strip_all_tags( $new_instance['title'] ) : '';
 		$instance['id']    = ( ! empty( $new_instance['id'] ) ) ? absint( $new_instance['id'] ) : '';
 
 		return $instance;

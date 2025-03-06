@@ -60,8 +60,40 @@ class Xyz_Insert_Php_Widget extends WP_Widget {
             if(substr(trim($content_to_eval), 0,5)=='<?php')
                 $content_to_eval='?>'.$content_to_eval;
         }
-        
+        $exception_occur=0;
+        $exception_msg="";
+        //////// code for error handling in exception mail////////
+          try {
         eval($content_to_eval);
+          } catch (Throwable $e) { // For PHP 7 and later
+              $exception_occur = 1;
+              $exception_msg = $e->getMessage();
+          }
+          catch (Exception $e) { // For PHP 5
+            $exception_occur = 1;
+            $exception_msg = $e->getMessage();
+        }
+        ///////////////////////////////////////////////////////////
+        if($exception_occur==1) {
+        //	global $post;
+         // $post_slug = $post->post_name;
+        //	if($post_slug!="xyz-ics-preview-page" && !is_customize_preview())
+          {
+            $status=1;
+            $wpdb->update($wpdb->prefix.'xyz_ics_short_code', array('exception_status'=>$status), array('title'=>$snippet_name));
+            if(get_option('xyz_ips_exception_email')!="0" && get_option('xyz_ips_exception_email')!="" && get_option('xyz_ips_auto_exception')==1)
+            {
+              $email=get_option('xyz_ips_exception_email');
+              $headers= "Content-type: text/html";
+              $subject="Exception Report";
+              $message="Hi,<br>An exception occurred while running one of the snippet in the widget.The snippet name is ".$snippet_name;
+              $message.=".<br>Exception details are given below : <br>";
+              $message.=$exception_msg;
+              wp_mail($email, $subject, $message,$headers);
+            }
+          }
+        }
+        //eval($content_to_eval);
         echo $after_widget;
     }
     /** @see WP_Widget::update -- do not rename this */
@@ -94,7 +126,8 @@ class Xyz_Insert_Php_Widget extends WP_Widget {
     <label for="<?php echo $this->get_field_id('message'); ?>"><?php _e('Choose Snippet :'); ?></label>
     <select name="<?php echo $this->get_field_name('message'); ?>">
         <?php
-        if( count($entries)>0 ) {
+          if(!empty($entries))//if( count($entries)>0 )
+          {
             $count=1;
             $class = '';
             foreach( $entries as $entry ) {

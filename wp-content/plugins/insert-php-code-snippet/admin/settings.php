@@ -45,6 +45,8 @@ if($_POST){
         $xyz_ips_auto_insert = intval($_POST['xyz_ips_auto_insert']);
         update_option('xyz_ips_auto_insert',$xyz_ips_auto_insert);
 
+        $xyz_ips_exec_in_editor = intval($_POST['xyz_ips_exec_in_editor']);
+        update_option('xyz_ips_exec_in_editor',$xyz_ips_exec_in_editor);
         $xyz_ips_auto_exception = intval($_POST['xyz_ips_auto_exception']);
         update_option('xyz_ips_auto_exception',$xyz_ips_auto_exception);
 
@@ -180,6 +182,17 @@ if($_POST){
                             <select name="xyz_ips_pre_ads" id="xyz_ips_pre_ads">
                                 <option value="0" <?php selected(get_option('xyz_ips_premium_version_ads'),0);?>>Disable</option>
                                 <option value="1" <?php selected(get_option('xyz_ips_premium_version_ads'),1);?>>Enable</option>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr valign="top">
+                        <td scope="row">
+                            <label for="xyz_ips_exec_in_editor">Execute shortcodes in editors</label><br/><span style="color: #1A87B9;font-size:13px;" >[Enable/Disable Shortcode Execution in Editors (Gutenberg, Classic, Elementor, etc.)]</span>
+                        </td>
+                        <td>
+                            <select name="xyz_ips_exec_in_editor" id="xyz_ips_exec_in_editor">
+                                <option value="0" <?php selected(get_option('xyz_ips_exec_in_editor'),0);?>>Disable</option>
+                                <option value="1" <?php selected(get_option('xyz_ips_exec_in_editor'),1);?>>Enable</option>
                             </select>
                         </td>
                     </tr>

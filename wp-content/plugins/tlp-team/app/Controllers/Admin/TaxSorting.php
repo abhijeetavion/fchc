@@ -26,7 +26,7 @@ class TaxSorting {
 	 * @return void
 	 */
 	protected function init() {
-
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended
 		if (isset($_GET['page'] ) && isset($_GET['post_type']) && 'ttp_taxonomy_order' === $_GET['page'] && 'team' === $_GET['post_type']){
 			add_action( 'admin_init', [ $this, 'refresh' ] );
 		}
@@ -52,19 +52,27 @@ class TaxSorting {
 
 		$html  = $msg = null;
 		$error = true;
-		if ( Fns::verifyNonce() ) {
-			$tax = ! empty( $_REQUEST['tax'] ) ? sanitize_text_field( $_REQUEST['tax'] ) : null;
+		if ( wp_verify_nonce( Fns::getNonce(), Fns::nonceText()) ) {
+			$tax = ! empty( $_REQUEST['tax'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['tax'] ) ) : null;
 			if ( $tax ) {
 				$error = false;
-				$terms = get_terms(
-					$tax,
-					[
-						'orderby'    => 'meta_value_num',
-						'meta_key'   => '_rt_order',
-						'order'      => 'ASC',
-						'hide_empty' => false,
-					]
-				);
+				/*old code*/
+//				$terms = get_terms(
+//					$tax,
+//					[
+//						'orderby'    => 'meta_value_num',
+//						'meta_key'   => '_rt_order',
+//						'order'      => 'ASC',
+//						'hide_empty' => false,
+//					]
+//				);
+				$terms = get_terms( array(
+					'taxonomy'   => $tax,
+					'orderby'    => 'meta_value_num',
+					'meta_key'   => '_rt_order', // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_key
+					'order'      => 'ASC',
+					'hide_empty' => false,
+				) );
 				if ( ! empty( $terms ) ) {
 					$html .= "<ul id='order-target' data-taxonomy='{$tax}'>";
 					foreach ( $terms as $term ) {
@@ -107,6 +115,7 @@ class TaxSorting {
 
 	function tlp_pre_get_posts( $wp_query ) {
 		if ( is_admin() ) {
+			// phpcs:ignore WordPress.Security.NonceVerification.Recommended
 			if ( isset( $wp_query->query['post_type'] ) && ! isset( $_GET['orderby'] ) && $wp_query->query['post_type'] == 'team' && $wp_query->is_main_query() ) {
 				$wp_query->set( 'orderby', 'menu_order' );
 				$wp_query->set( 'order', 'ASC' );
@@ -115,7 +124,13 @@ class TaxSorting {
 	}
 
 	function tlp_team_update_menu_order() {
-
+		if ( ! wp_verify_nonce( Fns::getNonce(), Fns::nonceText() ) ) {
+			wp_send_json_error(
+				[
+					'data' => __('Security Issue','tlp-team')
+				]
+			);
+		}
 		global $wpdb;
 
 		$data = ( ! empty( $_POST['post'] ) ? array_map( 'absint', $_POST['post'] ) : [] );
@@ -131,7 +146,15 @@ class TaxSorting {
 
 		$menu_order_arr = [];
 		foreach ( $id_arr as $key => $id ) {
-			$results = $wpdb->get_results( "SELECT menu_order FROM $wpdb->posts WHERE ID = " . intval( $id ) );
+			$tlp_tax_cache_key = 'tlp_team_menu_order_cache_'.$id;
+			$results = wp_cache_get($tlp_tax_cache_key);
+			if (false === $results){
+				// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
+				$results = $wpdb->get_results(
+					$wpdb->prepare("SELECT menu_order FROM $wpdb->posts WHERE ID = " . intval( $id ) )
+				);
+				wp_cache_set($tlp_tax_cache_key,$results);
+			}
 			foreach ( $results as $result ) {
 				$menu_order_arr[] = $result->menu_order;
 			}
@@ -140,6 +163,7 @@ class TaxSorting {
 		sort( $menu_order_arr );
 
 		foreach ( $data as $position => $id ) {
+			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
 			$wpdb->update( $wpdb->posts, [ 'menu_order' => $menu_order_arr[ $position ] ], [ 'ID' => intval( $id ) ] );
 		}
 
@@ -151,16 +175,26 @@ class TaxSorting {
 	 */
 	function refresh() {
 		global $wpdb;
+		$tlp_refresh_cache_key = 'tlp_team_post_refresh';
+		$results = wp_cache_get($tlp_refresh_cache_key);
+		if (false === $results){
+			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
+			$results = $wpdb->get_results(
+				$wpdb->prepare(
+					"
+			        SELECT ID
+			        FROM $wpdb->posts
+			        WHERE post_type = %s AND post_status IN ('publish', 'pending', 'draft', 'private', 'future')
+			        ORDER BY menu_order ASC
+			        ",
+					rttlp_team()->post_type
+				)
+			);
+			wp_cache_set($tlp_refresh_cache_key,$results);
+		}
 
-		$results = $wpdb->get_results(
-			"
-		SELECT ID
-		FROM $wpdb->posts
-		WHERE post_type = '" . rttlp_team()->post_type . "' AND post_status IN ('publish', 'pending', 'draft', 'private', 'future')
-		ORDER BY menu_order ASC
-	"
-		);
 		foreach ( $results as $key => $result ) {
+			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
 			$wpdb->update( $wpdb->posts, [ 'menu_order' => $key + 1 ], [ 'ID' => $result->ID ] );
 		}
 	}
@@ -169,17 +203,25 @@ class TaxSorting {
 	 * @return bool
 	 */
 	function ttp_term_update_order() {
+		if (wp_verify_nonce( Fns::getNonce(), Fns::nonceText() )){
+			$data = ( ! empty( $_POST['terms'] ) ? explode( ',', sanitize_text_field( wp_unslash( $_POST['terms'] ) ) ) : [] );
 
-		$data = ( ! empty( $_POST['terms'] ) ? explode( ',', sanitize_text_field( $_POST['terms'] ) ) : [] );
+			if ( ! is_array( $data ) && empty( $data ) ) {
+				return false;
+			}
+			// sort( $order_arr );
 
-		if ( ! is_array( $data ) && empty( $data ) ) {
-			return false;
+			foreach ( $data as $position => $id ) {
+				update_term_meta( intval( $id ), '_rt_order', $position );
+			}
+		}else{
+			wp_send_json_error(
+				[
+					'data' => __('Security Issue','tlp-team')
+				]
+			);
 		}
-		// sort( $order_arr );
 
-		foreach ( $data as $position => $id ) {
-			update_term_meta( intval( $id ), '_rt_order', $position );
-		}
 		die();
 	}
 }

@@ -166,7 +166,7 @@ if ( ! class_exists( 'SP_EAP_Options' ) ) {
 			$this->set_options();
 			$this->save_defaults();
 
-			add_action( 'admin_menu', array( &$this, 'add_admin_menu' ) );
+			add_action( 'admin_menu', array( &$this, 'add_admin_menu' ), $this->args['admin_bar_menu_priority'] );
 			add_action( 'admin_bar_menu', array( &$this, 'add_admin_bar_menu' ), $this->args['admin_bar_menu_priority'] );
 			add_action( 'wp_ajax_eapro_' . $this->unique . '_ajax_save', array( &$this, 'ajax_save' ) );
 
@@ -176,7 +176,6 @@ if ( ! class_exists( 'SP_EAP_Options' ) ) {
 
 			// wp enqeueu for typography and output css.
 			parent::__construct();
-
 		}
 
 		/**
@@ -315,7 +314,6 @@ if ( ! class_exists( 'SP_EAP_Options' ) ) {
 					);
 				}
 			}
-
 		}
 
 		/**
@@ -337,7 +335,6 @@ if ( ! class_exists( 'SP_EAP_Options' ) ) {
 					)
 				);
 			}
-
 		}
 
 		/**
@@ -373,7 +370,6 @@ if ( ! class_exists( 'SP_EAP_Options' ) ) {
 			if ( $this->args['save_defaults'] && empty( $tmp_options ) ) {
 				$this->save_options( $this->options );
 			}
-
 		}
 
 		/**
@@ -383,7 +379,6 @@ if ( ! class_exists( 'SP_EAP_Options' ) ) {
 		 * @return bool
 		 */
 		public function set_options( $ajax = false ) {
-
 			// XSS ok.
 			// No worries, This "POST" requests is sanitizing in the below foreach. see #L337 - #L341.
 			$response = ( $ajax && ! empty( $_POST['data'] ) ) ? json_decode( wp_unslash( trim( $_POST['data'] ) ), true ) : $_POST; // phpcs:ignore
@@ -442,26 +437,18 @@ if ( ! class_exists( 'SP_EAP_Options' ) ) {
 					foreach ( $this->pre_fields as $field ) {
 
 						if ( ! empty( $field['id'] ) ) {
-
 							$field_id    = $field['id'];
 							$field_value = isset( $options[ $field_id ] ) ? $options[ $field_id ] : '';
-
 							// Ajax and Importing doing wp_unslash already.
 							if ( ! $ajax && ! $importing ) {
 								$field_value = wp_unslash( $field_value );
 							}
-
 							// Sanitize "post" request of field.
 							if ( ! isset( $field['sanitize'] ) ) {
-
 								if ( is_array( $field_value ) ) {
-
 									$data[ $field_id ] = wp_kses_post_deep( $field_value );
-
 								} else {
-
 									$data[ $field_id ] = wp_kses_post( $field_value );
-
 								}
 							} elseif ( isset( $field['sanitize'] ) && function_exists( $field['sanitize'] ) ) {
 
@@ -502,13 +489,9 @@ if ( ! class_exists( 'SP_EAP_Options' ) ) {
 				if ( empty( $this->notice ) ) {
 					$this->notice = esc_html__( 'Settings saved.', 'easy-accordion-free' );
 				}
-
 				return true;
-
 			}
-
 			return false;
-
 		}
 
 		/**
@@ -555,7 +538,6 @@ if ( ! class_exists( 'SP_EAP_Options' ) ) {
 			}
 
 			return $this->options;
-
 		}
 
 		/**
@@ -603,7 +585,6 @@ if ( ! class_exists( 'SP_EAP_Options' ) ) {
 			}
 
 			add_action( 'load-' . $menu_page, array( &$this, 'add_page_on_load' ) );
-
 		}
 
 		/**
@@ -623,7 +604,6 @@ if ( ! class_exists( 'SP_EAP_Options' ) ) {
 					$screen->set_help_sidebar( $this->args['contextual_help_sidebar'] );
 				}
 			}
-
 		}
 
 		/**
@@ -845,7 +825,6 @@ if ( ! class_exists( 'SP_EAP_Options' ) ) {
 			echo '</div>';
 
 			do_action( 'eapro_options_after' );
-
 		}
 	}
 }

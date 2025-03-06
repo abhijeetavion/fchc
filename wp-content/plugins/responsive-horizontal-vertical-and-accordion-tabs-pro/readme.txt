@@ -3,9 +3,9 @@ Contributors:nik00726
 Donate link:http://www.i13websolution.com/donate-wordpress_image_thumbnail.php
 Tags:Accordion tabs, Vertical tabs,horizontal tabs,wp tabs,Responsive Tabs, All in one tabs
 Requires at least:3.0
-Tested up to:6.2
-Version:2.22
-Stable tag:2.22
+Tested up to:6.7
+Version:2.27
+Stable tag:2.27
 License:GPLv2 or later
 License URI:http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -63,6 +63,8 @@ Create beautiful responsive tabs with a very easy interface. This plugin is all 
 
 6. WordPress capebilities feature.
 
+7. Clone tab sets.
+
 
 
 
@@ -109,6 +111,29 @@ This plugin is free for everyone! Since it's released under the GPL, you can use
 
 
 == Changelog ==
+
+= 2.27 =
+
+* Added feature duplicate tab sets
+
+
+= 2.26 =
+
+* Fixed error undefined variable $wpdb
+
+
+= 2.25 =
+
+* Added shortcode param to disable scroll on tab click
+
+= 2.24 =
+ * Fixed vulnerability
+
+
+= 2.23 =
+
+* Make plugin compatible with block editor
+* Tested with WordPress 6.3
 
 = 2.22 =
 

@@ -1,95 +1,135 @@
 <?php
 /**
  * Plugin Name:       Float Menu Lite
- * Plugin URI:        https://wordpress.org/plugins/float-menu/
+ * Plugin URI:        https://wow-estore.com/item/float-menu-pro/
  * Description:       Easily create floating menus of varying complexity
- * Version:           5.0.3
+ * Version:           7.0
  * Author:            Wow-Company
  * Author URI:        https://wow-estore.com
  * License:           GPL-2.0+
  * License URI:       http://www.gnu.org/licenses/gpl-2.0.txt
+ * Text Domain:       float-menu
+ * Domain Path:       /languages
+ * Item ID:           5174
+ * Store URI:         https://wow-estore.com/
+ * Author Email:      hey@wow-company.com
+ * Plugin Menu:       Float Menu Lite
+ * Rating URI:        https://wordpress.org/support/plugin/float-menu/reviews/?filter=5#new-post
+ * Support URI:       https://wordpress.org/support/plugin/float-menu/
+ * Item URI:          https://wow-estore.com/item/float-menu-pro/
+ * Change URI:        https://wow-estore.com/float-menu-lite-changelog/#version-6.0
+ *
+ * PHP version        7.4
+ *
+ * @category    Wordpress_Plugin
+ * @package     Wow_Plugin
+ * @author      Dmytro Lobov <dev@wow-company.com>, Wow-Company
+ * @copyright   2024 Dmytro Lobov
+ * @license     GPL-2.0+
+ *
  */
 
-// Required set the namespace for plugin.
-namespace float_menu_free;
+namespace FloatMenuLite;
 
-if ( ! defined( 'ABSPATH' ) ) {
-	exit;
-}
+use FloatMenuLite\Admin\DBManager;
+use FloatMenuLite\Update\UpdateDB;
 
-if ( ! class_exists( 'Wow_Plugin' ) ) :
+defined( 'ABSPATH' ) || exit;
 
-	/**
-	 * Main Wow_Plugin Class.
-	 *
-	 * @since 1.0
-	 */
-	final class Wow_Plugin {
+if ( ! class_exists( 'WOWP_Plugin' ) ) :
 
-		private static $_instance;
+	final class WOWP_Plugin {
 
-		// Set the database name.
-		const PREF = 'fmp';
+		// Plugin slug
+		public const SLUG = 'float-menu';
 
-		/**
-		 * Main Wow_Plugin Instance.
-		 *
-		 * Insures that only one instance of Wow_Plugin exists in memory at any one
-		 * time. Also prevents needing to define globals all over the place.
-		 *
-		 * @return object|Wow_Plugin The one true Wow_Plugin for Current plugin
-		 *
-		 * @uses      Wow_Plugin::_includes() Include the required files.
-		 * @uses      Wow_Plugin::text_domain() load the language files.
-		 * @since     1.0
-		 * @static
-		 * @staticvar array $instance
-		 */
-		public static function instance() {
+		// Plugin prefix
+		public const PREFIX = 'wow_fmp';
 
-			if ( ! isset( self::$_instance ) && ! ( self::$_instance instanceof Wow_Plugin ) ) {
+		// Plugin Shortcode
+		public const SHORTCODE = 'Float-Menu';
 
-				$info = array(
-					'plugin' => array(
-						'name'      => esc_attr( 'Float Menu Lite' ), // Plugin name
-						'menu'      => esc_attr( 'Float Menu Lite' ), // Plugin name in menu
-						'author'    => 'Wow-Company', // Author
-						'prefix'    => self::PREF, // Prefix for database
-						'text'      => 'float-menu',    // Text domain for translate files
-						'version'   => '5.0.3', // Current version of the plugin
-						'file'      => __FILE__, // Main file of the plugin
-						'slug'      => dirname( plugin_basename( __FILE__ ) ), // Name of the plugin folder
-						'url'       => plugin_dir_url( __FILE__ ), // filesystem directory path for the plugin
-						'dir'       => plugin_dir_path( __FILE__ ), // URL directory path for the plugin
-						'shortcode' => 'Float-Menu',
-					),
-					'url'    => array(
-						'author'   => 'https://wow-estore.com/',
-						'home'     => 'https://wordpress.org/plugins/float-menu/',
-						'support'  => 'https://wordpress.org/support/plugin/float-menu/',
-						'pro'      => 'https://wow-estore.com/item/float-menu-pro/',
-						'facebook' => 'https://www.facebook.com/wowaffect/',
-					),
-					'rating' => array(
-						'website'  => esc_attr__( 'WordPress.org' ), // Name site for rating plugin
-						'url'      => 'https://wordpress.org/support/plugin/float-menu/reviews/#new-post',
-						'wp_url'   => 'https://wordpress.org/support/plugin/float-menu/reviews/#new-post',
-						'wp_home'  => 'https://wordpress.org/plugins/float-menu/',
-						'wp_title' => 'Float menu – awesome floating side menu',
-					),
-				);
+		private static $instance;
 
-				self::$_instance = new Wow_Plugin;
+		private WOWP_Admin $admin;
+		private Autoloader $autoloader;
+		private WOWP_Public $public;
+		private WOWP_Plugin_Checker $check;
 
-				register_activation_hook( __FILE__, array( self::$_instance, 'plugin_activate' ) );
-				add_action( 'plugins_loaded', array( self::$_instance, 'text_domain' ) );
+		public static function instance(): WOWP_Plugin {
+			if ( ! isset( self::$instance ) && ! ( self::$instance instanceof self ) ) {
+				self::$instance = new self;
 
-				self::$_instance->_includes();
-				self::$_instance->admin  = new Wow_Plugin_Admin( $info );
-				self::$_instance->public = new Wow_Plugin_Public( $info );
+				self::$instance->includes();
+
+				self::$instance->autoloader = new Autoloader( 'FloatMenuLite' );
+				self::$instance->admin      = new WOWP_Admin();
+				self::$instance->public     = new WOWP_Public();
+
+				register_activation_hook( __FILE__, [ self::$instance, 'plugin_activate' ] );
+				add_action( 'plugins_loaded', [ self::$instance, 'loaded' ] );
 			}
 
-			return self::$_instance;
+
+			return self::$instance;
+		}
+
+		// Plugin Root File.
+		public static function file(): string {
+			return __FILE__;
+		}
+
+		// Plugin Base Name.
+		public static function basename(): string {
+			return plugin_basename( __FILE__ );
+		}
+
+		// Plugin Folder Path.
+		public static function dir(): string {
+			return plugin_dir_path( __FILE__ );
+		}
+
+		// Plugin Folder URL.
+		public static function url(): string {
+			return plugin_dir_url( __FILE__ );
+		}
+
+		// Get Plugin Info
+		public static function info( $show = '' ): string {
+			$data        = [
+				'name'       => 'Plugin Name',
+				'version'    => 'Version',
+				'url'        => 'Plugin URI',
+				'author'     => 'Author',
+				'email'      => 'Author Email',
+				'store'      => 'Store URI',
+				'item_id'    => 'Item ID',
+				'menu_title' => 'Plugin Menu',
+				'rating'     => 'Rating URI',
+				'support'    => 'Support URI',
+				'pro'        => 'Item URI',
+				'change'     => 'Change URI',
+
+			];
+			$plugin_data = get_file_data( __FILE__, $data, false );
+
+			return $plugin_data[ $show ] ?? '';
+		}
+
+		/**
+		 * Include required files.
+		 *
+		 * @access private
+		 * @since  1.0
+		 */
+		private function includes(): void {
+			if ( ! class_exists( 'Wow_Company' ) ) {
+				require_once self::dir() . 'includes/class-wow-company.php';
+			}
+
+			require_once self::dir() . 'classes/Autoloader.php';
+			require_once self::dir() . 'admin/class-wowp-admin.php';
+			require_once self::dir() . 'public/class-wowp-public.php';
 		}
 
 		/**
@@ -98,90 +138,61 @@ if ( ! class_exists( 'Wow_Plugin' ) ) :
 		 * object therefore, we don't want the object to be cloned.
 		 *
 		 * @return void
-		 * @since  1.0
 		 * @access protected
 		 */
 		public function __clone() {
 			// Cloning instances of the class is forbidden.
-			_doing_it_wrong( __FUNCTION__, esc_attr__( 'Cheatin&#8217; huh?', 'float-menu' ), '0.1' );
+			_doing_it_wrong( __FUNCTION__, esc_attr__( 'Cheatin&#8217; huh?', 'float-menu' ), '1.0' );
 		}
 
 		/**
 		 * Disable unserializing of the class.
 		 *
 		 * @return void
-		 * @since  1.0
 		 * @access protected
 		 */
 		public function __wakeup() {
 			// Unserializing instances of the class is forbidden.
-			_doing_it_wrong( __FUNCTION__, esc_attr__( 'Cheatin&#8217; huh?', 'float-menu' ), '0.1' );
+			_doing_it_wrong( __FUNCTION__, esc_attr__( 'Cheatin&#8217; huh?', 'float-menu' ), '1.0' );
 		}
 
-
-		/**
-		 * Include required files.
-		 *
-		 * @access private
-		 * @return void
-		 * @since  1.0
-		 */
-		private function _includes() {
-			if ( ! class_exists( 'Wow_Company' ) ) {
-				include_once 'includes/class-wow-company.php';
+		public function plugin_activate(): void {
+			if ( is_plugin_active( 'float-menu-pro/float-menu-pro.php' ) ) {
+				deactivate_plugins( 'float-menu-pro/float-menu-pro.php' );
 			}
-			include_once 'admin/class-admin.php';
-			include_once 'public/class-public.php';
-		}
 
-		/**
-		 * Activate the plugin.
-		 * create the database
-		 * create the folder in wp-upload
-		 *
-		 * @access public
-		 * @return void
-		 * @since  1.0
-		 */
-		public function plugin_activate() {
-			update_option( 'wow_' . self::PREF . '_notice_action', 'read' );
-			global $wpdb;
-			require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
-			$table = $wpdb->prefix . 'wow_' . self::PREF;
-			$sql   = "CREATE TABLE " . $table . " (
-				id mediumint(9) NOT NULL AUTO_INCREMENT,
-				title VARCHAR(200) NOT NULL,
-				param TEXT,
-				UNIQUE KEY id (id)
-			) DEFAULT CHARSET=utf8;";
-			dbDelta( $sql );
+			$columns = "
+			id mediumint(9) NOT NULL AUTO_INCREMENT,
+			title VARCHAR(200),
+			param longtext,
+			status boolean DEFAULT 0 NOT NULL,
+			mode boolean DEFAULT 0 NOT NULL,
+			tag text,
+			PRIMARY KEY  (id)
+			";
 
-			deactivate_plugins( 'float-menu-pro/float-menu-pro.php' );
+			DBManager::create( $columns );
+
+			update_site_option( self::PREFIX . '_db_version', '6.0' );
 		}
 
 		/**
 		 * Download the folder with languages.
 		 *
-		 * @access public
+		 * @access Publisher
 		 * @return void
-		 * @since  1.0
 		 */
-		public function text_domain() {
+		public function loaded(): void {
+			UpdateDB::init();
 			$languages_folder = dirname( plugin_basename( __FILE__ ) ) . '/languages/';
 			load_plugin_textdomain( 'float-menu', false, $languages_folder );
 		}
 	}
 
-endif; // End if class_exists check.
+endif;
 
-/**
- * The main function for that returns Wow_Plugin
- *
- * @since 1.0
- */
-function Wow_Plugin_run() {
-	return Wow_Plugin::instance();
+function wp_plugin_run(): WOWP_Plugin {
+	return WOWP_Plugin::instance();
 }
 
-// Get Running.
-Wow_Plugin_run();
+wp_plugin_run();

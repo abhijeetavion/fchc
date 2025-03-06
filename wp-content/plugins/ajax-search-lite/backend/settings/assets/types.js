@@ -26,13 +26,6 @@ jQuery(function($){
     });
 
     /**
-     * Textarea as parameter
-     */
-    $('.wpdreamsTextareaIsParam .triggerer').bind('click', function () {
-        $('textarea', $(this).parent()).change();
-    });
-
-    /**
      * OnOff button
      */
     $('.wpdreamsOnOff .wpdreamsOnOffInner').on('click', function () {
@@ -1429,20 +1422,6 @@ jQuery(function($){
 
         }, 1000);
 
-    });
-
-    /**
-     * Animation selector
-     */
-    $('.wpdreamsAnimations .wpdreamsanimationselect').change(function () {
-        var parent = $(this).parent();
-        $('span', parent).removeClass();
-        $('span', parent).addClass("asp_an_" + $(this).val());
-    });
-    $('.wpdreamsAnimations .triggerer').bind('click', function () {
-        var parent = $(this).parent();
-        var select = $('select', parent);
-        return;
     });
 
     /**

@@ -1,11 +1,11 @@
 === Float menu - awesome floating side menu ===
-Contributors: Wpcalc
+Contributors: Wpcalc, lobov
 Donate link: https://wow-estore.com/item/float-menu-pro/
 Tags: sidebar menu, floating menu, side menu, sticky menu, float menu
 Requires at least: 4.3
-Tested up to: 6.2
-Requires PHP: 5.6
-Stable tag: 5.0.3
+Tested up to: 6.7
+Requires PHP: 7.4
+Stable tag: 7.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -16,7 +16,7 @@ Float Menu is a free WordPress plugin to create and place a unique floating menu
 
 The Float Menu extension will create the convenient floating menu for your site. The panel does not take up much of the screen space and is always available to the user. Connecting the tool to a web resource will provide an opportunity to increase its usability and attractiveness. The menu is easily customizable for different site themes.
 
-[Look Demo PRO](https://wow-company.com/wp-float-menu-pro/)
+[Look Demo PRO](https://demo.wow-estore.com/float-menu-pro/)
 
 = Main features =
 
@@ -27,7 +27,7 @@ The Float Menu makes user interaction with the site more comfortable. It can inc
 * add and customize labels of the buttons;
 * edit indents between the menu items;
 * square shape of the buttons;
-* more than 1600+ Font Awesome 5 icons;
+* more than 2000+ Font Awesome 6 icons;
 * select the color for each icon;
 * insert any links;
 * open a link in a new window;
@@ -67,10 +67,9 @@ Open access to all the extension features with the Pro-version of the plugin. It
 * set the display of navigation on all pages of the resource or in individual posts, use to output the category, IDs and exclusions, insert the panel via the shortcode;
 * And more...
 
-[Preview of Pro version](https://wow-company.com/wp-float-menu-pro/)
+[Preview of Pro version](https://demo.wow-estore.com/float-menu-pro/)
 
 Try our new [WordPress popup plugin](https://wordpress.org/plugins/popup-box/)
-
 
 = Use with other plugins to maximize your results =
 * [Popup Box – new WordPress popup plugin](https://wordpress.org/plugins/popup-box/)
@@ -100,6 +99,65 @@ Search for answers and ask your questions at [support center](https://wordpress.
 1. Menu
 
 == Changelog ==
+= 7.0 =
+* Added: Сategories for FontAwesome icons
+* Added: Introduced Icon Text option
+* Added: Added an option to duplicate menu items
+* Upgraded: FontAwesome to version 6.7.1
+* Changed: Updated Icon Picker with improved functionality
+* Changed: Rewritten script from jQuery to Vanilla JS for better performance
+* Removed: Velocity.js to optimize script size
+* Fixed: minor bugs and improved overall stability
+
+= 6.1.4 =
+* Fixed: updated database
+
+= 6.1.3 =
+* Fixed: Nonce verification logic for improved security.
+
+= 6.1.2 =
+* Fixed: structure of columns for creating a database table
+
+= 6.1.1 =
+Fixed: minor bug with save the link
+
+= 6.1 =
+* Added: Attribute 'aria-label'
+* Fixed: save link
+
+= 6.0.6 =
+* Updated: FontAwesome Icon.
+
+= 6.0.5 =
+* Fixed: main icon in the admin menu.
+* Fixed: minor bugs
+* Update: translate file
+
+= 6.0.4 =
+* Fixed: re-write the function 'Mobile Rules'
+
+= 6.0.3 =
+* Updated: FontAwesome Icon to version 6.6
+
+= 6.0.2 =
+* Improved: plugin interface
+
+= 6.0.1 =
+* Fixed: minor bug
+
+= 6.0 =
+* Added: Option 'Menu Size' for control Icon and Label size
+* Added: Item Type: Login, Logout, Lost Password, Register
+* Added: Ability to change menu status and mode from the list of all menus.
+* Added: The ability to change the menu status and mode for several selected menus from the list.
+* Changed: We think that it will be more convenient for you to use and create floating menus.
+
+= 5.1.1 =
+* Fixed: dynamic property for PHP 8.2
+
+= 5.1 =
+* Updated: FontAwesome to version 6.4.2
+
 = 5.0.3 =
 * Fixed: sanitize saving Link
 

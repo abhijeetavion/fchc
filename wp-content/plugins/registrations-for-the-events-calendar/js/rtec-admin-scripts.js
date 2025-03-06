@@ -170,7 +170,7 @@ jQuery(document).ready(function($){
     if (jQuery('#rtec-notice-bar').length) {
         jQuery('#wpadminbar').after(jQuery('#rtec-notice-bar'));
         jQuery('#wpcontent').css('padding-left', 0);
-        jQuery('#wpbody').css('padding-left', '20px');
+        jQuery('#wpbody, .rtec-settings-header-inner').css('padding-left', '20px');
         jQuery('#rtec-notice-bar').show();
     }
 
@@ -183,6 +183,25 @@ jQuery(document).ready(function($){
         };
         var successFunc = function(data){};
         rtecRegistrationAjax(submitData,successFunc);
+    });
+
+    function rtecHelpNoticeDismiss() {
+        jQuery('#rtec-help-notice').slideUp();
+
+        var submitData = {
+            action : 'rtec_help_notice_dismiss',
+            rtec_nonce : rtecAdminScript.rtec_nonce
+        };
+        var successFunc = function(data){};
+        rtecRegistrationAjax(submitData,successFunc);
+    }
+    $('body').on('click', '#rtec-help-notice .notice-dismiss', function () {
+        rtecHelpNoticeDismiss()
+    });
+
+    jQuery('#rtec-help-notice .rtec-dismiss').on('click',function(e) {
+        e.preventDefault();
+        rtecHelpNoticeDismiss()
     });
 
     // Tooltip
@@ -431,7 +450,8 @@ jQuery(document).ready(function($){
                 var $rtecEditing = RtecRecordsEditor.$table.find('.rtec-editing');
 
                 $rtecEditing.find('td').each(function() {
-                    $(this).text($(this).attr('data-rtec-value'));
+                    $(this).find('.rtec-edit-input').hide();
+                    $(this).find('span').show();
 
                 });
 
@@ -538,19 +558,12 @@ jQuery(document).ready(function($){
                     $row = $checkbox.closest('.rtec-reg-row');
                 $row.addClass('rtec-editing');
                 $row.find('td').each(function() {
-                    if ($(this).hasClass('rtec-reg-registration_date')) {
-                        $(this).html('<button class="button-primary rtec-submit-edit">Submit Edit</button>');
-                    } else if ($(this).hasClass('rtec-data-cell')) {
-                        var fieldKey = $(this).attr('data-rtec-key');
-                        if (typeof fieldKey !== 'undefined') {
-                            var currentVal = $(this).text();
-
-                            $(this).html('<input class="rtec-standard-input" type="text" name="'+fieldKey+'" value="'+currentVal+'">');
-                        } else {
-                            var currentVal = $(this).text();
-                            fieldKey = $(this).attr('data-rtec-custom-key');
-                            $(this).html('<input class="rtec-custom-input" type="text" name="'+fieldKey+'" data-original="'+currentVal+'" value="'+currentVal+'">');
-                        }
+                    let $context = $(this);
+                    if ($context.hasClass('rtec-reg-registration_date')) {
+                        $context.html('<button class="button-primary rtec-submit-edit">Submit Edit</button>');
+                    } else if ($context.hasClass('rtec-data-cell')) {
+                        $context.find('span').hide();
+                        $context.find('.rtec-edit-input').show();
                     }
                 });
             }
@@ -632,5 +645,16 @@ jQuery(document).ready(function($){
       }
     rtecRegistrationAjax(submitData, successFunc);
   }
+
+  $('#rtec-smtp-notice').on('click',function() {
+      var submitData = {
+              action: 'rtec_dismiss_dashboard_notice',
+              type: $('this').attr('id'),
+              rtec_nonce : rtecAdminScript.rtec_nonce
+          },
+          successFunc = function (data) {
+          }
+      rtecRegistrationAjax(submitData, successFunc);
+  });
 
 });

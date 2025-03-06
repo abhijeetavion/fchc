@@ -2,8 +2,8 @@
 /**
  * Admin-bar modules
  *
- * @package   PUM
- * @copyright Copyright (c) 2023, Code Atlantic LLC
+ * @package   PopupMaker
+ * @copyright Copyright (c) 2024, Code Atlantic LLC
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -54,7 +54,7 @@ class PUM_Modules_Admin_Bar {
 			( current_user_can( 'edit_others_posts' ) || current_user_can( 'manage_options' ) ),
 		];
 
-		return ! in_array( false, $tests );
+		return ! in_array( false, $tests, true );
 	}
 
 	/**
@@ -178,7 +178,7 @@ class PUM_Modules_Admin_Bar {
 				[
 					'id'     => 'no-popups-loaded',
 					'title'  => __( 'No Popups Loaded', 'popup-maker' ) . '<strong style="color:#fff; margin-left: 5px;">?</strong>',
-					'href'   => 'https://docs.wppopupmaker.com/article/265-my-popup-wont-work-how-can-i-fix-it?utm_campaign=contextual-help&utm_medium=inline-doclink&utm_source=plugin-admin-bar&utm_content=no-popups-loaded',
+					'href'   => 'https://wppopupmaker.com/docs/problem-solving/troubleshooting-your-first-popup/?utm_campaign=contextual-help&utm_medium=inline-doclink&utm_source=plugin-admin-bar&utm_content=no-popups-loaded',
 					'parent' => 'popups',
 					'meta'   => [
 						'target' => '_blank',

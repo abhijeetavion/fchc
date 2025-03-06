@@ -89,7 +89,7 @@ if ( ! class_exists( 'SP_EAP' ) ) {
 			self::constants();
 
 			// translate.
-			self::set_locale();
+			add_action( 'init', array( 'SP_EAP', 'set_locale' ) );
 
 			// include files.
 			self::includes();
@@ -411,6 +411,10 @@ if ( ! class_exists( 'SP_EAP' ) ) {
 					'eapro',
 					'eapro_vars',
 					array(
+						'previewJS'     => array(
+							'collapse' => esc_url( SP_EA_URL . 'public/assets/js/collapse' . $min . '.js' ),
+							'script'   => esc_url( SP_EA_URL . 'public/assets/js/script' . $min . '.js' ),
+						),
 						'pluginsUrl'    => SP_EA_URL,
 						'color_palette' => apply_filters( 'eapro_color_palette', array() ),
 						'i18n'          => array(
@@ -419,7 +423,7 @@ if ( ! class_exists( 'SP_EAP' ) ) {
 							'reset_notification'  => esc_html__( 'Restoring options.', 'easy-accordion-free' ),
 							'import_notification' => esc_html__( 'Importing options.', 'easy-accordion-free' ),
 
-							// chosen localize.
+							/* translators: %s: modify typing text. */
 							'typing_text'         => esc_html__( 'Please enter %s or more characters', 'easy-accordion-free' ),
 							'searching_text'      => esc_html__( 'Searching...', 'easy-accordion-free' ),
 							'no_results_text'     => esc_html__( 'No results match', 'easy-accordion-free' ),
@@ -503,7 +507,8 @@ if ( ! class_exists( 'SP_EAP' ) ) {
 
 				$field_type = $field['type'];
 
-				$field            = array();
+				$field = array();
+				/* translators: %s: modify field type. */
 				$field['content'] = sprintf( esc_html__( 'Ooops! This field type (%s) can not be used here, yet.', 'easy-accordion-free' ), '<strong>' . $field_type . '</strong>' );
 				$field['type']    = 'notice';
 				$field['style']   = 'danger';
@@ -555,9 +560,9 @@ if ( ! class_exists( 'SP_EAP' ) ) {
 				}
 
 				if ( ! empty( $field['title'] ) ) {
-					$title_help = ( ! empty( $field['title_help'] ) ) ? '<div class="eapro-help eapro-title-help"><span class="eapro-help-text">' . wp_kses_post( $field['title_help'] ) . '</span><i class="fa fa-question-circle"></i></div>' : '';
+					$title_info = ( ! empty( $field['title_info'] ) ) ? '<span class="eapro-help title-info"><div class="eapro-help-text">' . wp_kses_post( $field['title_info'] ) . '</div><span class="tooltip-icon"><img src="' . self::include_plugin_url( 'assets/images/info.svg' ) . '"></span></span>' : '';
 					echo '<div class="eapro-title">';
-					echo '<h4>' . wp_kses_post( $field['title'] ) . '</h4>' . wp_kses_post( $title_help );
+					echo '<h4>' . wp_kses_post( $field['title'] . $title_info ) . '</h4>';
 					echo ( ! empty( $field['subtitle'] ) ) ? '<div class="eapro-text-subtitle">' . wp_kses_post( $field['subtitle'] ) . '</div>' : '';
 					echo '</div>';
 				}
@@ -584,9 +589,7 @@ if ( ! class_exists( 'SP_EAP' ) ) {
 			echo ( ! empty( $field['title'] ) || ! empty( $field['fancy_title'] ) ) ? '</div>' : '';
 			echo '<div class="clear"></div>';
 			echo '</div>';
-
 		}
-
 	}
 
 	SP_EAP::init();

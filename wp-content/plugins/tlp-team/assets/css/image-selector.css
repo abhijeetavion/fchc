@@ -33,7 +33,6 @@
     will-change: transform;
     -webkit-transition: -webkit-transform 0.3s;
     transition: -webkit-transform 0.3s;
-    -o-transition: transform 0.3s;
     transition: transform 0.3s;
     transition: transform 0.3s, -webkit-transform 0.3s;
     overflow: hidden;
@@ -71,7 +70,6 @@
     pointer-events: none;
     z-index: 99;
     -webkit-transition: all 0.3s;
-    -o-transition: all 0.3s;
     transition: all 0.3s;
 }
 

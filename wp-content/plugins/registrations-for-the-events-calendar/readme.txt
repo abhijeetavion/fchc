@@ -4,15 +4,17 @@ Contributors: roundupwp
 Support Website: https://roundupwp.com/support
 Tags: registration, The Events Calendar, RSVP, events, event registration
 Requires at least: 5.6
-Tested up to: 6.2
-Requires PHP: 7.1
-Stable tag: 2.9.6
+Tested up to: 6.7
+Requires PHP: 7.4
+Stable tag: 2.13.3
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
+Collect and manage event registrations with a customizable form and email template. The best event registration plugin for The Events Calendar.
+
 == Description ==
 
-Collect and manage event registrations with a customizable form and email template. Whether you're holding a meetup, class, workshop, tournament, or any other kind of event, you need a way to handle registration. Our plugin makes managing event registration easy and simple. Even nontechnical users can setup the plugin and start collecting registrations within minutes.
+Whether you're holding a meetup, class, workshop, tournament, or any other kind of event, you need a way to handle registration. Our plugin makes managing event registration easy and simple. Even nontechnical users can set up the plugin and start collecting registrations within minutes. Create a simple RSVP registration form or a more complex form with custom fields. All registrations are recorded in your database for easy event management. Customize confirmation and notification emails to keep your attendees, as well as your event managers, informed.
 
 = Parent Plugin =
 
@@ -20,7 +22,7 @@ In order for the Registrations for the Events Calendar to work properly, you nee
 
 = Quick to Set Up and Easy to Get Started =
 
-As soon as you install and activate the plugin, you can begin collecting event registrations on the single event page for all of your events. You can also customize the placement of the form on the single event page or on any other page using a shortcode.
+As soon as you install and activate the plugin, you can begin collecting event registrations on the single event page for all of your events. You can also customize the placement of the form on the single event page or on any other page using a shortcode or the block editor.
 
 = Uses =
 
@@ -33,6 +35,7 @@ The plugin can be used for more than event registration. Here are other things t
 * Webinar sign-ups
 * Private instructor booking
 * Virtual events
+* Pickleball tournament registration
 
 = User-Friendly Features =
 
@@ -63,6 +66,7 @@ The plugin can be used for more than event registration. Here are other things t
 * View a breakdown of registrations by event, and browse them quickly in an overview.
 * Export your event registrations to a CSV spreadsheet.
 * Search event registrations by name, phone, or email.
+* Integrates with WPML (WordPress Multi-language) for multi-language events.
 
 = Tools for GDPR Compliance =
 
@@ -85,22 +89,28 @@ The plugin can be used for more than event registration. Here are other things t
 
 "I needed a plugin to allow signing up for advising sessions at a university; this worked great. **Simple, easy to set up.**" -[adowdle](https://wordpress.org/support/topic/great-extension-for-the-events-calendar/)
 
+"**Awesome Support for Very Useful Plugin** I’ve used Registrations for the Events Calendar for several years in a website for a chess camp. RoundupWP always provides timely, above-and-beyond support for any issues that arise." - [jodyfr](https://wordpress.org/support/topic/awesome-support-for-very-useful-plugin/)
+
 = Pro Version =
 
-Do you need even more customization and control? Check out [Registrations for the Events Calendar Pro](https://roundupwp.com/products/registrations-for-the-events-calendar-pro/). Pro features include:
+Do you need even more customization and control? Check out [Registrations for the Events Calendar Pro](https://roundupwp.com/products/registrations-for-the-events-calendar-pro/?utm_campaign=rtec-free&utm_source=readme&utm_medium=pro-list&utm_content=RTECPro). Pro features include:
 
 * Multiple registration forms specific to each event.
-* Drop-down, checkbox, radio, date, file upload and paragraph fields.
-* Online payments for events using PayPal. (Stripe extension available)
+* Drag and drop registration form builder.
+* Drop-down, number, checkbox, radio, date, file upload and paragraph fields.
+* Online payments for events using PayPal. (Stripe, iDeal, and WooCommerce extensions available)
 * Offline payment management.
 * Add multiple costs to events or add costs based on form field responses.
 * Guest registrations (register for more than one person at a time).
+* Waiting lists with automatic promotion when a spot opens.
 * Multiple confirmation email templates.
-* Multiple registration venues and tiers.
+* Multiple registration categories and price levels.
 * Automatic/reminder email message sending.
-* Connect multiple events to a single registration.
+* Manual email sending from the WordPress dashboard.
+* Connect an event series to a single registration when using The Events Calendar Pro.
 * Convenient event check in system.
-* Customizable event reports.
+* Customizable event reports downloadable as a .csv file.
+* Import registrations in bulk using a .csv file.
 * Registrants can edit their own registrations.
 * Easy event management for membership sites.
 * Logged-in users can view a list of events they registered for.
@@ -113,7 +123,7 @@ We would love to hear feedback and support the plugin so please visit the "Suppo
 
 Follow these steps for a manual installation:
 
-1. Make sure you have the plugin "The Events Calendar" by Modern Tribe installed and activated.
+1. Make sure you have the plugin "The Events Calendar" by Modern Tribe installed and activated. Or install it using our quiick install button after activation.
 2. From the dashboard of your site, navigate to Plugins -> Add New.
 3. Select the Upload option and click "Choose File."
 4. A popup message will appear. Upload the plugin files from your desktop.
@@ -122,8 +132,8 @@ Follow these steps for a manual installation:
 
 == Setting up Registrations for the Events Calendar ==
 
-1. Make sure you have the plugin "The Events Calendar" by Modern Tribe installed and activated before activating "Registrations for The Events Calendar"
-2. If you haven't created an event. Create a new event by going to the WordPress dashboard and navigating to Events -> Add New.
+1. Install the plugin "The Events Calendar" by Modern Tribe from our welcome page (if not already installed).
+2. If you haven't created an event, do so by going to the WordPress dashboard and navigating to Events -> Add New.
 3. A registration form will now appear on your created event or any other published event.
 3. Add a registration form for a specific event to another page on your site using the shortcode [rtec-registration-form event=743] with the "event" setting being the post ID for that event.
 4. You can configure the form fields, messaging, registrations limits etc by navigating to Events -> Registrations and then selecting the "Form" tab.
@@ -156,7 +166,7 @@ Yes. There is a button to add custom text input fields on the "Form" tab.
 
 = I'm not receiving a notification email or attendees are not receiving a confirmation email  =
 
-Take a look at [our FAQ](https://roundupwp.com/faq/my-confirmationnotification-emails-are-missing/) on troubleshooting this issue as well as instructions for installing an SMTP plugin.
+Take a look at [our FAQ](https://roundupwp.com/faq/my-confirmationnotification-emails-are-missing/?utm_campaign=rtec-free&utm_source=readme&utm_medium=faq-emailsmissing&utm_content=OurFAQ) on troubleshooting this issue as well as instructions for installing an SMTP plugin.
 
 = How do I disable registrations for a specific event? =
 
@@ -191,6 +201,55 @@ Yes. There is a custom database table added to each sub-site's database to separ
 Go to the "Support" tab on the plugin's settings page and follow the link to our support page, setup instructions page, or feature request page.
 
 == Changelog ==
+= 2.13.3 =
+* Fix: When a logged-in user canceled a registration, there would be no email confirmation or email notification.
+
+= 2.13.2 =
+* Fix: Fixed WordPress notice related to translations being loaded too early.
+
+= 2.13.1 =
+* Fix: When allowing logged-in users to register more than once, the ability to cancel the registration was disabled.
+
+= 2.13 =
+* New: The plugin will detect if a logged-in user has registered for an event and will show a message to the user if they try to register again.
+* New: Logged-in users can cancel a registration with a click of a button.
+* New: You can now set a date for when registration opens for an event and show a message to visitors if they try to register before that date.
+* Important: Logged-in users can only register once for an event. You can allow multiple registrations while logged in using the setting found on the form tab.
+
+= 2.12.4 =
+* Fix: Important security update and code improvements.
+
+= 2.12.3 =
+* Fix: Plugin hardening.
+* Tweak: Change the version of The Events Calendar that is installed during our onboarding process.
+
+= 2.12.2 =
+* Fix: Plugin hardening.
+* Fix: Fixed a PHP fatal error that would occur in special circumstances related to our WPML integration.
+
+= 2.12.1 =
+* Fix: Fixed a rare fatal PHP error that would occur on the registrations overview page when WPML was active.
+
+= 2.12 =
+* New: Improved support for WPML (WordPress Multi-language) for multi-language events. You can now configure the plugin to combine the registrations for all translations of an event.
+* Fix: Fixed an issue causing the forms to not submit if there were multiple forms on a page and the Google recaptcha field was used.
+* Fix: Fixed an issue with the new Elementor integration for The Events Calendar preventing the form from being automatically placed.
+* Tweak: Added additional phone number formatting options to the "Form" tab.
+
+= 2.11.1 =
+* Tweak: Added a notice to recurring events warning that making changes to event settings may affect registrations unexpectedly.
+
+= 2.11 =
+* New: Added a cancellation confirmation flow for people unregistering from a link in the confirmation email. This prevents email providers from checking links found in emails and inadvertently triggering a cancellation.
+* Tweak: Tweaked the layout and styling of the modal that can be used when "pop-up modal" is selected as the display type.
+
+= 2.10.1 =
+* Fix: Welcome notice would not dismiss as expected.
+
+= 2.10 =
+* New: Added support for multiple venues in email messages. Just add a dash plus the ordinal number of the additional venue (i.e. venue-2, venue-address-2).
+* Fix: Fixed an issue causing the datepicker to have no styling when choosing a start date for filtering registrations on the registrations tab.
+
 = 2.9.6 =
 * Fix: Added a setting to change or translate the text "No record found.". Find this on the "Email" tab of the settings page.
 * Fix: When viewing list of events in the back-end, the time zone offset was not being factored in leading to some upcoming events disappearing from the list too early.

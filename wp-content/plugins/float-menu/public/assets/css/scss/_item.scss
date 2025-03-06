@@ -1,0 +1,14 @@
+.floating-menu {
+
+  .fm-item {
+    --item_width: calc(var(--fm-icon-box) * 1px);
+    border-radius: var(--fm-border-radius);
+    position: relative;
+
+    &.-hidden {
+      visibility: hidden;
+    }
+  }
+
+}
+

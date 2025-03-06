@@ -1,25 +1,26 @@
-=== Team - WordPress Team Members Showcase Plugin ===
+=== Team - Team Members Showcase Plugin ===
 Contributors: techlabpro1
 Donate link:
-Tags: team, team showcase, team members showcase, our team, team members
-Requires at least: 4.5
-Tested up to: 6.2
-Stable tag: 4.3.5
-License: GPLv3
+Tags: team, team showcase, team slider, team plugin, team members
+Stable tag: 4.4.9
+Requires at least: 5.0
+Tested up to: 6.7
+Requires PHP: 7.0
+License: GPL-2.0-or-later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
-The Best WordPress Team plugin to showcase your team members profile in grid, slider and filter layouts easily using the shortcode and Team members Elementor addon.
+Team Member Plugin allows you to showcase your team members in grid, slider, and filter layouts using shortcode and the Team Members Elementor addon.
 
 == Description ==
 
-[Team](https://www.radiustheme.com/downloads/tlp-team-pro-for-wordpress/) is the best WordPress team plugin that facilitates the best display of your team members on your site. It is 100% responsive and mobile friendly, which guarantees the best views across all devices. This team members WordPress plugin is user and developer-friendly, so it is easy to customize and use as you wish.
+[Team](https://www.radiustheme.com/downloads/tlp-team-pro-for-wordpress/) is the WordPress team plugin that facilitates the display of your team members on your site. It is fully responsive and mobile friendly, which guarantees the views across all devices. This team members WordPress plugin is user and developer-friendly, so it is easy to customize and use as you wish.
 
 With the WordPress Team plugin, you can showcase your team members in various layouts, including grids and isotope. The plugin lets you create 5 different grid and isotope layouts. You can then choose whether you want the profile images of your team members to appear in square or rounded shapes.
 
 👉 [Shortcode Demo](https://www.radiustheme.com/demo/plugins/team/layout-1/) | [Elementor Demo](https://radiustheme.net/plugins/team-elementor/) | [Documentation](
 https://www.radiustheme.com/docs/team/) | [Get Pro](https://www.radiustheme.com/downloads/tlp-team-pro-for-wordpress/) 👈
 
-== Best WordPress Team Plugin with Shortcode and Elementor Addons ==
+== WordPress Team Plugin with Shortcode and Elementor Addons ==
 
 This Team members slider & showcase plugin makes the displays fully customizable, so you can create unique team showcases for your site. Its shortcode generator gives you an additional customization option and extra easy control over your layouts. You can use the plugin’s shortcode or Elementor widget to display team member profiles with grid, list, slider and isotope views.
 
@@ -73,13 +74,13 @@ With this team showcase WordPress plugin, you can add your team members easily f
 
 👉 **Image Size Control:** When you accumulate too many large images on your website, your site slows down massively. When you want to limit the size of the images that go on your website, this plugin helps you do just that. What’s more, Team PRO gives you the option of setting custom image sizes instead of completely round numbers.
 
-👉 **Style Control:** With this team showcase WordPress plugin, you get to control the style in which you display your team members. You can choose the styles and colors you want for your team showcase. This meet the team plugin even lets you showcase the profile images of your team members in square or round borders. It supports device-wise display control so that you can give all your visitors the best versions of your team showcase displays.
+👉 **Style Control:** With this team showcase WordPress plugin, you get to control the style in which you display your team members. You can choose the styles and colors you want for your team showcase. This meet the team plugin even lets you showcase the profile images of your team members in square or round borders.
 
 [Shortcode Documentation](https://www.radiustheme.com/docs/team/shortcode-generate/styling/)
 
 👉 **Member Filter Option:** This team showcase plugin supports the display of team member sections by department or individual member. Your team members can be showcased with different filter options for your members.
 
-👉 **Social Profiles:** With this best WordPress team plugin, you can showcase the social profiles of your team members. You can link various social profiles, including LinkedIn, Facebook, Twitter, and Instagram.
+👉 **Social Profiles:** With this WordPress team plugin, you can showcase the social profiles of your team members. You can link various social profiles, including LinkedIn, Facebook, Twitter, and Instagram.
 
 👉 **Translation Support:** You can translate your website into any language you want without hiccups. This team showcase WordPress plugin comes with ready POT files for different languages.
 
@@ -93,48 +94,17 @@ When you have this team builder plugin and are ready to showcase your team showc
 
 2.	Generate the shortcode for entire team member sections. Here’s how you should go about it:
 
-👉 **Step1: Layout**
+👉 **Step 1: Layout**
 
-1.	Start by choosing a layout type from the available options.
-
-2.	Choose the layout style. You get to choose from 6 variations with the free version and 33 more layouts for them.
-
-3.	Choose the number of columns you want to display based on different devices.
-
-4.	With the PRO plugin, you can choose the Filters you want, with options including taxonomy filter, order (allows you to sort the retrieved posts by given parameter), sort order (designates the descending or ascending order of the ‘order by’ parameter), and search filter.
-
-5.	Switch pagination on or off
-
-6.	Enable or disable the display of the feature image.
-
-7.	Choose whether you want your image in normal or round style.
-
-8.	You can set the precise image size.
-
-9.	Set the word limit of the short description.
-
-10.	Toggle the detail page link on or off.
+Start by choosing a layout type from the available options. Choose the layout style. Then choose the number of columns you want to display based on different devices. With the PRO plugin, you can choose the Filters you want, with options including taxonomy filter, order (allows you to sort the retrieved posts by given parameter), sort order (designates the descending or ascending order of the ‘order by’ parameter), and search filter and others settings.
 
 [Shortcode Documentation](https://www.radiustheme.com/docs/team/shortcode-generate/layout/)
 
 
 👉 **Step 2: Filtering**
 
-1.	Choose the members you want to display in the ‘include only’ section.
+Choose the members you want to display in the ‘include only’ section. Select the members you want to hide in the ‘exclude’ part. Set limit on the number of member posts to display. Leaving it empty will display all found posts. Select the departments you want to filter. With the PRO plugin, choose the designations you want to filter.
 
-2.	Select the members you want to hide in the ‘exclude’ part.
-
-3.	Set limit on the number of member posts to display. Leaving it empty will display all found posts.
-
-4.	Select the departments you want to filter.
-
-5.	With the PRO plugin, choose the designations you want to filter.
-
-6.	If you have the PRO plugin, you can also select the ‘taxonomy relation’ option that allows you to select over at least one taxonomy, such as department, skill, and designation.
-
-7.	Select whether you want to order by name.
-
-8.	Choose whether you want to order your team members by ascending or descending order.
 
 [Shortcode Documentation](https://www.radiustheme.com/docs/team/shortcode-generate/filtering/)
 
@@ -146,21 +116,8 @@ When checking the fields on your field selection, check the fields you want to d
 
 👉 **Step 4: Styling**
 
-1.	Select the parent class you want for adding custom CSS coding.
+Select the parent class you want for adding custom CSS coding. Choose the primary color you want for your team members. Select the colors of the button background, text, hover text, hover background, active background, and border. Choose the name color, hover color, font size, font weight, and alignment.
 
-2.	Choose the primary color you want for your team members.
-
-3.	Select the colors of the button background, text, hover text, hover background, active background, and border.
-
-4.	Choose the name color, hover color, font size, font weight, and alignment.
-
-5.	Select the designation’s color, hover color, font size, weight, and alignment.
-
-6.	Select the color, hover color, font size, weight, and alignment of the short biography.
-
-7.	Choose the social icon background color.
-
-8.	Summon the shortcode in the post or page you want using Gutenberg or the Elementor addon. You can also go with copying and pasting the shortcode on the post or page.
 
 [Shortcode Documentation](https://www.radiustheme.com/docs/team/shortcode-generate/styling/)
 
@@ -231,6 +188,26 @@ Install and Activate
 * **WordPress version:** >= 4.5
 * **PHP version:** >= 5.6
 
+== Need Any Help? ==
+* For any bug, support or suggestion please submit your ticket [here](https://www.radiustheme.com/ticket-support/).
+
+== Liked RadiusTheme ==
+* Join our [Facebook Group](https://www.facebook.com/groups/radiustheme).
+* Learn from our tutorials on [YouTube Channel](https://www.youtube.com/@RadiusTheme).
+
+== 🔥 WHAT’S NEXT ==
+
+If you like The Post Grid Plugin, then consider checking out our other WordPress Plugins:
+
+* [The Post Grid](https://wordpress.org/plugins/the-post-grid/) – Shortcode, Gutenberg Blocks and Elementor Addon for Post Grid.
+
+* [Variation Swatches](https://wordpress.org/plugins/woo-product-variation-swatches/) - Woocommerce Variation Swatches plugin converts the product variation select fields into radio, images, colors, and labels.
+
+* [Variation Gallery](https://wordpress.org/plugins/woo-product-variation-gallery/) - Woocommerce Variation Gallery plugin allows to add UNLIMITED additional images for each variation of product.
+
+* [ShopBuilder](https://wordpress.org/plugins/shopbuilder/) - Elementor WooCommerce Builder Addons with 84+ widgets and 10+ modules.
+
+* [Food Menu](https://wordpress.org/plugins/tlp-food-menu/) – Restaurant Menu & Online Ordering using WooCommerce.
 
 == Frequently Asked Questions ==
 
@@ -257,16 +234,11 @@ Install and Activate
 
 = Is this Team showcase plugin work with multisites? =
 
-* Yes this Team showcase plugin will work wirh multisites.
+* Yes this Team showcase plugin will work with multisites.
 
 = is this Team plugin support multi-language? =
 
 * Yes this Team plugin support multi-language.
-
-= Need Any Help? =
-
-* Please mail us at `support@radiustheme.com`
-* We provide `12 hours live support`
 
 == Screenshots ==
 
@@ -282,27 +254,70 @@ Install and Activate
 
 == Changelog ==
 
-= 4.3.5  (July 10, 2022 ) =
+= 4.4.9  ( January 01, 2025 ) =
+* Added Style: Read More Button, Resume Button, Hire Me Button.
+
+= 4.4.8  ( December 24, 2024 ) =
+* Fixed: Color Issue Fixed, Update Fontawesome icon 6
+
+= 4.4.7  ( December 05, 2024 ) =
+* Fixed: Name Spelling
+
+= 4.4.6  ( December 03, 2024 ) =
+* Fixed: Escaping Data, Sanitize, Unslash, Layout Style.
+
+= 4.4.5  ( November 21, 2024 ) =
+* Fixed: text spilling.
+
+== Changelog ==
+
+= 4.4.4  ( November 20, 2024 ) =
+* Fixed: PHP Deprecated issue And Layout Style issue.
+
+= 4.4.3  (October 29, 2024 ) =
+* Fixed: Elementor grid widget designation color control issue.
+
+= 4.4.2  (September 12, 2024 ) =
+* Updated: Proper sanitization shortcode preview page.
+
+= 4.4.1  (May 30, 2024 ) =
+* Added: Read More button in shortcode
+* Fixed: P.H.P Deprecated issue
+
+= 4.3.9  (May 10, 2024 ) =
+* Fixed: Smart popup dynamic css control issues
+
+= 4.3.8  (April 16, 2024 ) =
+* Updated: Proper sanitization and escaping for all files.
+* Fixed: Some security bugs.
+
+= 4.3.7  (November 20, 2023 ) =
+* Added: WordPress Version 6.4.0 Compatible
+
+= 4.3.6  (August 11, 2023 ) =
+* Added: WordPress Version 6.3.0 Compatible
+
+= 4.3.5  (July 10, 2023 ) =
 * Fixed: Admin performance optimization
 
-= 4.3.4  (June 24, 2022 ) =
+= 4.3.4  (June 24, 2023 ) =
 * Fixed: Responsive css issue
 
-= 4.3.3  (May 29, 2022 ) =
+= 4.3.3  (May 29, 2023 ) =
 * Fixed: Shortcode Image Size Issue
 
-= 4.3.2  (April 17, 2022 ) =
+= 4.3.2  (April 17, 2023 ) =
 * Fixed: Some Css & Responsive issue.
 
-= 4.3.1  (March 20, 2022 ) =
+= 4.3.1  (March 20, 2023 ) =
 * Added: Css Fixed.
 
 
-= 4.3.0  (March 16, 2022 ) =
+= 4.3.0  (March 16, 2023 ) =
 * Added: 1 new social profile support (Github).
 * Added: 1 new grid layout in shortcode and elementor.
 
-= 4.2.0  (January 6, 2022 ) =
+= 4.2.0  (January 6, 2023 ) =
 * Added: 3 new social profile support (Skype, Whatsapp & Telegram).
 * Fixed: Some design issues.
 

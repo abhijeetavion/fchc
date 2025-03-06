@@ -45,6 +45,12 @@ if ( in_array( 'designation', $items, true ) && $designation ) {
 
 $html .= Fns::get_formatted_short_bio( $short_bio, $items );
 $html .= Fns::get_formatted_social_link( $sLink, $items );
+if (in_array('readmore_btn',$items,true) && $link && $read_more_btn_text){
+	$html .= '<div class="readmore-btn"><a class="' . esc_attr( $anchorClass ) . '" data-id="' . absint( $mID ) .'"  target="' . esc_attr( $target ) . '"  title="' . esc_attr( $title ) . '" href="' . esc_url( $pLink ) . '">' . esc_html( $read_more_btn_text ) . '</a></div>';
+}
+
+
+
 $html .= '</div>';
 $html .= '</div>';
 $html .= '</div>';
