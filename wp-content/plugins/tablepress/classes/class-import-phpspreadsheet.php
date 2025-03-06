@@ -8,6 +8,8 @@
  * @since 2.0.0
  */
 
+use TablePress\Import\File;
+
 // Prohibit direct script loading.
 defined( 'ABSPATH' ) || die( 'No direct script access allowed!' );
 
@@ -27,8 +29,8 @@ class TablePress_Import_PHPSpreadsheet extends TablePress_Import_Base {
 	 * @since 2.0.0
 	 */
 	public function __construct() {
-		// Load PHPSpreadsheet via the Composer autoloading mechanism.
-		TablePress::load_file( 'autoload.php', 'libraries' );
+		// Load PHPSpreadsheet via its autoloading mechanism.
+		TablePress::load_file( 'autoload.php', 'libraries/vendor' );
 	}
 
 	/**
@@ -36,32 +38,32 @@ class TablePress_Import_PHPSpreadsheet extends TablePress_Import_Base {
 	 *
 	 * @since 2.0.0
 	 *
-	 * @param array $file File to import.
-	 * @return array|WP_Error Table array on success, WP_Error on error.
+	 * @param File $file File to import.
+	 * @return array<string, mixed>|WP_Error Table array on success, WP_Error on error.
 	 */
-	public function import_table( array $file ) {
-		$data = file_get_contents( $file['location'] );
+	public function import_table( File $file ) /* : array|WP_Error */ {
+		$data = file_get_contents( $file->location );
 		if ( false === $data ) {
-			return new WP_Error( 'table_import_phpspreadsheet_data_read', '', $file['location'] );
+			return new WP_Error( 'table_import_phpspreadsheet_data_read', '', $file->location );
 		}
 
 		// Remove a possible UTF-8 Byte-Order Mark (BOM).
 		$bom = pack( 'CCC', 0xef, 0xbb, 0xbf );
-		if ( 0 === strncmp( $data, $bom, 3 ) ) {
+		if ( str_starts_with( $data, $bom ) ) {
 			$data = substr( $data, 3 );
 		}
 
 		if ( '' === $data ) {
-			return new WP_Error( 'table_import_phpspreadsheet_data_empty', '', $file['location'] );
+			return new WP_Error( 'table_import_phpspreadsheet_data_empty', '', $file->location );
 		}
 
 		$table = $this->_maybe_import_json( $data );
-		if ( false !== $table ) {
+		if ( is_array( $table ) ) {
 			return $table;
 		}
 
 		$table = $this->_maybe_import_html( $data );
-		if ( false !== $table ) {
+		if ( is_array( $table ) ) {
 			return $table;
 		}
 
@@ -74,13 +76,15 @@ class TablePress_Import_PHPSpreadsheet extends TablePress_Import_Base {
 	 * @since 2.0.0
 	 *
 	 * @param string $data Data to import.
-	 * @return array|WP_Error|false Table array on success, WP_Error on error, false if the file is not a JSON file.
+	 * @return array<string, mixed>|false Table array on success, false if the file is not a JSON file.
 	 */
-	protected function _maybe_import_json( $data ) {
-		// If the first non-whitespace character is not a { or [, the file is not a supported JSON file.
-		$data = ltrim( $data );
+	protected function _maybe_import_json( string $data ) /* : array|false */ {
+		$data = trim( $data );
+
+		// If the file does not begin / end with [ / ] or { / }, it's not a supported JSON file.
 		$first_character = $data[0];
-		if ( '{' !== $first_character && '[' !== $first_character ) {
+		$last_character = $data[-1];
+		if ( ! ( '[' === $first_character && ']' === $last_character ) && ! ( '{' === $first_character && '}' === $last_character ) ) {
 			return false;
 		}
 
@@ -126,15 +130,15 @@ class TablePress_Import_PHPSpreadsheet extends TablePress_Import_Base {
 	 * @since 2.0.0
 	 *
 	 * @param string $data Data to import.
-	 * @return array|WP_Error|false Table array on success, WP_Error on error, false if the file is not a JSON file.
+	 * @return array<string, mixed>|WP_Error Table array on success, WP_Error if the file is not an HTML file.
 	 */
-	protected function _maybe_import_html( $data ) {
+	protected function _maybe_import_html( string $data ) /* : array|false */ {
 		TablePress::load_file( 'html-parser.class.php', 'libraries' );
 		$table = HTML_Parser::parse( $data );
 
 		// Check if the HTML code could be parsed. If not, this is probably not an HTML file.
 		if ( is_wp_error( $table ) ) {
-			return false;
+			return $table;
 		}
 
 		$this->pad_array_to_max_cols( $table['data'] );
@@ -146,17 +150,26 @@ class TablePress_Import_PHPSpreadsheet extends TablePress_Import_Base {
 	 *
 	 * @since 2.0.0
 	 *
-	 * @param array $file File to import.
-	 * @return array|WP_Error Table array on success, WP_Error on error.
+	 * @param File $file File to import.
+	 * @return array<string, mixed>|WP_Error Table array on success, WP_Error on error.
 	 */
-	protected function _import_phpspreadsheet( array $file ) {
+	protected function _import_phpspreadsheet( File $file ) /* : array|WP_Error */ {
 		// Rename the temporary file, as PHPSpreadsheet tries to infer the format from the file's extension.
-		if ( '' !== $file['extension'] ) {
-			$temp_file = pathinfo( $file['location'] );
-			if ( ! isset( $temp_file['extension'] ) || $file['extension'] !== $temp_file['extension'] ) {
-				$new_location = "{$temp_file['dirname']}/{$temp_file['filename']}.{$file['extension']}";
-				if ( rename( $file['location'], $new_location ) ) {
-					$file['location'] = $new_location;
+		if ( '' !== $file->extension ) {
+			$file_data = pathinfo( $file->location );
+			if ( ! isset( $file_data['extension'] ) || $file->extension !== $file_data['extension'] ) {
+				$temp_file = wp_tempnam();
+				$new_location = "{$temp_file}.{$file->extension}";
+				if ( $file->keep_file ) {
+					// Copy the file, as the original should be kept.
+					if ( copy( $file->location, $new_location ) ) {
+						$file->location = $new_location;
+						$file->keep_file = false; // Delete the newly created file after the import.
+					}
+				} else { // phpcs:ignore Universal.ControlStructures.DisallowLonelyIf.Found
+					if ( rename( $file->location, $new_location ) ) {
+						$file->location = $new_location;
+					}
 				}
 			}
 		}
@@ -164,20 +177,29 @@ class TablePress_Import_PHPSpreadsheet extends TablePress_Import_Base {
 		try {
 			// Treat all cell values as strings, except for formulas (due to recognition of quoted/escaped formulas like `'=A2`).
 			\TablePress\PhpOffice\PhpSpreadsheet\Cell\Cell::setValueBinder( new \TablePress\PhpOffice\PhpSpreadsheet\Cell\StringValueBinder() );
-			\TablePress\PhpOffice\PhpSpreadsheet\Cell\Cell::getValueBinder()->setFormulaConversion( false );
+			\TablePress\PhpOffice\PhpSpreadsheet\Cell\Cell::getValueBinder()->setFormulaConversion( false ); // @phpstan-ignore method.notFound
 
 			/*
 			 * Try to detect a reader from the file extension and MIME type.
 			 * Fall back to CSV if no reader could be determined.
 			 */
 			try {
-				$reader = \TablePress\PhpOffice\PhpSpreadsheet\IOFactory::createReaderForFile( $file['location'] );
+				$reader = \TablePress\PhpOffice\PhpSpreadsheet\IOFactory::createReaderForFile( $file->location );
 			} catch ( \TablePress\PhpOffice\PhpSpreadsheet\Reader\Exception $exception ) {
 				$reader = \TablePress\PhpOffice\PhpSpreadsheet\IOFactory::createReader( 'Csv' );
-				// Append .csv to the file name, so that \TablePress\PhpOffice\PhpSpreadsheet\Reader\Csv::canRead() returns true.
-				$new_location = $file['location'] . '.csv';
-				if ( rename( $file['location'], $new_location ) ) {
-					$file['location'] = $new_location;
+				// Change the file extension to .csv, so that \TablePress\PhpOffice\PhpSpreadsheet\Reader\Csv::canRead() returns true.
+				$temp_file = wp_tempnam();
+				$new_location = "{$temp_file}.csv";
+				if ( $file->keep_file ) {
+					// Copy the file, as the original should be kept.
+					if ( copy( $file->location, $new_location ) ) {
+						$file->location = $new_location;
+						$file->keep_file = false; // Delete the newly created file after the import.
+					}
+				} else { // phpcs:ignore Universal.ControlStructures.DisallowLonelyIf.Found
+					if ( rename( $file->location, $new_location ) ) {
+						$file->location = $new_location;
+					}
 				}
 			}
 
@@ -186,7 +208,8 @@ class TablePress_Import_PHPSpreadsheet extends TablePress_Import_Base {
 			$detected_format = strtolower( array_pop( $class_type ) );
 
 			if ( 'csv' === $detected_format ) {
-				$reader->setInputEncoding( \TablePress\PhpOffice\PhpSpreadsheet\Reader\Csv::GUESS_ENCODING );
+				$reader->setInputEncoding( \TablePress\PhpOffice\PhpSpreadsheet\Reader\Csv::GUESS_ENCODING ); // @phpstan-ignore method.notFound
+				// @phpstan-ignore method.notFound, smaller.alwaysFalse (PHPStan thinks that the Composer minimum version will always be fulfilled.)
 				$reader->setEscapeCharacter( ( PHP_VERSION_ID < 70400 ) ? "\x0" : '' ); // Disable the proprietary escape mechanism of PHP's fgetcsv() in PHP >= 7.4.
 			}
 
@@ -200,10 +223,10 @@ class TablePress_Import_PHPSpreadsheet extends TablePress_Import_Base {
 
 			// For formats where it's supported, import only the first sheet.
 			if ( in_array( $detected_format, array( 'csv', 'html', 'slk' ), true ) ) {
-				$reader->setSheetIndex( 0 );
+				$reader->setSheetIndex( 0 ); // @phpstan-ignore method.notFound
 			}
 
-			$spreadsheet = $reader->load( $file['location'] );
+			$spreadsheet = $reader->load( $file->location );
 			$worksheet = $spreadsheet->getActiveSheet();
 			$cell_collection = $worksheet->getCellCollection();
 			$comments = $worksheet->getComments();
@@ -235,22 +258,39 @@ class TablePress_Import_PHPSpreadsheet extends TablePress_Import_Base {
 						continue;
 					}
 
+					$cell_has_hyperlink = $worksheet->hyperlinkExists( $cell_reference ) && ! $worksheet->getHyperlink( $cell_reference )->isInternal();
+
 					if ( $value instanceof \TablePress\PhpOffice\PhpSpreadsheet\RichText\RichText ) {
-						$cell_data = $this->parse_rich_text( $value );
+						$cell_data = $this->parse_rich_text( $value, $cell_has_hyperlink );
 					} else {
 						$cell_data = (string) $value;
 					}
 
 					// Apply data type formatting.
 					$style = $spreadsheet->getCellXfByIndex( $cell->getXfIndex() );
+
+					$format = $style->getNumberFormat()->getFormatCode() ?? \TablePress\PhpOffice\PhpSpreadsheet\Style\NumberFormat::FORMAT_GENERAL;
+
+					/*
+					 * When cells in Excel files are formatted as "Text", quotation marks are removed, due to https://github.com/PHPOffice/PhpSpreadsheet/pull/3344.
+					 * Setting the format to "General" seems to prevent that.
+					 */
+					if ( \TablePress\PhpOffice\PhpSpreadsheet\Style\NumberFormat::FORMAT_TEXT === $format && ! is_numeric( $cell_data ) ) {
+						$format = \TablePress\PhpOffice\PhpSpreadsheet\Style\NumberFormat::FORMAT_GENERAL;
+					}
+
+					// Fix floating point precision issues with numbers in the "General" Excel .xlsx format.
+					if ( 'xlsx' === $detected_format && \TablePress\PhpOffice\PhpSpreadsheet\Style\NumberFormat::FORMAT_GENERAL === $format && is_numeric( $cell_data ) ) {
+						$cell_data = (string) (float) $cell_data; // Type-cast strings to float and back.
+					}
 					$cell_data = \TablePress\PhpOffice\PhpSpreadsheet\Style\NumberFormat::toFormattedString(
 						$cell_data,
-						$style->getNumberFormat() ? $style->getNumberFormat()->getFormatCode() : \TablePress\PhpOffice\PhpSpreadsheet\Style\NumberFormat::FORMAT_GENERAL,
-						array( $this, 'format_color' )
+						$format,
+						array( $this, 'format_color' ),
 					);
 
 					if ( strlen( $cell_data ) > 1 && '=' === $cell_data[0] ) {
-						if ( $style->getQuotePrefix() ) {
+						if ( 'xlsx' === $detected_format && $style->getQuotePrefix() ) {
 							// Prepend a ' to quoted/escaped formulas (so that they are shown as text). This is currently not supported (at least) for the XLS format.
 							$cell_data = "'{$cell_data}";
 						} else {
@@ -259,8 +299,6 @@ class TablePress_Import_PHPSpreadsheet extends TablePress_Import_Base {
 							continue;
 						}
 					}
-
-					$cell_has_hyperlink = $worksheet->hyperlinkExists( $cell_reference ) && ! $worksheet->getHyperlink( $cell_reference )->isInternal();
 
 					$font = $style->getFont();
 
@@ -291,7 +329,7 @@ class TablePress_Import_PHPSpreadsheet extends TablePress_Import_Base {
 
 					// Convert Hyperlinks to HTML code.
 					if ( $cell_has_hyperlink ) {
-						$url = esc_url( $worksheet->getHyperlink( $cell_reference )->getUrl() );
+						$url = $worksheet->getHyperlink( $cell_reference )->getUrl();
 						if ( '' !== $url ) {
 							$title = $worksheet->getHyperlink( $cell_reference )->getTooltip();
 							if ( '' !== $title ) {
@@ -341,7 +379,7 @@ class TablePress_Import_PHPSpreadsheet extends TablePress_Import_Base {
 			unset( $comments, $cell_collection, $worksheet, $spreadsheet );
 
 			return $table;
-		} catch ( \TablePress\PhpOffice\PhpSpreadsheet\Reader\Exception $exception ) {
+		} catch ( \TablePress\PhpOffice\PhpSpreadsheet\Reader\Exception | \TablePress\PhpOffice\PhpSpreadsheet\Exception $exception ) {
 			return new WP_Error( 'table_import_phpspreadsheet_failed', '', 'Exception: ' . $exception->getMessage() );
 		}
 	}
@@ -349,10 +387,11 @@ class TablePress_Import_PHPSpreadsheet extends TablePress_Import_Base {
 	/**
 	 * Parses PHPSpreadsheet RichText elements and converts formatting to HTML tags.
 	 *
-	 * @param RichText $value RichText element.
+	 * @param \TablePress\PhpOffice\PhpSpreadsheet\RichText\RichText $value              RichText element.
+	 * @param bool                                                   $cell_has_hyperlink Whether the cell has a hyperlink.
 	 * @return string Cell value with HTML formatting.
 	 */
-	protected function parse_rich_text( $value ) {
+	protected function parse_rich_text( \TablePress\PhpOffice\PhpSpreadsheet\RichText\RichText $value, bool $cell_has_hyperlink ): string {
 		$cell_data = '';
 		$elements = $value->getRichTextElements();
 		foreach ( $elements as $element ) {
@@ -381,7 +420,8 @@ class TablePress_Import_PHPSpreadsheet extends TablePress_Import_Base {
 					$element_data = "<em>{$element_data}</em>";
 				}
 				$color = $font->getColor()->getRGB();
-				if ( '' !== $color ) {
+				if ( '' !== $color && '000000' !== $color && ! $cell_has_hyperlink ) {
+					// Don't add the span if the color is black, as that's the default, or if it's in a hyperlink.
 					$color_css = esc_attr( "color:#{$color};" );
 					$element_data = "<span style=\"{$color_css}\">{$element_data}</span>";
 				}
@@ -399,7 +439,7 @@ class TablePress_Import_PHPSpreadsheet extends TablePress_Import_Base {
 	 * @param string $format_code Format code.
 	 * @return string Value with color format applied.
 	 */
-	public function format_color( $value, $format_code ) {
+	public function format_color( string $value, string $format_code ): string {
 		// Color information, e.g. [Red] is always at the beginning of the format code.
 		$color = '';
 		if ( 1 === preg_match( '/^\\[[a-zA-Z]+\\]/', $format_code, $matches ) ) {

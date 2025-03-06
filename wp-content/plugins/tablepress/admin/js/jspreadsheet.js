@@ -1,19 +1,13 @@
 /**
- * Jspreadsheet v4.11.1
+ * Jspreadsheet v4.15.0
  *
  * Website: https://bossanova.uk/jspreadsheet/
  * Description: Create amazing web based spreadsheets.
  *
- * This software is distribute under MIT License
+ * This software is distributed under MIT License
  */
 
 // TablePress: var formula = ... removed.
-
-/* // TablePress: jSuites is loaded directly from a file.
-if (! jSuites && typeof(require) === 'function') {
-	var jSuites = require('jsuites');
-}
-*/
 
 ;(function (global, factory) {
 	// TablePress: Comment out next to lines to force creation of a global jspreadsheet object.
@@ -29,7 +23,7 @@ if (! jSuites && typeof(require) === 'function') {
 		// Information
 		var info = {
 			title: 'Jspreadsheet',
-			version: '4.11.3',
+			version: '4.15.0',
 			type: 'CE',
 			host: 'https://bossanova.uk/jspreadsheet',
 			license: 'MIT',
@@ -696,17 +690,7 @@ if (! jSuites && typeof(require) === 'function') {
 			ads.setAttribute('href', 'https://bossanova.uk/jspreadsheet/');
 			obj.ads = document.createElement('div');
 			obj.ads.className = 'jexcel_about';
-			/* // TablePress: Remove this as it loads a file from the Jspreadsheet server.
-			try {
-				if (typeof(sessionStorage) !== "undefined" && ! sessionStorage.getItem('jexcel')) {
-					sessionStorage.setItem('jexcel', true);
-					var img = document.createElement('img');
-					img.src = '//bossanova.uk/jspreadsheet/logo.png';
-					ads.appendChild(img);
-				}
-			} catch (exception) {
-			}
-			*/
+
 			var span = document.createElement('span');
 			span.innerHTML = 'Jspreadsheet CE';
 			ads.appendChild(span);
@@ -1009,9 +993,9 @@ if (! jSuites && typeof(require) === 'function') {
 				if (px > 0) {
 					py++;
 				}
-		   }
+			}
 
-		   return dataset;
+			return dataset;
 		}
 
 		/**
@@ -1067,9 +1051,9 @@ if (! jSuites && typeof(require) === 'function') {
 				if (row != null) {
 					data.push(row);
 				}
-		   }
+			}
 
-		   return data;
+			return data;
 		}
 
 		/**
@@ -1480,6 +1464,9 @@ if (! jSuites && typeof(require) === 'function') {
 				if (! nestedInformation[i].title) {
 					nestedInformation[i].title = '';
 				}
+				if (! nestedInformation[i].id) {
+					nestedInformation[i].id = '';
+				}
 
 				// Number of columns
 				var numberOfColumns = nestedInformation[i].colspan;
@@ -1500,6 +1487,7 @@ if (! jSuites && typeof(require) === 'function') {
 				td.setAttribute('data-column', column.join(','));
 				td.setAttribute('colspan', nestedInformation[i].colspan);
 				td.setAttribute('align', nestedInformation[i].align);
+				td.setAttribute('id', nestedInformation[i].id);
 				td.textContent = nestedInformation[i].title;
 				tr.appendChild(td);
 			}
@@ -1548,30 +1536,38 @@ if (! jSuites && typeof(require) === 'function') {
 					toolbarItem.textContent = toolbar[i].content;
 					obj.toolbar.appendChild(toolbarItem);
 				} else if (toolbar[i].type == 'select') {
-				   var toolbarItem = document.createElement('select');
-				   toolbarItem.classList.add('jexcel_toolbar_item');
-				   toolbarItem.setAttribute('data-k', toolbar[i].k);
-				   // Tooltip
-				   if (toolbar[i].tooltip) {
-					   toolbarItem.setAttribute('title', toolbar[i].tooltip);
-				   }
-				   // Handle onchange
-				   if (toolbar[i].onchange && typeof(toolbar[i].onchange)) {
-					   toolbarItem.onchange = toolbar[i].onchange;
-				   } else {
-					   toolbarItem.onchange = function() {
-						   var k = this.getAttribute('data-k');
-						   obj.setStyle(obj.highlighted, k, this.value);
-					   }
-				   }
-				   // Add options to the dropdown
-				   for(var j = 0; j < toolbar[i].v.length; j++) {
+					var toolbarItem = document.createElement('select');
+					var raiseInitialOnChange = false;
+					toolbarItem.classList.add('jexcel_toolbar_item');
+					toolbarItem.setAttribute('data-k', toolbar[i].k);
+					// Tooltip
+					if (toolbar[i].tooltip) {
+						toolbarItem.setAttribute('title', toolbar[i].tooltip);
+					}
+					// Handle onchange
+					if (toolbar[i].onchange && typeof(toolbar[i].onchange)) {
+						toolbarItem.onchange = toolbar[i].onchange;
+						raiseInitialOnChange = true;
+					} else {
+						toolbarItem.onchange = function() {
+							var k = this.getAttribute('data-k');
+							obj.setStyle(obj.highlighted, k, this.value);
+						}
+					}
+					// Add options to the dropdown
+					for(var j = 0; j < toolbar[i].v.length; j++) {
 						var toolbarDropdownOption = document.createElement('option');
 						toolbarDropdownOption.value = toolbar[i].v[j];
 						toolbarDropdownOption.textContent = toolbar[i].v[j];
+						if (toolbar[i].selectedValue && toolbarDropdownOption.value === toolbar[i].selectedValue) {
+							toolbarDropdownOption.selected = true;
+						}
 						toolbarItem.appendChild(toolbarDropdownOption);
-				   }
-				   obj.toolbar.appendChild(toolbarItem);
+					}
+					if (raiseInitialOnChange) {
+						toolbarItem.dispatchEvent(new Event('change'));
+					}
+					obj.toolbar.appendChild(toolbarItem);
 				} else if (toolbar[i].type == 'color') {
 					 var toolbarItem = document.createElement('i');
 					 toolbarItem.classList.add('jexcel_toolbar_item');
@@ -2601,9 +2597,13 @@ if (! jSuites && typeof(require) === 'function') {
 					oldValue: obj.options.data[y][x],
 				}
 
-				if (obj.options.columns[x].editor) {
+				let editor = obj.options.columns[x].editor;
+				if (editor) {
 					// Update data and cell
 					obj.options.data[y][x] = value;
+					if (typeof(editor.setValue) === 'function') {
+						editor.setValue(obj.records[y][x], value);
+					}
 				} else {
 					// Native functions
 					if (obj.options.columns[x].type == 'checkbox' || obj.options.columns[x].type == 'radio') {
@@ -3091,7 +3091,7 @@ if (! jSuites && typeof(require) === 'function') {
 					borderRight = 0;
 				}
 				for (var i = borderLeft; i <= borderRight; i++) {
-					if (obj.options.columns[i].type != 'hidden') {
+					if (obj.options.columns[i].type != 'hidden' && obj.colgroup[i].style && obj.colgroup[i].style.display != 'none') {
 						// Top border
 						if (obj.records[borderTop] && obj.records[borderTop][i]) {
 							obj.records[borderTop][i].classList.add('highlight-top');
@@ -3337,7 +3337,7 @@ if (! jSuites && typeof(require) === 'function') {
 			} else {
 				// In case the column is an object
 				if (typeof(column) == 'object') {
-					column = $(column).getAttribute('data-x');
+					column = column.getAttribute('data-x');
 				}
 
 				data = obj.colgroup[column].getAttribute('width')
@@ -3686,7 +3686,7 @@ if (! jSuites && typeof(require) === 'function') {
 					}
 				}
 
-			   return data;
+				return data;
 			} else {
 				cell = jexcel.getIdFromColumnName(cell, true);
 
@@ -3945,15 +3945,18 @@ if (! jSuites && typeof(require) === 'function') {
 				}
 
 				// TablePress: Keep Table Head and Table Foot row at the top/bottom, if used.
-				if ( window?.tp?.table?.options?.table_head ) {
-					const first_row_idx = 0;
-					newValue = newValue.filter( ( row_idx ) => ( row_idx > first_row_idx ) );
-					newValue.unshift( first_row_idx );
+				if ( window?.tp?.table?.options?.table_head > 0 ) {
+					const last_head_row_idx = window?.tp?.table?.options?.table_head - 1;
+					newValue = newValue.filter( ( row_idx ) => ( row_idx > last_head_row_idx ) );
+					newValue.unshift( ...Array( window?.tp?.table?.options?.table_head ).keys() );
 				}
-				if ( window?.tp?.table?.options?.table_foot ) {
+				if ( window?.tp?.table?.options?.table_foot > 0) {
 					const last_row_idx = newValue.length - 1;
-					newValue = newValue.filter( ( row_idx ) => ( row_idx < last_row_idx ) );
-					newValue.push( last_row_idx );
+					const first_foot_row_idx = newValue.length - window?.tp?.table?.options?.table_foot;
+					newValue = newValue.filter( ( row_idx ) => ( row_idx < first_foot_row_idx ) );
+					for ( let idx = first_foot_row_idx; idx <= last_row_idx; idx++ ) {
+						newValue.push( idx );
+					}
 				}
 
 				// Save history
@@ -4670,9 +4673,9 @@ if (! jSuites && typeof(require) === 'function') {
 					}
 
 					// onbeforedeletecolumn
-				   if (obj.dispatch('onbeforedeletecolumn', el, columnNumber, numOfColumns) === false) {
-					  return false;
-				   }
+					if (obj.dispatch('onbeforedeletecolumn', el, columnNumber, numOfColumns) === false) {
+						return false;
+					}
 
 					// Can't remove the last column
 					if (parseInt(columnNumber) > -1) {
@@ -5356,7 +5359,7 @@ if (! jSuites && typeof(require) === 'function') {
 								}
 								// Get column data
 								if ((''+value).substr(0,1) == '=') {
-									if (formulaResults[tokens[i]]) {
+									if (typeof formulaResults[tokens[i]] !== 'undefined') {
 										value = formulaResults[tokens[i]];
 									} else {
 										value = execute(value, position[0], position[1]);
@@ -5968,11 +5971,6 @@ if (! jSuites && typeof(require) === 'function') {
 		 * Search
 		 */
 		obj.search = function(query) {
-			// Query
-			if (query) {
-				var query = query.toLowerCase();
-			}
-
 			// Reset any filter
 			if (obj.options.filters) {
 				obj.resetFilters();
@@ -6004,9 +6002,12 @@ if (! jSuites && typeof(require) === 'function') {
 					}
 				}
 
+				var parsedQuery = query.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&");
+				parsedQuery = new RegExp(parsedQuery, "i");
+
 				// Filter
-				var data = obj.options.data.filter(function(v, k) {
-					if (search(v, query, k)) {
+				obj.options.data.forEach(function(v, k) {
+					if (search(v, parsedQuery, k)) {
 						// Merged rows found
 						var rows = obj.isRowMerged(k);
 						if (rows.length) {
@@ -6020,9 +6021,6 @@ if (! jSuites && typeof(require) === 'function') {
 							// Normal row found
 							addToResult(k);
 						}
-						return true;
-					} else {
-						return false;
 					}
 				});
 			} else {
@@ -6499,6 +6497,23 @@ if (! jSuites && typeof(require) === 'function') {
 		 * @return string value
 		 */
 		obj.paste = function(x, y, data) {
+			var x_1 = parseInt(x),
+			y_1 = parseInt(y),
+			x_2 = parseInt(obj.selectedCell[2]),
+			y_2 = parseInt(obj.selectedCell[3]),
+			w = x_2 - x_1 + 1,
+			h = y_2 - y_1 + 1;
+
+			// change paste range if select is from right to left
+			if (x_2 < x_1){
+				x = x_2.toString();
+				w = x_1 - x_2 + 1;
+			}
+			// change paste range if select is from down to up
+			if (y_2 < y_1){
+				y = y_2.toString();
+				h = y_1 - y_2 + 1;
+			}
 			// Paste filter
 			var ret = obj.dispatch('onbeforepaste', el, data, x, y);
 
@@ -6519,6 +6534,27 @@ if (! jSuites && typeof(require) === 'function') {
 
 			// Split new line
 			var data = obj.parseCSV(data, "\t");
+			// Modify data to allow wor extending paste range in multiples of input range
+			if ((w > 1) & Number.isInteger(w / data[0].length)) {
+				style = null;
+				repeats = w / data[0].length;
+
+				var arrayB = data.map(function (row, i) {
+				var arrayC = Array.apply(null, { length: repeats * row.length }).map(
+					function (e, i) { return row[i % row.length]; }
+				);
+				return arrayC;
+				});
+				data = arrayB;
+			}
+			if ((h > 1) & Number.isInteger(h / data.length)) {
+				style = null;
+				var repeats = h / data.length;
+				var arrayB = Array.apply(null, { length: repeats * data.length }).map(
+				function (e, i) { return data[i % data.length]; }
+				);
+				data = arrayB;
+			}
 
 			if (x != null && y != null && data) {
 				// Records
@@ -7611,7 +7647,7 @@ if (! jSuites && typeof(require) === 'function') {
 				} else if (e.which == 35) {
 					jexcel.current.last(e.shiftKey, e.ctrlKey);
 					e.preventDefault();
-				} else if (e.which == 46) {
+				} else if (e.which == 46 || e.which == 8) {
 					// Delete
 					if (jexcel.current.options.editable == true) {
 						if (jexcel.current.selectedRow) {
@@ -7725,12 +7761,12 @@ if (! jSuites && typeof(require) === 'function') {
 									if (e.keyCode == 32) {
 										// Space
 										e.preventDefault()
-										if (jspreadsheet.current.options.columns[columnId].type == 'checkbox' ||
-											jspreadsheet.current.options.columns[columnId].type == 'radio') {
-											jspreadsheet.current.setCheckRadioValue();
+										if (jexcel.current.options.columns[columnId].type == 'checkbox' ||
+											jexcel.current.options.columns[columnId].type == 'radio') {
+											jexcel.current.setCheckRadioValue();
 										} else {
 											// Start edition
-											jspreadsheet.current.openEditor(jspreadsheet.current.records[rowId][columnId], true);
+											jexcel.current.openEditor(jexcel.current.records[rowId][columnId], true);
 										}
 									} else if (e.keyCode == 113) {
 										// Start edition with current content F2
@@ -8713,20 +8749,11 @@ if (! jSuites && typeof(require) === 'function') {
 	/**
 	 * Get letter based on a number
 	 *
-	 * @param integer i
+	 * @param {number} columnNumber
 	 * @return string letter
 	 */
-	jexcel.getColumnName = function(i) {
-		var letter = '';
-		if (i > 701) {
-			letter += String.fromCharCode(64 + parseInt(i / 676));
-			letter += String.fromCharCode(64 + parseInt((i % 676) / 26));
-		} else if (i > 25) {
-			letter += String.fromCharCode(64 + parseInt(i / 26));
-		}
-		letter += String.fromCharCode(65 + (i % 26));
-
-		return letter;
+	jexcel.getColumnName = function(columnNumber) {
+		return jexcel.helpers.getColumnName(columnNumber);
 	}
 
 	/**
@@ -8878,6 +8905,9 @@ if (! jSuites && typeof(require) === 'function') {
 				}
 				if (info = header.getAttribute('id')) {
 					options.columns[i].id = info;
+				}
+				if (info = header.getAttribute('data-mask')) {
+					options.columns[i].mask = info;
 				}
 			}
 
@@ -9094,20 +9124,19 @@ if (! jSuites && typeof(require) === 'function') {
 		/**
 		 * Get letter based on a number
 		 *
-		 * @param integer i
+		 * @param {number} columnNumber
 		 * @return string letter
 		 */
-		component.getColumnName = function(i) {
-			var letter = '';
-			if (i > 701) {
-				letter += String.fromCharCode(64 + parseInt(i / 676));
-				letter += String.fromCharCode(64 + parseInt((i % 676) / 26));
-			} else if (i > 25) {
-				letter += String.fromCharCode(64 + parseInt(i / 26));
+		component.getColumnName = function(columnNumber) {
+			let dividend = columnNumber+1;
+			let columnName = "";
+			let modulo;
+			while (dividend > 0) {
+				modulo = (dividend - 1) % 26;
+				columnName = String.fromCharCode(65 + modulo).toString() + columnName;
+				dividend = parseInt((dividend - modulo) / 26);
 			}
-			letter += String.fromCharCode(65 + (i % 26));
-
-			return letter;
+			return  columnName;
 		}
 
 		/**

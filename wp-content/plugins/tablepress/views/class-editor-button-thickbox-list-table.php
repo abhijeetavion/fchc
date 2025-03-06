@@ -25,9 +25,8 @@ class TablePress_Editor_Button_Thickbox_List_Table extends WP_List_Table {
 	 * Number of items of the initial data set (before sort, search, and pagination).
 	 *
 	 * @since 1.0.0
-	 * @var int
 	 */
-	protected $items_count = 0;
+	protected int $items_count = 0;
 
 	/**
 	 * Initializes the List Table.
@@ -35,6 +34,7 @@ class TablePress_Editor_Button_Thickbox_List_Table extends WP_List_Table {
 	 * @since 1.0.0
 	 */
 	public function __construct() {
+		// @phpstan-ignore argument.type (WordPress Core's docblocks state wrong argument types in some places.)
 		parent::__construct( array(
 			'singular' => 'tablepress-table',              // Singular name of the listed records.
 			'plural'   => 'tablepress-editor-button-list', // Plural name of the listed records.
@@ -48,9 +48,9 @@ class TablePress_Editor_Button_Thickbox_List_Table extends WP_List_Table {
 	 *
 	 * @since 1.0.0
 	 *
-	 * @param array $items Tables to be displayed in the List Table.
+	 * @param string[] $items Tables to be displayed in the List Table.
 	 */
-	public function set_items( array $items ) {
+	public function set_items( array $items ): void {
 		$this->items = $items;
 		$this->items_count = count( $items );
 	}
@@ -63,7 +63,8 @@ class TablePress_Editor_Button_Thickbox_List_Table extends WP_List_Table {
 	 *
 	 * @return bool true (Default value).
 	 */
-	public function ajax_user_can() {
+	#[\Override]
+	public function ajax_user_can(): bool {
 		return true;
 	}
 
@@ -74,9 +75,10 @@ class TablePress_Editor_Button_Thickbox_List_Table extends WP_List_Table {
 	 *
 	 * @since 1.0.0
 	 *
-	 * @return array List of columns in this List Table.
+	 * @return array<string, string> List of columns in this List Table.
 	 */
-	public function get_columns() {
+	#[\Override]
+	public function get_columns(): array {
 		$columns = array(
 			// "name" is special in WP, which is why we prefix every entry here, to be safe!
 			'table_id'          => __( 'ID', 'tablepress' ),
@@ -94,9 +96,10 @@ class TablePress_Editor_Button_Thickbox_List_Table extends WP_List_Table {
 	 *
 	 * @since 1.0.0
 	 *
-	 * @return array List of sortable columns in this List Table.
+	 * @return array<string, array{string, bool}> List of sortable columns in this List Table.
 	 */
-	protected function get_sortable_columns() {
+	#[\Override]
+	protected function get_sortable_columns(): array {
 		// No sorting on the Empty List placeholder.
 		if ( ! $this->has_items() ) {
 			return array();
@@ -117,7 +120,8 @@ class TablePress_Editor_Button_Thickbox_List_Table extends WP_List_Table {
 	 *
 	 * @return string Name of the default primary column, in this case, the table name.
 	 */
-	protected function get_default_primary_column_name() {
+	#[\Override]
+	protected function get_default_primary_column_name(): string {
 		return 'table_name';
 	}
 
@@ -126,10 +130,10 @@ class TablePress_Editor_Button_Thickbox_List_Table extends WP_List_Table {
 	 *
 	 * @since 1.0.0
 	 *
-	 * @param array $item Data item for the current row.
+	 * @param array<string, mixed> $item Data item for the current row.
 	 * @return string HTML content of the cell.
 	 */
-	protected function column_table_id( array $item ) {
+	protected function column_table_id( array $item ): string {
 		return esc_html( $item['id'] );
 	}
 
@@ -138,10 +142,10 @@ class TablePress_Editor_Button_Thickbox_List_Table extends WP_List_Table {
 	 *
 	 * @since 1.0.0
 	 *
-	 * @param array $item Data item for the current row.
+	 * @param array<string, mixed> $item Data item for the current row.
 	 * @return string HTML content of the cell.
 	 */
-	protected function column_table_name( array $item ) {
+	protected function column_table_name( array $item ): string {
 		if ( '' === trim( $item['name'] ) ) {
 			$item['name'] = __( '(no name)', 'tablepress' );
 		}
@@ -153,10 +157,10 @@ class TablePress_Editor_Button_Thickbox_List_Table extends WP_List_Table {
 	 *
 	 * @since 1.0.0
 	 *
-	 * @param array $item Data item for the current row.
+	 * @param array<string, mixed> $item Data item for the current row.
 	 * @return string HTML content of the cell.
 	 */
-	protected function column_table_description( array $item ) {
+	protected function column_table_description( array $item ): string {
 		if ( '' === trim( $item['description'] ) ) {
 			$item['description'] = __( '(no description)', 'tablepress' );
 		}
@@ -168,11 +172,11 @@ class TablePress_Editor_Button_Thickbox_List_Table extends WP_List_Table {
 	 *
 	 * @since 1.0.0
 	 *
-	 * @param array $item Data item for the current row.
+	 * @param array<string, mixed> $item Data item for the current row.
 	 * @return string HTML content of the cell.
 	 */
-	protected function column_table_action( array $item ) {
-		return '<input type="button" class="insert-shortcode button" title="' . esc_attr( '[' . TablePress::$shortcode . " id={$item['id']} /]" ) . '" value="' . esc_attr__( 'Insert Shortcode', 'tablepress' ) . '" />';
+	protected function column_table_action( array $item ): string {
+		return '<input type="button" class="insert-shortcode button" title="' . esc_attr( '[' . TablePress::$shortcode . " id={$item['id']} /]" ) . '" value="' . esc_attr__( 'Insert Shortcode', 'tablepress' ) . '">';
 	}
 
 	/**
@@ -180,7 +184,8 @@ class TablePress_Editor_Button_Thickbox_List_Table extends WP_List_Table {
 	 *
 	 * @since 1.0.0
 	 */
-	public function no_items() {
+	#[\Override]
+	public function no_items(): void {
 		_e( 'No tables found.', 'tablepress' );
 		if ( 0 === $this->items_count ) {
 			echo ' ' . __( 'You should add or import a table on the TablePress screens to get started!', 'tablepress' );
@@ -194,9 +199,12 @@ class TablePress_Editor_Button_Thickbox_List_Table extends WP_List_Table {
 	 *
 	 * @since 1.0.0
 	 *
-	 * @param string $which Location ("top" or "bottom").
+	 * @param 'top'|'bottom' $which Location ("top" or "bottom").
 	 */
-	protected function display_tablenav( $which ) {
+	#[\Override]
+	protected function display_tablenav( /* string */ $which ): void {
+		// Don't use type hints in the method declaration to prevent PHP errors, as the method is inherited.
+
 		if ( ! $this->has_items() ) {
 			return;
 		}
@@ -210,9 +218,9 @@ class TablePress_Editor_Button_Thickbox_List_Table extends WP_List_Table {
 
 		add_filter( 'ngettext_default', array( $this, 'change_pagination_items_string' ), 10, 5 );
 		$this->pagination( $which );
-		remove_filter( 'ngettext_default', array( $this, 'change_pagination_items_string' ), 10, 5 );
+		remove_filter( 'ngettext_default', array( $this, 'change_pagination_items_string' ), 10 );
 		?>
-			<br class="clear" />
+			<br class="clear">
 		</div>
 		<?php
 	}
@@ -229,7 +237,7 @@ class TablePress_Editor_Button_Thickbox_List_Table extends WP_List_Table {
 	 * @param string $domain      Text domain. Defaults to 'default'.
 	 * @return string The changed translation.
 	 */
-	public function change_pagination_items_string( $translation, $single, $plural, $number, $domain ) {
+	public function change_pagination_items_string( string $translation, string $single, string $plural, int $number, string $domain ): string {
 		if ( '%s item' === $single && '%s items' === $plural ) {
 			$translation = _n( '%s table', '%s tables', $number, 'tablepress' );
 		}
@@ -244,16 +252,20 @@ class TablePress_Editor_Button_Thickbox_List_Table extends WP_List_Table {
 	 * @param string $item Table ID that shall be searched.
 	 * @return bool Whether the search term was found or not.
 	 */
-	protected function _search_callback( $item ) {
+	protected function _search_callback( string $item ): bool {
 		static $term;
 		static $json_encoded_term;
 		if ( is_null( $term ) || is_null( $json_encoded_term ) ) {
 			$term = wp_unslash( $_GET['s'] );
-			$json_encoded_term = substr( wp_json_encode( $term, TABLEPRESS_JSON_OPTIONS ), 1, -1 );
+			$json_encoded_term = substr( wp_json_encode( $term, TABLEPRESS_JSON_OPTIONS ), 1, -1 ); // @phpstan-ignore argument.type
 		}
 
 		// Load table again, with table data, but without options and visibility settings.
 		$item = TablePress::$model_table->load( $item, true, false );
+
+		if ( is_wp_error( $item ) ) {
+			return false;
+		}
 
 		// Don't search corrupted tables.
 		if ( isset( $item['is_corrupted'] ) && $item['is_corrupted'] ) {
@@ -261,12 +273,12 @@ class TablePress_Editor_Button_Thickbox_List_Table extends WP_List_Table {
 		}
 
 		// Search from easy to hard, so that "expensive" code maybe doesn't have to run.
-		if ( false !== stripos( $item['id'], $term )
-		|| false !== stripos( $item['name'], $term )
-		|| false !== stripos( $item['description'], $term )
-		|| false !== stripos( TablePress::get_user_display_name( $item['author'] ), $term )
-		|| false !== stripos( TablePress::format_datetime( $item['last_modified'] ), $term )
-		|| false !== stripos( wp_json_encode( $item['data'], TABLEPRESS_JSON_OPTIONS ), $json_encoded_term ) ) {
+		if ( false !== stripos( $item['id'], (string) $term )
+		|| false !== stripos( $item['name'], (string) $term )
+		|| false !== stripos( $item['description'], (string) $term )
+		|| false !== stripos( TablePress::get_user_display_name( $item['author'] ), (string) $term )
+		|| false !== stripos( TablePress::format_datetime( $item['last_modified'] ), (string) $term )
+		|| false !== stripos( wp_json_encode( $item['data'], TABLEPRESS_JSON_OPTIONS ), (string) $json_encoded_term ) ) { // @phpstan-ignore argument.type
 			return true;
 		}
 
@@ -278,11 +290,11 @@ class TablePress_Editor_Button_Thickbox_List_Table extends WP_List_Table {
 	 *
 	 * @since 1.0.0
 	 *
-	 * @param array $item_a First item that shall be compared to.
-	 * @param array $item_b The second item for the comparison.
+	 * @param array<string, mixed> $item_a First item that shall be compared to.
+	 * @param array<string, mixed> $item_b The second item for the comparison.
 	 * @return int (-1, 0, 1) depending on which item sorts "higher".
 	 */
-	protected function _order_callback( array $item_a, array $item_b ) {
+	protected function _order_callback( array $item_a, array $item_b ): int {
 		global $orderby, $order;
 
 		if ( $item_a[ $orderby ] === $item_b[ $orderby ] ) {
@@ -300,7 +312,8 @@ class TablePress_Editor_Button_Thickbox_List_Table extends WP_List_Table {
 	 *
 	 * @since 1.0.0
 	 */
-	public function prepare_items() {
+	#[\Override]
+	public function prepare_items(): void {
 		global $orderby, $order, $s;
 		wp_reset_vars( array( 'orderby', 'order', 's' ) );
 
@@ -314,8 +327,7 @@ class TablePress_Editor_Button_Thickbox_List_Table extends WP_List_Table {
 			// Don't load data nor table options.
 			$item = TablePress::$model_table->load( $item, false, false );
 		}
-		// Break reference in foreach iterator.
-		unset( $item );
+		unset( $item ); // Unset use-by-reference parameter of foreach loop.
 
 		// Maybe sort the items.
 		$_sortable_columns = $this->get_sortable_columns();

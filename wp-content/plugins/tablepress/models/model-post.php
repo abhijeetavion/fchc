@@ -25,12 +25,11 @@ class TablePress_Post_Model extends TablePress_Model {
 	 * Name of the "Custom Post Type" for the tables.
 	 *
 	 * @since 1.0.0
-	 * @var string
 	 */
-	protected $post_type = 'tablepress_table';
+	protected string $post_type = 'tablepress_table';
 
 	/**
-	 * Init the model by registering the Custom Post Type.
+	 * Inits the model by registering the Custom Post Type.
 	 *
 	 * @since 1.0.0
 	 */
@@ -40,11 +39,11 @@ class TablePress_Post_Model extends TablePress_Model {
 	}
 
 	/**
-	 * Register the Custom Post Type which the tables use.
+	 * Registers the Custom Post Type which the tables use.
 	 *
 	 * @since 1.0.0
 	 */
-	protected function _register_post_type() {
+	protected function _register_post_type(): void {
 		/**
 		 * Filters the "Custom Post Type" that TablePress uses for storing tables in the database.
 		 *
@@ -71,21 +70,21 @@ class TablePress_Post_Model extends TablePress_Model {
 		 *
 		 * @since 1.0.0
 		 *
-		 * @param array $post_type_args Arguments for the registration of the TablePress "Custom Post Type".
+		 * @param array<string, mixed> $post_type_args Arguments for the registration of the TablePress "Custom Post Type".
 		 */
 		$post_type_args = apply_filters( 'tablepress_post_type_args', $post_type_args );
 		register_post_type( $this->post_type, $post_type_args );
 	}
 
 	/**
-	 * Insert a post with the correct Custom Post Type and default values in the the wp_posts table in the database.
+	 * Inserts a post with the correct Custom Post Type and default values in the the wp_posts table in the database.
 	 *
 	 * @since 1.0.0
 	 *
-	 * @param array $post Post to insert.
+	 * @param array<string, mixed> $post Post to insert.
 	 * @return int|WP_Error Post ID of the inserted post on success, WP_Error on error.
 	 */
-	public function insert( array $post ) {
+	public function insert( array $post ) /* : int|WP_Error */ {
 		$default_post = array(
 			'ID'             => false, // false on new insert, but existing post ID on update.
 			'comment_status' => 'closed',
@@ -137,7 +136,7 @@ class TablePress_Post_Model extends TablePress_Model {
 		}
 
 		// In rare cases, `wp_insert_post()` returns 0 as the post ID, when an error happens, so it's converted to a WP_Error here.
-		if ( 0 === $post_id ) {
+		if ( 0 === $post_id ) { // @phpstan-ignore identical.alwaysFalse (False-positive in the PHPStan WordPress stubs.)
 			return new WP_Error( 'post_insert', '' );
 		}
 
@@ -145,14 +144,14 @@ class TablePress_Post_Model extends TablePress_Model {
 	}
 
 	/**
-	 * Update an existing post with the correct Custom Post Type and default values in the the wp_posts table in the database.
+	 * Updates an existing post with the correct Custom Post Type and default values in the the wp_posts table in the database.
 	 *
 	 * @since 1.0.0
 	 *
-	 * @param array $post Post.
+	 * @param array<string, mixed> $post Post.
 	 * @return int|WP_Error Post ID of the updated post on success, WP_Error on error.
 	 */
-	public function update( array $post ) {
+	public function update( array $post ) /* : int|WP_Error */ {
 		$default_post = array(
 			'ID'             => false, // false on new insert, but existing post ID on update.
 			'comment_status' => 'closed',
@@ -207,14 +206,14 @@ class TablePress_Post_Model extends TablePress_Model {
 	}
 
 	/**
-	 * Get a post from the wp_posts table in the database.
+	 * Gets a post from the wp_posts table in the database.
 	 *
 	 * @since 1.0.0
 	 *
 	 * @param int $post_id Post ID.
 	 * @return WP_Post|false Post on success, false on error.
 	 */
-	public function get( $post_id ) {
+	public function get( int $post_id ) /* : WP_Post|false */ {
 		$post = get_post( $post_id );
 		if ( is_null( $post ) ) {
 			return false;
@@ -223,19 +222,19 @@ class TablePress_Post_Model extends TablePress_Model {
 	}
 
 	/**
-	 * Delete a post (and all revisions) from the wp_posts table in the database.
+	 * Deletes a post (and all revisions) from the wp_posts table in the database.
 	 *
 	 * @since 1.0.0
 	 *
 	 * @param int $post_id Post ID.
 	 * @return WP_Post|false|null Post data on success, false or null on failure.
 	 */
-	public function delete( $post_id ) {
+	public function delete( int $post_id ) /* : WP_Post|false|null */ {
 		return wp_delete_post( $post_id, true ); // true means force delete, although for CPTs this is automatic in this function.
 	}
 
 	/**
-	 * Move a post to the trash (if trash is globally enabled), instead of directly deleting the post.
+	 * Moves a post to the trash (if trash is globally enabled), instead of directly deleting the post.
 	 * (yet unused)
 	 *
 	 * @since 1.0.0
@@ -243,73 +242,69 @@ class TablePress_Post_Model extends TablePress_Model {
 	 * @param int $post_id Post ID.
 	 * @return WP_Post|false|null Post data on success, false or null on failure.
 	 */
-	public function trash( $post_id ) {
+	public function trash( int $post_id ) /* : WP_Post|false|null */ {
 		return wp_trash_post( $post_id );
 	}
 
 	/**
-	 * Restore a post from the trash.
+	 * Restores a post from the trash.
 	 * (yet unused)
 	 *
 	 * @since 1.0.0
 	 *
 	 * @param int $post_id Post ID.
-	 * @return WP_Post|false Post on success, false on error.
+	 * @return WP_Post|false|null Post on success, false or null on error.
 	 */
-	public function untrash( $post_id ) {
+	public function untrash( int $post_id ) /* : WP_Post|false */ {
 		return wp_untrash_post( $post_id );
 	}
 
 	/**
-	 * Load all posts with one query, to prime the cache.
+	 * Loads all posts with one query, to prime the cache.
 	 *
 	 * @since 1.0.0
 	 *
 	 * @global wpdb $wpdb WordPress database abstraction object.
 	 * @see get_post()
 	 *
-	 * @param array $all_post_ids      List of Post IDs.
+	 * @param int[] $all_post_ids      List of Post IDs.
 	 * @param bool  $update_meta_cache Optional. Whether to update the Post Meta Cache (for table options and visibility).
 	 */
-	public function load_posts( array $all_post_ids, $update_meta_cache = true ) {
+	public function load_posts( array $all_post_ids, bool $update_meta_cache = true ): void {
 		global $wpdb;
 
 		// Split post loading, to save memory.
-		$offset = 0;
-		$length = 100; // 100 posts at a time
-		$number_of_posts = count( $all_post_ids );
-		while ( $offset < $number_of_posts ) {
-			$post_ids = array_slice( $all_post_ids, $offset, $length );
+		while ( ! empty( $all_post_ids ) ) {
+			$post_ids = array_splice( $all_post_ids, 0, 100 ); // Extract 100 posts at a time.
 			// Don't load posts that are in the cache already.
 			$post_ids = _get_non_cached_ids( $post_ids, 'posts' );
 			if ( ! empty( $post_ids ) ) {
 				$post_ids_list = implode( ',', $post_ids );
 				// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
-				$posts = $wpdb->get_results( "SELECT {$wpdb->posts}.* FROM {$wpdb->posts} WHERE ID IN ({$post_ids_list})" );
+				$posts = $wpdb->get_results( "SELECT {$wpdb->posts}.* FROM {$wpdb->posts} WHERE ID IN ({$post_ids_list})" ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching,WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 				update_post_cache( $posts );
 				if ( $update_meta_cache ) {
 					// Get all post meta data for all table posts, @see get_post_meta().
 					update_meta_cache( 'post', $post_ids );
 				}
 			}
-			$offset += $length; // next array_slice() $offset.
 		}
 	}
 
 	/**
-	 * Count the number of posts with the model's CPT in the wp_posts table in the database.
+	 * Counts the number of posts with the model's CPT in the wp_posts table in the database.
 	 * (currently for debug only)
 	 *
 	 * @since 1.0.0
 	 *
 	 * @return int Number of posts.
 	 */
-	public function count_posts() {
+	public function count_posts(): int {
 		return array_sum( (array) wp_count_posts( $this->post_type ) ); // Original return value is object with the counts for each post_status.
 	}
 
 	/**
-	 * Add a post meta field to a post.
+	 * Adds a post meta field to a post.
 	 *
 	 * @since 1.0.0
 	 *
@@ -318,7 +313,7 @@ class TablePress_Post_Model extends TablePress_Model {
 	 * @param string $value   Value of the post meta field (not slashed).
 	 * @return bool True on success, false on error.
 	 */
-	public function add_meta_field( $post_id, $field, $value ) {
+	public function add_meta_field( int $post_id, string $field, string $value ): bool {
 		// WP expects a slashed value.
 		$value = wp_slash( $value );
 		$success = add_post_meta( $post_id, $field, $value, true ); // true means unique.
@@ -328,7 +323,7 @@ class TablePress_Post_Model extends TablePress_Model {
 	}
 
 	/**
-	 * Update the value of a post meta field of a post.
+	 * Updatse the value of a post meta field of a post.
 	 *
 	 * If the field does not yet exist, it is added.
 	 *
@@ -339,7 +334,7 @@ class TablePress_Post_Model extends TablePress_Model {
 	 * @param string $value   Value of the post meta field (not slashed).
 	 * @return bool True on success, false on error.
 	 */
-	public function update_meta_field( $post_id, $field, $value ) {
+	public function update_meta_field( int $post_id, string $field, string $value ): bool {
 		$prev_value = (string) get_post_meta( $post_id, $field, true );
 		// No need to update, if values are equal (also, update_post_meta() would return false for this).
 		if ( $prev_value === $value ) {
@@ -352,7 +347,7 @@ class TablePress_Post_Model extends TablePress_Model {
 	}
 
 	/**
-	 * Get the value of a post meta field of a post.
+	 * Gets the value of a post meta field of a post.
 	 *
 	 * @since 1.0.0
 	 *
@@ -360,12 +355,12 @@ class TablePress_Post_Model extends TablePress_Model {
 	 * @param string $field   Name of the post meta field.
 	 * @return string Value of the meta field.
 	 */
-	public function get_meta_field( $post_id, $field ) {
+	public function get_meta_field( int $post_id, string $field ): string {
 		return get_post_meta( $post_id, $field, true ); // true means single value.
 	}
 
 	/**
-	 * Delete a post meta field of a post.
+	 * Deletes a post meta field of a post.
 	 * (yet unused)
 	 *
 	 * @since 1.0.0
@@ -374,18 +369,18 @@ class TablePress_Post_Model extends TablePress_Model {
 	 * @param string $field   Name of the post meta field.
 	 * @return bool True on success, false on error.
 	 */
-	public function delete_meta_field( $post_id, $field ) {
+	public function delete_meta_field( int $post_id, string $field ): bool {
 		return delete_post_meta( $post_id, $field, true ); // true means single value.
 	}
 
 	/**
-	 * Return the Custom Post Type that TablePress uses.
+	 * Returns the Custom Post Type that TablePress uses.
 	 *
 	 * @since 1.5.0
 	 *
 	 * @return string The used Custom Post Type.
 	 */
-	public function get_post_type() {
+	public function get_post_type(): string {
 		return $this->post_type;
 	}
 

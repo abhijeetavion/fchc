@@ -17,7 +17,7 @@ import { __, _n } from '@wordpress/i18n';
 /**
  * Internal dependencies.
  */
-import { $ } from './_common-functions';
+import { $ } from './common/functions';
 
 document.querySelector( '.tablepress-all-tables' ).addEventListener( 'click', ( event ) => {
 	if ( ! event.target ) {
@@ -60,7 +60,7 @@ $( '#tablepress-page' ).addEventListener( 'click', ( event ) => {
 	}
 
 	if ( event.target.matches( '.ajax-link' ) ) {
-		fetch( `${ ajaxurl }?${ event.target.href.split('?')['1'] }` ) // Append original link's query string to AJAX endpoint.
+		fetch( `${ ajaxurl }?${ event.target.href.split( '?' )[1] }` ) // Append original link's query string to AJAX endpoint.
 		.then( ( response ) => response.text() )
 		.then( ( result ) => {
 			if ( '1' !== result ) {

@@ -25,19 +25,21 @@ class TablePress_About_View extends TablePress_View {
 	 * Number of screen columns for post boxes on this screen.
 	 *
 	 * @since 1.0.0
-	 * @var int
 	 */
-	protected $screen_columns = 2;
+	protected int $screen_columns = 2;
 
 	/**
 	 * Set up the view with data and do things that are specific for this view.
 	 *
 	 * @since 1.0.0
 	 *
-	 * @param string $action Action for this view.
-	 * @param array  $data   Data for this view.
+	 * @param string               $action Action for this view.
+	 * @param array<string, mixed> $data   Data for this view.
 	 */
-	public function setup( $action, array $data ) {
+	#[\Override]
+	public function setup( /* string */ $action, array $data ) /* : void */ {
+		// Don't use type hints in the method declaration to prevent PHP errors, as the method is inherited.
+
 		parent::setup( $action, $data );
 
 		$this->add_text_box( 'spacer', array( $this, 'textbox_spacer' ), 'normal' );
@@ -56,13 +58,11 @@ class TablePress_About_View extends TablePress_View {
 	 *
 	 * @since 2.0.0
 	 *
-	 * @param array $data Data for this screen.
-	 * @param array $box  Information about the text box.
+	 * @param array<string, mixed> $data Data for this screen.
+	 * @param array<string, mixed> $box  Information about the text box.
 	 */
-	public function textbox_spacer( array $data, array $box ) {
-		?>
-		<p></p>
-		<?php
+	public function textbox_spacer( array $data, array $box ): void {
+		echo '<p></p>';
 	}
 
 	/**
@@ -70,10 +70,10 @@ class TablePress_About_View extends TablePress_View {
 	 *
 	 * @since 1.0.0
 	 *
-	 * @param array $data Data for this screen.
-	 * @param array $box  Information about the meta box.
+	 * @param array<string, mixed> $data Data for this screen.
+	 * @param array<string, mixed> $box  Information about the meta box.
 	 */
-	public function postbox_plugin_purpose( array $data, array $box ) {
+	public function postbox_plugin_purpose( array $data, array $box ): void {
 		?>
 	<p>
 		<?php _e( 'TablePress allows you to create and manage tables in the admin area of WordPress.', 'tablepress' ); ?>
@@ -88,10 +88,10 @@ class TablePress_About_View extends TablePress_View {
 	 *
 	 * @since 1.0.0
 	 *
-	 * @param array $data Data for this screen.
-	 * @param array $box  Information about the meta box.
+	 * @param array<string, mixed> $data Data for this screen.
+	 * @param array<string, mixed> $box  Information about the meta box.
 	 */
-	public function postbox_usage( array $data, array $box ) {
+	public function postbox_usage( array $data, array $box ): void {
 		?>
 	<p>
 		<?php _e( 'At first, you should add or import a table.', 'tablepress' ); ?>
@@ -128,10 +128,10 @@ class TablePress_About_View extends TablePress_View {
 	 *
 	 * @since 1.0.0
 	 *
-	 * @param array $data Data for this screen.
-	 * @param array $box  Information about the meta box.
+	 * @param array<string, mixed> $data Data for this screen.
+	 * @param array<string, mixed> $box  Information about the meta box.
 	 */
-	public function postbox_more_information( array $data, array $box ) {
+	public function postbox_more_information( array $data, array $box ): void {
 		?>
 	<p>
 		<?php printf( __( 'More information about TablePress can be found on the <a href="%1$s">plugin website</a> or on its page in the <a href="%2$s">WordPress Plugin Directory</a>.', 'tablepress' ), 'https://tablepress.org/', 'https://wordpress.org/plugins/tablepress/' ); ?>
@@ -146,10 +146,10 @@ class TablePress_About_View extends TablePress_View {
 	 *
 	 * @since 1.0.0
 	 *
-	 * @param array $data Data for this screen.
-	 * @param array $box  Information about the meta box.
+	 * @param array<string, mixed> $data Data for this screen.
+	 * @param array<string, mixed> $box  Information about the meta box.
 	 */
-	public function postbox_author_license( array $data, array $box ) {
+	public function postbox_author_license( array $data, array $box ): void {
 		?>
 	<p>
 		<?php printf( __( 'This plugin was written and developed by <a href="%s">Tobias Bäthge</a>.', 'tablepress' ), 'https://tobias.baethge.com/' ); ?>
@@ -160,7 +160,7 @@ class TablePress_About_View extends TablePress_View {
 	</p>
 		<?php
 		if ( tb_tp_fs()->is_free_plan() ) {
-			echo '<p><strong>' . sprintf( __( 'I would like to invite you to check out the <a href="%s">Premium versions of TablePress</a>.', 'tablepress' ), 'https://tablepress.org/premium/' ) . ' '
+			echo '<p><strong>' . sprintf( __( 'I would like to invite you to check out the <a href="%s">Premium versions of TablePress</a>.', 'tablepress' ), 'https://tablepress.org/premium/?utm_source=plugin&utm_medium=textlink&utm_content=about-screen' ) . ' '
 			. __( 'The available Pro and Max plans offer user support and many exciting and helpful features for your tables.', 'tablepress' ) . '</strong></p>';
 		}
 		?>
@@ -172,16 +172,16 @@ class TablePress_About_View extends TablePress_View {
 	 *
 	 * @since 1.0.0
 	 *
-	 * @param array $data Data for this screen.
-	 * @param array $box  Information about the meta box.
+	 * @param array<string, mixed> $data Data for this screen.
+	 * @param array<string, mixed> $box  Information about the meta box.
 	 */
-	public function postbox_help_support( array $data, array $box ) {
+	public function postbox_help_support( array $data, array $box ): void {
 		if ( tb_tp_fs()->is_free_plan() ) {
 			?>
 		<h4><?php _e( 'Premium Support', 'tablepress' ); ?></h4>
 		<p>
 			<?php _e( 'Users with a valid TablePress Premium license plan are eligible for Priority Email Support, directly from the plugin developer!', 'tablepress' ); ?>
-			<strong><?php printf( __( '<a href="%s">Find out more!</a>', 'tablepress' ), 'https://tablepress.org/premium/' ); ?></strong>
+			<strong><?php printf( __( '<a href="%s">Find out more!</a>', 'tablepress' ), 'https://tablepress.org/premium/?utm_source=plugin&utm_medium=textlink&utm_content=about-screen' ); ?></strong>
 		</p>
 		<h4><?php _e( 'Community Support for users of the Free version', 'tablepress' ); ?></h4>
 		<p>
@@ -198,35 +198,38 @@ class TablePress_About_View extends TablePress_View {
 	 *
 	 * @since 1.0.0
 	 *
-	 * @param array $data Data for this screen.
-	 * @param array $box  Information about the meta box.
+	 * @param array<string, mixed> $data Data for this screen.
+	 * @param array<string, mixed> $box  Information about the meta box.
 	 */
-	public function postbox_debug_version_information( array $data, array $box ) {
-		$mysqli = ( isset( $GLOBALS['wpdb']->use_mysqli, $GLOBALS['wpdb']->dbh ) && $GLOBALS['wpdb']->use_mysqli );
+	public function postbox_debug_version_information( array $data, array $box ): void {
 		?>
 		<p>
 			<strong><?php _e( 'Please provide this information in bug reports and support requests.', 'tablepress' ); ?></strong>
 		</p>
-		<p class="ltr">
-			&middot; Website: <?php echo site_url(); ?>
-			<br />&middot; TablePress: <?php echo TablePress::version; ?>
-			<br />&middot; TablePress (DB): <?php echo TablePress::db_version; ?>
-			<br />&middot; TablePress table scheme: <?php echo TablePress::table_scheme_version; ?>
-			<br />&middot; Plan: <?php echo tb_tp_fs()->is_plan_or_trial( 'pro', true ) ? 'Pro' : ( tb_tp_fs()->is_plan_or_trial( 'max', true ) ? 'Max' : 'Free' ); ?>
-			<br />&middot; Plugin installed: <?php echo wp_date( 'Y/m/d H:i:s', $data['first_activation'] ); ?>
-			<br />&middot; WordPress: <?php echo $GLOBALS['wp_version']; ?>
-			<br />&middot; Multisite: <?php echo is_multisite() ? 'yes' : 'no'; ?>
-			<br />&middot; PHP: <?php echo PHP_VERSION; ?>
-			<br />&middot; mysqli Extension: <?php echo $mysqli ? 'true' : 'false'; ?>
-			<br />&middot; mySQL (Server): <?php echo $mysqli ? mysqli_get_server_info( $GLOBALS['wpdb']->dbh ) : '<em>no mysqli</em>'; // phpcs:ignore WordPress.DB.RestrictedFunctions.mysql_mysqli_get_server_info ?>
-			<br />&middot; mySQL (Client): <?php echo $mysqli ? mysqli_get_client_info() : '<em>no mysqli</em>'; // phpcs:ignore WordPress.DB.RestrictedFunctions.mysql_mysqli_get_client_info ?>
-			<br />&middot; ZIP support: <?php echo $data['zip_support_available'] ? 'yes' : 'no'; ?>
-			<br />&middot; UTF-8 conversion: <?php echo ( function_exists( 'mb_detect_encoding' ) && function_exists( 'iconv' ) ) ? 'yes' : 'no'; ?>
-			<br />&middot; WP Memory Limit: <?php echo WP_MEMORY_LIMIT; ?>
-			<br />&middot; Server Memory Limit: <?php echo (int) @ini_get( 'memory_limit' ) . 'M'; // phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged ?>
-			<br />&middot; WP_DEBUG: <?php echo WP_DEBUG ? 'true' : 'false'; ?>
-			<br />&middot; WP_POST_REVISIONS: <?php echo is_bool( WP_POST_REVISIONS ) ? ( WP_POST_REVISIONS ? 'true' : 'false' ) : WP_POST_REVISIONS; ?>
-		</p>
+		<ul>
+			<li>Website: <?php echo site_url(); ?></li>
+			<li>Block Theme: <?php echo wp_is_block_theme() ? 'yes' : 'no'; ?></li>
+			<li>TablePress: <?php echo TablePress::version; ?></li>
+			<li>TablePress (DB): <?php echo TablePress::db_version; ?></li>
+			<li>TablePress table scheme: <?php echo TablePress::table_scheme_version; ?></li>
+			<li>Plan: Free</li>
+			<li>Plugin installed: <?php echo wp_date( 'Y/m/d H:i:s', $data['first_activation'] ); ?></li>
+			<li>WordPress: <?php echo $GLOBALS['wp_version']; ?></li>
+			<li>Multisite: <?php echo is_multisite() ? 'yes' : 'no'; ?></li>
+			<li>PHP: <?php echo PHP_VERSION; ?></li>
+			<li>mySQL (Server): <?php echo ( isset( $GLOBALS['wpdb']->dbh ) && function_exists( 'mysqli_get_server_info' ) ) ? mysqli_get_server_info( $GLOBALS['wpdb']->dbh ) : 'no mySQL server'; // phpcs:ignore WordPress.DB.RestrictedFunctions.mysql_mysqli_get_server_info ?></li>
+			<li>mySQL (Client): <?php echo function_exists( 'mysqli_get_client_info' ) ? mysqli_get_client_info() : 'no mySQL client'; // phpcs:ignore WordPress.DB.RestrictedFunctions.mysql_mysqli_get_client_info ?></li>
+			<li>mbstring: <?php echo extension_loaded( 'mbstring' ) ? 'yes' : '<span style="color:#800000;font-weight:bold;">no</span>'; ?></li>
+			<li>ZipArchive: <?php echo class_exists( 'ZipArchive', false ) ? 'yes' : '<span style="color:#800000;font-weight:bold;">no</span>'; ?></li>
+			<li>DOMDocument: <?php echo class_exists( 'DOMDocument', false ) ? 'yes' : '<span style="color:#800000;font-weight:bold;">no</span>'; ?></li>
+			<li>simplexml_load_string: <?php echo function_exists( 'simplexml_load_string' ) ? 'yes' : '<span style="color:#800000;font-weight:bold;">no</span>'; ?></li>
+			<li>libxml_disable_entity_loader: <?php echo function_exists( 'libxml_disable_entity_loader' ) ? 'yes' : '<span style="color:#800000;font-weight:bold;">no</span>'; ?></li>
+			<li>UTF-8 conversion: <?php echo ( function_exists( 'mb_detect_encoding' ) && function_exists( 'iconv' ) ) ? 'yes' : '<span style="color:#800000;font-weight:bold;">no</span>'; ?></li>
+			<li>WP Memory Limit: <?php echo WP_MEMORY_LIMIT; ?></li>
+			<li>Server Memory Limit: <?php echo esc_html( @ini_get( 'memory_limit' ) ); // phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged ?></li>
+			<li>WP_DEBUG: <?php echo WP_DEBUG ? 'true' : 'false'; ?></li>
+			<li>WP_POST_REVISIONS: <?php echo is_bool( WP_POST_REVISIONS ) ? ( WP_POST_REVISIONS ? 'true' : 'false' ) : WP_POST_REVISIONS; // @phpstan-ignore constant.notFound ?></li>
+		</ul>
 		<?php
 	}
 
@@ -235,17 +238,19 @@ class TablePress_About_View extends TablePress_View {
 	 *
 	 * @since 1.0.0
 	 *
-	 * @param array $data Data for this screen.
-	 * @param array $box  Information about the meta box.
+	 * @param array<string, mixed> $data Data for this screen.
+	 * @param array<string, mixed> $box  Information about the meta box.
 	 */
-	public function postbox_credits_thanks( array $data, array $box ) {
+	public function postbox_credits_thanks( array $data, array $box ): void {
 		?>
 		<p>
 			<?php _e( 'Special Thanks go to:', 'tablepress' ); ?>
-			<br />&middot; <?php printf( __( 'Allan Jardine for <a href="%s">DataTables</a>,', 'tablepress' ), 'https://www.datatables.net/' ); ?>
-			<br />&middot; <?php printf( __( 'the translators in the <a href="%s">Plugin Directory</a>,', 'tablepress' ), 'https://translate.wordpress.org/projects/wp-plugins/tablepress/' ); ?>
-			<br />&middot; <?php _e( 'all customers, donors, contributors, supporters, reviewers, and users of the plugin!', 'tablepress' ); ?>
 		</p>
+		<ul>
+			<li><?php printf( __( 'Allan Jardine for <a href="%s">DataTables</a>,', 'tablepress' ), 'https://datatables.net/' ); ?></li>
+			<li><?php printf( __( 'the translators in the <a href="%s">Plugin Directory</a>,', 'tablepress' ), 'https://translate.wordpress.org/projects/wp-plugins/tablepress/' ); ?></li>
+			<li><?php _e( 'all customers, donors, contributors, supporters, reviewers, and users of the plugin!', 'tablepress' ); ?></li>
+		</ul>
 		<?php
 	}
 

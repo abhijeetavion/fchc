@@ -43,7 +43,7 @@ class TablePress_Admin_AJAX_Controller extends TablePress_Controller {
 	 *
 	 * @since 1.0.0
 	 */
-	public function ajax_action_hide_message() {
+	public function ajax_action_hide_message(): void {
 		if ( empty( $_GET['item'] ) ) {
 			wp_die( '0' );
 		}
@@ -66,7 +66,7 @@ class TablePress_Admin_AJAX_Controller extends TablePress_Controller {
 	 *
 	 * @since 1.0.0
 	 */
-	public function ajax_action_save_table() {
+	public function ajax_action_save_table(): void {
 		if ( empty( $_POST['tablepress']['id'] ) ) {
 			wp_die( '-1' );
 		}
@@ -85,27 +85,32 @@ class TablePress_Admin_AJAX_Controller extends TablePress_Controller {
 		$success = false;
 		$message = 'error_save';
 		$error_details = '';
-		do { // to be able to "break;" (allows for better readable code)
+		do { // To be able to "break;" (allows for better readable code).
 			// Load table, without table data, but with options and visibility settings.
 			$existing_table = TablePress::$model_table->load( $edit_table['id'], false, true );
-			if ( is_wp_error( $existing_table ) ) { // maybe somehow load a new table here? (TablePress::$model_table->get_table_template())?
+			if ( is_wp_error( $existing_table ) ) {
 				$error = new WP_Error( 'ajax_save_table_load', '', $edit_table['id'] );
 				$error->merge_from( $existing_table );
 				$error_details = TablePress::get_wp_error_string( $error );
 				break;
 			}
 
-			// Check and convert data that was transmitted as JSON.
-			if ( empty( $edit_table['data'] )
-			|| empty( $edit_table['options'] )
-			|| empty( $edit_table['visibility'] ) ) {
-				$error = new WP_Error( 'ajax_save_table_data_empty', '', $edit_table['id'] );
-				$error_details = TablePress::get_wp_error_string( $error );
-				break;
+			// Check and convert all data that was transmitted as valid JSON.
+			$keys = array( 'data', 'options', 'visibility' );
+			foreach ( $keys as $key ) {
+				if ( empty( $edit_table[ $key ] ) ) {
+					$error = new WP_Error( "ajax_save_table_{$key}_empty", '', $edit_table['id'] );
+					$error_details = TablePress::get_wp_error_string( $error );
+					break 2;
+				}
+				$edit_table[ $key ] = json_decode( $edit_table[ $key ], true );
+				if ( is_null( $edit_table[ $key ] ) ) {
+					$error = new WP_Error( "ajax_save_table_{$key}_invalid_json", '', $edit_table['id'] );
+					$error_details = TablePress::get_wp_error_string( $error );
+					break 2;
+				}
+				$edit_table[ $key ] = (array) $edit_table[ $key ]; // Cast to array again, to catch strings, etc.
 			}
-			$edit_table['data'] = (array) json_decode( $edit_table['data'], true );
-			$edit_table['options'] = (array) json_decode( $edit_table['options'], true );
-			$edit_table['visibility'] = (array) json_decode( $edit_table['visibility'], true );
 
 			// Check consistency of new table, and then merge with existing table.
 			$table = TablePress::$model_table->prepare_table( $existing_table, $edit_table, true );
@@ -156,6 +161,8 @@ class TablePress_Admin_AJAX_Controller extends TablePress_Controller {
 				$message = 'success_save_error_id_change';
 				$error_details = 'table_id_could_not_be_changed: capability_check_failed';
 			}
+
+			// @phpstan-ignore doWhile.alwaysFalse
 		} while ( false ); // Do-while-loop through this exactly once, to be able to "break;" early.
 
 		// Generate the response.
@@ -166,11 +173,14 @@ class TablePress_Admin_AJAX_Controller extends TablePress_Controller {
 			'message' => $message,
 		);
 		if ( $success ) {
-			$response['table_id'] = $table['id'];
-			$response['new_edit_nonce'] = wp_create_nonce( TablePress::nonce( 'edit', $table['id'] ) );
-			$response['new_preview_nonce'] = wp_create_nonce( TablePress::nonce( 'preview_table', $table['id'] ) );
-			$response['last_modified'] = TablePress::format_datetime( $table['last_modified'] );
-			$response['last_editor'] = TablePress::get_user_display_name( $table['options']['last_editor'] );
+			// For the phpstan ignores in the next lines: If this is reached, $table is guaranteed to exist and is a valid array.
+			$response['table_id'] = $table['id']; // @phpstan-ignore offsetAccess.nonOffsetAccessible, variable.undefined
+			$response['new_edit_nonce'] = wp_create_nonce( TablePress::nonce( 'edit', $table['id'] ) ); // @phpstan-ignore offsetAccess.nonOffsetAccessible, variable.undefined
+			$response['new_preview_nonce'] = wp_create_nonce( TablePress::nonce( 'preview_table', $table['id'] ) ); // @phpstan-ignore offsetAccess.nonOffsetAccessible, variable.undefined
+			$response['new_copy_nonce'] = wp_create_nonce( TablePress::nonce( 'copy_table', $table['id'] ) ); // @phpstan-ignore offsetAccess.nonOffsetAccessible, variable.undefined
+			$response['new_delete_nonce'] = wp_create_nonce( TablePress::nonce( 'delete_table', $table['id'] ) ); // @phpstan-ignore offsetAccess.nonOffsetAccessible, variable.undefined
+			$response['last_modified'] = TablePress::format_datetime( $table['last_modified'] ); // @phpstan-ignore offsetAccess.nonOffsetAccessible, variable.undefined
+			$response['last_editor'] = TablePress::get_user_display_name( $table['options']['last_editor'] ); // @phpstan-ignore offsetAccess.nonOffsetAccessible, variable.undefined
 		}
 		if ( ! empty( $error_details ) ) {
 			$response['error_details'] = esc_html( $error_details );
@@ -190,7 +200,7 @@ class TablePress_Admin_AJAX_Controller extends TablePress_Controller {
 	 *
 	 * @since 1.0.0
 	 */
-	public function ajax_action_preview_table() {
+	public function ajax_action_preview_table(): void {
 		if ( empty( $_POST['tablepress']['id'] ) ) {
 			wp_die( '-1' );
 		}
@@ -207,22 +217,25 @@ class TablePress_Admin_AJAX_Controller extends TablePress_Controller {
 
 		// Default response data.
 		$success = false;
-		do { // to be able to "break;" (allows for better readable code)
+		do { // To be able to "break;" (allows for better readable code).
 			// Load table, without table data, but with options and visibility settings.
 			$existing_table = TablePress::$model_table->load( $preview_table['id'], false, true );
-			if ( is_wp_error( $existing_table ) ) { // maybe somehow load a new table here? (TablePress::$model_table->get_table_template())?
+			if ( is_wp_error( $existing_table ) ) {
 				break;
 			}
 
-			// Check and convert data that was transmitted as JSON.
-			if ( empty( $preview_table['data'] )
-			|| empty( $preview_table['options'] )
-			|| empty( $preview_table['visibility'] ) ) {
-				break;
+			// Check and convert all data that was transmitted as valid JSON.
+			$keys = array( 'data', 'options', 'visibility' );
+			foreach ( $keys as $key ) {
+				if ( empty( $preview_table[ $key ] ) ) {
+					break 2;
+				}
+				$preview_table[ $key ] = json_decode( $preview_table[ $key ], true );
+				if ( is_null( $preview_table[ $key ] ) ) {
+					break 2;
+				}
+				$preview_table[ $key ] = (array) $preview_table[ $key ]; // Cast to array again, to catch strings, etc.
 			}
-			$preview_table['data'] = (array) json_decode( $preview_table['data'], true );
-			$preview_table['options'] = (array) json_decode( $preview_table['options'], true );
-			$preview_table['visibility'] = (array) json_decode( $preview_table['visibility'], true );
 
 			// Check consistency of new table, and then merge with existing table.
 			$table = TablePress::$model_table->prepare_table( $existing_table, $preview_table, true );
@@ -247,6 +260,8 @@ class TablePress_Admin_AJAX_Controller extends TablePress_Controller {
 
 			// At this point, the table data is valid and sanitized and can be rendered.
 			$success = true;
+
+			// @phpstan-ignore doWhile.alwaysFalse
 		} while ( false ); // Do-while-loop through this exactly once, to be able to "break;" early.
 
 		if ( $success ) {
@@ -256,11 +271,13 @@ class TablePress_Admin_AJAX_Controller extends TablePress_Controller {
 			$default_render_options = $_render->get_default_render_options();
 			/** This filter is documented in controllers/controller-frontend.php */
 			$default_render_options = apply_filters( 'tablepress_shortcode_table_default_shortcode_atts', $default_render_options );
-			$render_options = shortcode_atts( $default_render_options, $table['options'] );
+			// For the phpstan ignores in the next lines: If this is reached, $table is guaranteed to exist and is a valid array.
+			$render_options = shortcode_atts( $default_render_options, $table['options'] ); // @phpstan-ignore offsetAccess.nonOffsetAccessible, variable.undefined
 			/** This filter is documented in controllers/controller-frontend.php */
 			$render_options = apply_filters( 'tablepress_shortcode_table_shortcode_atts', $render_options );
-			$render_options['html_id'] = "tablepress-{$table['id']}";
-			$_render->set_input( $table, $render_options );
+			$render_options['html_id'] = "tablepress-{$table['id']}"; // @phpstan-ignore offsetAccess.nonOffsetAccessible, variable.undefined
+			$render_options['block_preview'] = true;
+			$_render->set_input( $table, $render_options ); // @phpstan-ignore variable.undefined
 			$head_html = $_render->get_preview_css();
 			$custom_css = TablePress::$model_options->get( 'custom_css' );
 			$use_custom_css = ( TablePress::$model_options->get( 'use_custom_css' ) && '' !== $custom_css );
@@ -271,7 +288,7 @@ class TablePress_Admin_AJAX_Controller extends TablePress_Controller {
 			$body_html = '<div id="tablepress-page"><p>'
 				. __( 'This is a preview of your table.', 'tablepress' ) . ' '
 				. __( 'Because of CSS styling in your theme, the table might look different on your page!', 'tablepress' ) . ' '
-				. __( 'The Table Features for Site Visitors, like sorting, filtering, and pagination, are also not available in this preview!', 'tablepress' ) . '<br />';
+				. __( 'The Table Features for Site Visitors, like sorting, filtering, and pagination, are also not available in this preview!', 'tablepress' ) . '<br>';
 			// Show the instructions string depending on whether the Block Editor is used on the site or not.
 			if ( TablePress::site_uses_block_editor() ) {
 				$body_html .= sprintf( __( 'To insert a table into a post or page, add a “%1$s” block in the block editor and select the desired table.', 'tablepress' ), __( 'TablePress table', 'tablepress' ) );
@@ -279,7 +296,7 @@ class TablePress_Admin_AJAX_Controller extends TablePress_Controller {
 				$body_html .= __( 'To insert a table into a post or page, paste its Shortcode at the desired place in the editor.', 'tablepress' ) . ' '
 					. __( 'Each table has a unique ID that needs to be adjusted in that Shortcode.', 'tablepress' );
 			}
-			$body_html .= '</p>' . $_render->get_output() . '</div>';
+			$body_html .= '</p>' . $_render->get_output( 'html' ) . '</div>';
 		} else {
 			$head_html = '';
 			$body_html = __( 'The preview could not be loaded.', 'tablepress' );
@@ -306,7 +323,7 @@ class TablePress_Admin_AJAX_Controller extends TablePress_Controller {
 	 *
 	 * @since 2.1.0
 	 */
-	public function ajax_action_save_screen_options() {
+	public function ajax_action_save_screen_options(): void {
 		// Check if the submitted nonce matches the generated nonce we created earlier, dies -1 on failure.
 		TablePress::check_nonce( 'screen_options', false, '_ajax_nonce', true );
 

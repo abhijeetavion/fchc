@@ -27,8 +27,8 @@ class TablePress_Evaluate_PHPSpreadsheet {
 	 * @since 2.0.0
 	 */
 	public function __construct() {
-		// Load PHPSpreadsheet via the Composer autoloading mechanism.
-		TablePress::load_file( 'autoload.php', 'libraries' );
+		// Load PHPSpreadsheet via its autoloading mechanism.
+		TablePress::load_file( 'autoload.php', 'libraries/vendor' );
 	}
 
 	/**
@@ -36,11 +36,11 @@ class TablePress_Evaluate_PHPSpreadsheet {
 	 *
 	 * @since 1.0.0
 	 *
-	 * @param array  $table_data Table data in which formulas shall be evaluated.
-	 * @param string $table_id   ID of the passed table.
-	 * @return array Table data with evaluated formulas.
+	 * @param array<int, array<int, string>> $table_data Table data in which formulas shall be evaluated.
+	 * @param string                         $table_id   ID of the passed table.
+	 * @return array<int, array<int, string>> Table data with evaluated formulas.
 	 */
-	public function evaluate_table_data( array $table_data, $table_id ) {
+	public function evaluate_table_data( array $table_data, string $table_id ): array {
 		$table_has_formulas = false;
 
 		// Loop through all cells to check for formulas and convert notations.
@@ -52,11 +52,11 @@ class TablePress_Evaluate_PHPSpreadsheet {
 
 				$table_has_formulas = true;
 
-				// Convert legacy "formulas in text" notation to standard Excel notation (`=Text {A3+B3} Text` => `="Text "&A3+B3&" Text"`).
-				$count = 0;
-				$cell_content = preg_replace( '#{(.+?)}#', '"&$1&"', $cell_content, -1, $count );
-				if ( $count > 0 ) {
-					$cell_content = '="' . substr( $cell_content, 1 ) . '"';
+				// Convert legacy "formulas in text" notation (`=Text {A3+B3} Text`) to standard Excel notation (`="Text "&A3+B3&" Text"`).
+				if ( 1 === preg_match( '#{(.+?)}#', $cell_content ) ) {
+					$cell_content = str_replace( '"', '""', $cell_content ); // Preserve existing quotation marks in text around formulas.
+					$cell_content = '="' . substr( $cell_content, 1 ) . '"'; // Wrap the whole cell content in quotation marks, as there will be text around formulas.
+					$cell_content = (string) preg_replace( '#{(.+?)}#', '"&$1&"', $cell_content, -1, $count ); // Convert all wrapped formulas to standard Excel notation.
 				}
 			}
 		}
@@ -73,7 +73,7 @@ class TablePress_Evaluate_PHPSpreadsheet {
 			$worksheet->fromArray( /* $source */ $table_data, /* $nullValue */ '' );
 
 			// Don't allow cyclic references.
-			TablePress\PhpOffice\PhpSpreadsheet\Calculation\Calculation::getInstance( $spreadsheet )->cyclicFormulaCount = 0;
+			\TablePress\PhpOffice\PhpSpreadsheet\Calculation\Calculation::getInstance( $spreadsheet )->cyclicFormulaCount = 0;
 
 			/*
 			 * Register variables as Named Formulas.
@@ -101,6 +101,19 @@ class TablePress_Evaluate_PHPSpreadsheet {
 							$cell = $cell_collection->get( $cell_reference );
 							try {
 								$cell_content = (string) $cell->getCalculatedValue();
+
+								// Convert hyperlinks, e.g. generated via `=HYPERLINK()` to HTML code.
+								$cell_has_hyperlink = $worksheet->hyperlinkExists( $cell_reference ) && ! $worksheet->getHyperlink( $cell_reference )->isInternal();
+								if ( $cell_has_hyperlink ) {
+									$url = $worksheet->getHyperlink( $cell_reference )->getUrl();
+									if ( '' !== $url ) {
+										$url = esc_url( $url );
+										$cell_content = "<a href=\"{$url}\">{$cell_content}</a>";
+									}
+								}
+
+								// Sanitize the output of the evaluated formula.
+								$cell_content = wp_kses_post( $cell_content ); // Equals wp_filter_post_kses(), but without the unnecessary slashes handling.
 							} catch ( \TablePress\PhpOffice\PhpSpreadsheet\Calculation\Exception $exception ) {
 								$message = str_replace( 'Worksheet!', '', $exception->getMessage() );
 								$cell_content = "!ERROR! {$message}";
