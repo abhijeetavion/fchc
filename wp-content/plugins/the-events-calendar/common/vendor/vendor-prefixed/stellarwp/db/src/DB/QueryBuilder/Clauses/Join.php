@@ -2,8 +2,7 @@
 /**
  * @license GPL-2.0
  *
- * Modified by the-events-calendar on 13-July-2023 using Strauss.
- * @see https://github.com/BrianHenryIE/strauss
+ * Modified using {@see https://github.com/BrianHenryIE/strauss}.
  */
 
 namespace TEC\Common\StellarWP\DB\QueryBuilder\Clauses;
@@ -36,10 +35,10 @@ class Join {
 	 * @param  string  $joinType  \StellarWP\DB\QueryBuilder\Types\JoinType
 	 * @param  string|null  $alias
 	 */
-	public function __construct( $joinType, $table, $alias = null ) {
+	public function __construct( $joinType, $table, $alias = '' ) {
 		$this->table	= QueryBuilder::prefixTable( $table );
 		$this->joinType = $this->getJoinType( $joinType );
-		$this->alias	= trim( $alias );
+		$this->alias	= is_scalar( $alias ) ? trim( (string) $alias ) : '';
 	}
 
 	/**

@@ -272,14 +272,16 @@ class I18n {
 		};
 
 		add_filter( 'locale', $force_locale );
+		add_filter( 'pre_determine_locale', $force_locale );
 		$result = $do( ...$args );
 		remove_filter( 'locale', $force_locale );
+		remove_filter( 'pre_determine_locale', $force_locale );
 
 		$domains = isset( $args[1] ) ? (array) $args[1] : false;
 		if ( false !== $domains ) {
 			foreach ( $domains as $domain => $file ) {
 				// Reload it with the correct language.
-				unload_textdomain( $domain );
+				unload_textdomain( $domain, true );
 
 				if ( 'default' === $domain ) {
 					load_default_textdomain();
@@ -337,7 +339,7 @@ class I18n {
 
 		foreach ( (array) $domains as $domain => $file ) {
 			// Reload it with the correct language.
-			unload_textdomain( $domain );
+			unload_textdomain( $domain, true );
 
 			if ( 'default' === $domain ) {
 				load_default_textdomain();

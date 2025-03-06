@@ -5,8 +5,7 @@
  * @package TEC\Common\StellarWP\Telemetry\Contracts
  *
  * @license GPL-2.0-or-later
- * Modified by the-events-calendar on 13-July-2023 using Strauss.
- * @see https://github.com/BrianHenryIE/strauss
+ * Modified using {@see https://github.com/BrianHenryIE/strauss}.
  */
 
 namespace TEC\Common\StellarWP\Telemetry\Contracts;
@@ -24,5 +23,4 @@ interface Subscriber_Interface {
 	 * @return void
 	 */
 	public function register();
-
 }

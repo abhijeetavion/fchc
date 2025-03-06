@@ -2,8 +2,7 @@
 /**
  * @license GPL-2.0
  *
- * Modified by the-events-calendar on 13-July-2023 using Strauss.
- * @see https://github.com/BrianHenryIE/strauss
+ * Modified using {@see https://github.com/BrianHenryIE/strauss}.
  */
 
 namespace TEC\Common\StellarWP\DB\QueryBuilder\Concerns;
@@ -27,7 +26,7 @@ trait FromClause {
 	 *
 	 * @return $this
 	 */
-	public function from( $table, $alias = null ) {
+	public function from( $table, $alias = '' ) {
 		$this->froms[] = new From( $table, $alias );
 
 		return $this;

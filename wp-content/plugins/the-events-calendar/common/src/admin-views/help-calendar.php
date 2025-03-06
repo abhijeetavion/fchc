@@ -1,31 +1,31 @@
 <?php
+/**
+ * View: Help Page for The Events Calendar.
+ */
 
-use \Tribe\Admin\Help_Page;
-
-$faqs              = tribe( Tribe__Admin__Help_Page::class )->get_calendar_faqs();
-$extensions        = tribe( Tribe__Admin__Help_Page::class )->get_calendar_extensions();
-$calendar_products = tribe( Tribe__Admin__Help_Page::class )->get_calendar_products();
+$faqs                    = tribe( Tribe__Admin__Help_Page::class )->get_calendar_faqs();
+$extensions              = tribe( Tribe__Admin__Help_Page::class )->get_calendar_extensions();
+$calendar_products       = tribe( Tribe__Admin__Help_Page::class )->get_calendar_products();
+$is_tec_events_help_page = tribe( Tribe__Admin__Help_Page::class )->is_tec_events_help_page();
+$tec_events_style        = $is_tec_events_help_page ? 'block' : 'none';
 
 ?>
-<div id="tribe-calendar">
-	<img
-		class="tribe-events-admin-header__right-image"
-		src="<?php echo esc_url( tribe_resource_url( 'images/help/help-calendar-header.png', false, null, $main ) ); ?>"
-	/>
+<div id="tribe-calendar" style="display: <?php echo esc_attr( $tec_events_style ); ?>;">
+	<img class="tribe-events-admin-header__right-image" src="<?php echo esc_url( tribe_resource_url( 'images/help/help-calendar-header.png', false, null, $main ) ); ?>" />
 	<p class="tribe-events-admin-products-description">
 		<?php esc_html_e( 'Get help for these products and learn more about products you don\'t have.', 'tribe-common' ); ?>
 	</p>
 
-	<?php // list of products ?>
+	<?php
+	// list of products.
+	?>
 	<div class="tribe-events-admin-products tribe-events-admin-2col-grid">
-	<?php //requires valid links for all the products
-		foreach ( $calendar_products as $slug ) : ?>
+		<?php
+		// requires valid links for all the products.
+		foreach ( $calendar_products as $slug ) :
+			?>
 			<div class="tribe-events-admin-products-card">
-				<img
-					class="tribe-events-admin-products-card__icon"
-					src="<?php echo esc_url( tribe_resource_url( $products[ $slug ]['logo'], false, null, $main ) ); ?>"
-					alt="<?php esc_attr_e( 'logo icon', 'tribe-common' ); ?>"
-				/>
+				<img class="tribe-events-admin-products-card__icon" src="<?php echo esc_url( tribe_resource_url( $products[ $slug ]['logo'], false, null, $main ) ); ?>" alt="<?php esc_attr_e( 'logo icon', 'tribe-common' ); ?>" />
 				<div class="tribe-events-admin-products-card__group">
 					<h4 class="tribe-events-admin-products-card__group-title">
 						<?php echo esc_html( $products[ $slug ]['title'] ); ?>
@@ -34,38 +34,50 @@ $calendar_products = tribe( Tribe__Admin__Help_Page::class )->get_calendar_produ
 						<?php echo esc_html( $products[ $slug ]['description-help'] ); ?>
 					</div>
 				</div>
-				<?php 
-					$plugin_path_url = WP_PLUGIN_DIR . '/' . $products[ $slug ]['plugin-dir'] . '/' . $products[ $slug ]['main-file'];
-					$plugin_exists = file_exists( $plugin_path_url );
+				<?php
+				$plugin_path_url = WP_PLUGIN_DIR . '/' . $products[ $slug ]['plugin-dir'] . '/' . $products[ $slug ]['main-file'];
+				$plugin_exists   = file_exists( $plugin_path_url );
 
-					// checks if plugin is installed and activated
-					if ( $products[ $slug ]['is_installed'] ) { ?>
-						<button class="tribe-events-admin-products-card__button tribe-events-admin-products-card__button--active">
-							<?php esc_html_e( 'Active', 'tribe-common' ); ?>
-						</button> 
+				// checks if plugin is installed and activated.
+				if ( $products[ $slug ]['is_installed'] ) {
+					?>
+					<button class="tribe-events-admin-products-card__button tribe-events-admin-products-card__button--active">
+						<?php esc_html_e( 'Active', 'tribe-common' ); ?>
+					</button>
+					<?php
+					// displays different message for EA.
+				} elseif ( ! $products[ $slug ]['is_installed'] && 'Event Aggregator' === $products[ $slug ]['title'] ) {
+					?>
+					<a href="
 						<?php
-					}
-					// displays different message for EA
-					elseif ( ! $products[ $slug ]['is_installed'] && 'Event Aggregator' === $products[ $slug ]['title'] ) { ?>
-						<a href="<?php echo esc_url( Tribe__Settings::instance()->get_url( [ 'tab' => 'licenses', 'post_type' => 'tribe_events' ] ) ); ?>" class="tribe-events-admin-products-card__button">
-							<?php esc_html_e( 'Add license key', 'tribe-common' ); ?>
-						</a>
-						<?php
-					}
-					// checks if plugin is installed but not activated
-					elseif ( ! $products[ $slug ]['is_installed'] && $plugin_exists ) { ?>
-						<a href="<?php echo esc_url( admin_url( 'plugins.php' ) ); ?>" class="tribe-events-admin-products-card__button">
-							<?php esc_html_e( 'Activate', 'tribe-common' ); ?>
-						</a>
-						<?php
-					}
-					// adds a learn more link if plugin is neither activated nor installed
-					else { ?>
-						<a href="<?php echo $products[ $slug ]['link'] ?>" target="_blank" rel="noopener noreferrer" class="tribe-events-admin-products-card__button">
-							<?php esc_html_e( 'Learn More', 'tribe-common' ); ?>
-						</a>
-						<?php
-					}
+						echo esc_url(
+							tribe( 'settings' )->get_url(
+								[
+									'tab'       => 'licenses',
+									'post_type' => 'tribe_events',
+								]
+							)
+						);
+						?>
+									" class="tribe-events-admin-products-card__button">
+						<?php esc_html_e( 'Add license key', 'tribe-common' ); ?>
+					</a>
+					<?php
+					// checks if plugin is installed but not activated.
+				} elseif ( ! $products[ $slug ]['is_installed'] && $plugin_exists ) {
+					?>
+					<a href="<?php echo esc_url( admin_url( 'plugins.php' ) ); ?>" class="tribe-events-admin-products-card__button">
+						<?php esc_html_e( 'Activate', 'tribe-common' ); ?>
+					</a>
+					<?php
+					// adds a learn more link if plugin is neither activated nor installed.
+				} else {
+					?>
+					<a href="<?php echo esc_url( $products[ $slug ]['link'] ); ?>" target="_blank" rel="noopener noreferrer" class="tribe-events-admin-products-card__button">
+						<?php esc_html_e( 'Learn More', 'tribe-common' ); ?>
+					</a>
+					<?php
+				}
 				?>
 			</div>
 		<?php endforeach; ?>
@@ -75,7 +87,7 @@ $calendar_products = tribe( Tribe__Admin__Help_Page::class )->get_calendar_produ
 		<h3>
 			<?php esc_html_e( 'Start Here', 'tribe-common' ); ?>
 		</h3>
-		
+
 		<a href="https://evnt.is/1aq9" target="_blank" rel="noopener noreferrer">
 			<?php esc_html_e( 'Visit Knowledgebase', 'tribe-common' ); ?>
 		</a>
@@ -83,11 +95,7 @@ $calendar_products = tribe( Tribe__Admin__Help_Page::class )->get_calendar_produ
 
 	<div class="tribe-events-admin-kb tribe-events-admin-3col-grid">
 		<div class="tribe-events-admin-kb-card">
-			<img
-				class="tribe-events-admin-kb-card__image"
-				src="<?php echo esc_url( tribe_resource_url( 'images/help/getting-started.png', false, null, $main ) ); ?>"
-				alt="<?php esc_attr_e( 'book with The Events Calendar logo', 'tribe-common' ); ?>"
-			/>
+			<img class="tribe-events-admin-kb-card__image" src="<?php echo esc_url( tribe_resource_url( 'images/help/getting-started.png', false, null, $main ) ); ?>" alt="<?php esc_attr_e( 'book with The Events Calendar logo', 'tribe-common' ); ?>" />
 			<h4 class="tribe-events-admin-kb-card__title">
 				<?php esc_html_e( 'Getting Started Guides', 'tribe-common' ); ?>
 			</h4>
@@ -107,20 +115,11 @@ $calendar_products = tribe( Tribe__Admin__Help_Page::class )->get_calendar_produ
 						<?php esc_html_e( 'Filter Bar', 'tribe-common' ); ?>
 					</a>
 				</li>
-				<li>
-					<a href="https://evnt.is/1ape" target="_blank" rel="noopener noreferrer">
-						<?php esc_html_e( 'Virtual Events', 'tribe-common' ); ?>
-					</a>
-				</li>
 			</ul>
 		</div>
 
 		<div class="tribe-events-admin-kb-card">
-			<img
-				class="tribe-events-admin-kb-card__image"
-				src="<?php echo esc_url( tribe_resource_url( 'images/help/customizing.png', false, null, $main ) ); ?>"
-				alt="<?php esc_attr_e( 'book with The Events Calendar logo', 'tribe-common' ); ?>"
-			/>
+			<img class="tribe-events-admin-kb-card__image" src="<?php echo esc_url( tribe_resource_url( 'images/help/customizing.png', false, null, $main ) ); ?>" alt="<?php esc_attr_e( 'book with The Events Calendar logo', 'tribe-common' ); ?>" />
 			<h4 class="tribe-events-admin-kb-card__title">
 				<?php esc_html_e( 'Customizing', 'tribe-common' ); ?>
 			</h4>
@@ -149,11 +148,7 @@ $calendar_products = tribe( Tribe__Admin__Help_Page::class )->get_calendar_produ
 		</div>
 
 		<div class="tribe-events-admin-kb-card">
-			<img
-				class="tribe-events-admin-kb-card__image"
-				src="<?php echo esc_url( tribe_resource_url( 'images/help/common-issues.png', false, null, $main ) ); ?>"
-				alt="<?php esc_attr_e( 'book with The Events Calendar logo', 'tribe-common' ); ?>"
-			/>
+			<img class="tribe-events-admin-kb-card__image" src="<?php echo esc_url( tribe_resource_url( 'images/help/common-issues.png', false, null, $main ) ); ?>" alt="<?php esc_attr_e( 'book with The Events Calendar logo', 'tribe-common' ); ?>" />
 			<h4 class="tribe-events-admin-kb-card__title">
 				<?php esc_html_e( 'Common Issues', 'tribe-common' ); ?>
 			</h4>
@@ -182,12 +177,14 @@ $calendar_products = tribe( Tribe__Admin__Help_Page::class )->get_calendar_produ
 		</div>
 	</div>
 
-	<?php // faq section ?>
+	<?php
+	// faq section.
+	?>
 	<div class="tribe-events-admin-section-header">
 		<h3>
 			<?php esc_html_e( 'FAQs', 'tribe-common' ); ?>
 		</h3>
-		
+
 		<a href="https://evnt.is/1av1#faqs" target="_blank" rel="noopener noreferrer">
 			<?php esc_html_e( 'All FAQs', 'tribe-common' ); ?>
 		</a>
@@ -197,15 +194,12 @@ $calendar_products = tribe( Tribe__Admin__Help_Page::class )->get_calendar_produ
 		<?php foreach ( $faqs as $faq ) : ?>
 			<div class="tribe-events-admin-faq-card">
 				<div class="tribe-events-admin-faq-card__icon">
-					<img
-						src="<?php echo esc_url( tribe_resource_url( 'images/icons/faq.png', false, null, $main ) ); ?>"
-						alt="<?php esc_attr_e( 'lightbulb icon', 'tribe-common' ); ?>"
-					/>
+					<img src="<?php echo esc_url( tribe_resource_url( 'images/icons/faq.png', false, null, $main ) ); ?>" alt="<?php esc_attr_e( 'lightbulb icon', 'tribe-common' ); ?>" />
 				</div>
-				<div class="tribe-events-admin-faq-card__content">					
+				<div class="tribe-events-admin-faq-card__content">
 					<div class="tribe-events-admin-faq__question">
 						<a href="<?php echo esc_url( $faq['link'] ); ?>" target="_blank" rel="noopener noreferrer">
-							<?php echo esc_html( $faq['question'] ); ?>	
+							<?php echo esc_html( $faq['question'] ); ?>
 						</a>
 					</div>
 					<div class="tribe-events-admin-faq__answer">
@@ -216,12 +210,14 @@ $calendar_products = tribe( Tribe__Admin__Help_Page::class )->get_calendar_produ
 		<?php endforeach; ?>
 	</div>
 
-	<?php // extensions section ?>
+	<?php
+	// extensions section.
+	?>
 	<div class="tribe-events-admin-section-header">
 		<h3>
 			<?php esc_html_e( 'Free extensions', 'tribe-common' ); ?>
 		</h3>
-		
+
 		<a href="https://evnt.is/1aqa" target="_blank" rel="noopener noreferrer">
 			<?php esc_html_e( 'All Extensions', 'tribe-common' ); ?>
 		</a>

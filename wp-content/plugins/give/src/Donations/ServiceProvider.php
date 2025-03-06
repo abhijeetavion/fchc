@@ -2,6 +2,7 @@
 
 namespace Give\Donations;
 
+use Give\Donations\CustomFields\Controllers\DonationDetailsController;
 use Give\Donations\LegacyListeners\ClearDonationPostCache;
 use Give\Donations\LegacyListeners\DispatchDonationNoteEmailNotification;
 use Give\Donations\LegacyListeners\DispatchGiveInsertPayment;
@@ -15,6 +16,7 @@ use Give\Donations\ListTable\DonationsListTable;
 use Give\Donations\Migrations\AddMissingDonorIdToDonationComments;
 use Give\Donations\Migrations\MoveDonationCommentToDonationMetaTable;
 use Give\Donations\Migrations\SetAutomaticFormattingOption;
+use Give\Donations\Migrations\UnserializeTitlePrefix;
 use Give\Donations\Models\Donation;
 use Give\Donations\Repositories\DonationNotesRepository;
 use Give\Donations\Repositories\DonationRepository;
@@ -46,11 +48,13 @@ class ServiceProvider implements ServiceProviderInterface
     {
         $this->bootLegacyListeners();
         $this->registerDonationsAdminPage();
+        $this->addCustomFieldsToDonationDetails();
 
         give(MigrationsRegister::class)->addMigrations([
             AddMissingDonorIdToDonationComments::class,
             SetAutomaticFormattingOption::class,
             MoveDonationCommentToDonationMetaTable::class,
+            UnserializeTitlePrefix::class,
         ]);
     }
 
@@ -114,5 +118,15 @@ class ServiceProvider implements ServiceProviderInterface
                 Hooks::addAction('admin_enqueue_scripts', DonationsAdminPage::class, 'loadScripts');
             }
         }
+    }
+
+    /**
+     * @since 3.0.0
+     */
+    private function addCustomFieldsToDonationDetails()
+    {
+        add_action('give_view_donation_details_billing_after', static function ($donationId) {
+            echo (new DonationDetailsController())->show($donationId);
+        });
     }
 }

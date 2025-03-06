@@ -1,72 +1,25 @@
 <?php
 /**
- * Notice for the Black Friday Sale
- *
- * @since 4.14.2
+ * @deprecated 6.3.0
  */
-
 namespace Tribe\Admin\Notice\Marketing;
 
-use Tribe__Date_Utils as Dates;
+_deprecated_file( __FILE__, '6.3.0', 'No Replacement' );
 
 /**
  * Class Black_Friday
  *
  * @since 4.14.2
+ * @deprecated 6.3.0
  *
  * @package Tribe\Admin\Notice\Marketing
  */
-class Black_Friday extends \Tribe\Admin\Notice\Date_Based {
-	/**
-	 * {@inheritDoc}
-	 */
-	public $slug = 'black-friday';
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public $start_date = 'fourth Thursday of November';
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public $end_date = 'November 29';
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public $end_time = 23;
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public function display_notice() {
-		\Tribe__Assets::instance()->enqueue( [ 'tribe-common-admin' ] );
-
-		// Set up template variables.
-		$template_args = [
-			'icon_url' => \Tribe__Main::instance()->plugin_url . 'src/resources/images/icons/sale-burst.svg',
-			'cta_url'  => 'https://evnt.is/1aqi',
-			'end_date' => $this->get_end_time()->format_i18n( 'F jS' ),
-		];
-
-		// Get the Black Friday notice content.
-		$content = $this->get_template()->template( 'notices/tribe-bf-general', $template_args, false );
-
-		return $content;
+class Black_Friday {
+	public function __call( $name, $arguments ) {
+		_deprecated_function( __METHOD__, '6.3.0', 'No replacement.' );
 	}
 
-	/**
-	 * Unix time for notice start.
-	 *
-	 * @since 4.14.2
-	 *
-	 * @return \Tribe\Utils\Date_I18n - Date Object
-	 */
-	public function get_start_time() {
-		$date = parent::get_start_time();
-		$date = $date->modify( '-3 days' );
-
-		return $date;
+	public static function __callStatic( $name, $arguments ) {
+		_deprecated_function( __METHOD__, '6.3.0', 'No replacement.' );
 	}
 }

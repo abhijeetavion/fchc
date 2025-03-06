@@ -8,6 +8,7 @@ use Give\Framework\PaymentGateways\Actions\GenerateGatewayRouteUrl;
 use Give\Framework\PaymentGateways\Contracts\PaymentGatewayInterface;
 use Give\Framework\PaymentGateways\Contracts\Subscription\SubscriptionAmountEditable;
 use Give\Framework\PaymentGateways\Contracts\Subscription\SubscriptionDashboardLinkable;
+use Give\Framework\PaymentGateways\Contracts\Subscription\SubscriptionPausable;
 use Give\Framework\PaymentGateways\Contracts\Subscription\SubscriptionPaymentMethodEditable;
 use Give\Framework\PaymentGateways\Contracts\Subscription\SubscriptionTransactionsSynchronizable;
 use Give\Framework\PaymentGateways\Routes\RouteSignature;
@@ -139,6 +140,52 @@ abstract class PaymentGateway implements PaymentGatewayInterface,
     }
 
     /**
+     * @inheritDoc
+     *
+     * @since 3.17.0
+     */
+    public function pauseSubscription(Subscription $subscription, array $data = []): void
+    {
+        if ($this->subscriptionModule instanceof SubscriptionPausable) {
+            $this->subscriptionModule->pauseSubscription($subscription, $data);
+
+            return;
+        }
+
+        throw new Exception('Gateway does not support pausing the subscription.');
+    }
+
+    /**
+     * @inheritDoc
+     *
+     * @since 3.17.0
+     */
+    public function resumeSubscription(Subscription $subscription): void
+    {
+        if ($this->subscriptionModule instanceof SubscriptionPausable) {
+            $this->subscriptionModule->resumeSubscription($subscription);
+
+            return;
+        }
+
+        throw new Exception('Gateway does not support resuming the subscription.');
+    }
+
+    /**
+     * @inheritDoc
+     *
+     * @since 3.17.0
+     */
+    public function canPauseSubscription(): bool
+    {
+        if ($this->subscriptionModule instanceof SubscriptionPausable) {
+            return $this->subscriptionModule->canPauseSubscription();
+        }
+
+        return false;
+    }
+
+    /**
      * @since 2.21.2
      * @inheritDoc
      */
@@ -191,16 +238,15 @@ abstract class PaymentGateway implements PaymentGatewayInterface,
     }
 
     /**
-     * @since 2.21.2
+     * @since 2.33.0 Return synchronizeSubscription() instead nothing
+     * @since      2.21.2
      * @inheritDoc
      * @throws Exception
      */
     public function synchronizeSubscription(Subscription $subscription)
     {
         if ($this->subscriptionModule instanceof SubscriptionTransactionsSynchronizable) {
-            $this->subscriptionModule->synchronizeSubscription($subscription);
-
-            return;
+            return $this->subscriptionModule->synchronizeSubscription($subscription);
         }
 
         throw new Exception('Gateway does not support syncing subscriptions.');
@@ -333,6 +379,7 @@ abstract class PaymentGateway implements PaymentGatewayInterface,
                     'exception' => $e,
                 ]
             );
+
             return false;
         }
 

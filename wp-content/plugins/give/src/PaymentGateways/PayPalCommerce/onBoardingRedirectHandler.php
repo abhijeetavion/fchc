@@ -82,10 +82,26 @@ class onBoardingRedirectHandler
     {
         if (isset($_GET['mode']) && in_array($_GET['mode'], ['live', 'sandbox'], true)) {
             $mode = $_GET['mode'];
-            $this->webhooksRepository->setMode($mode);
-            $this->merchantRepository->setMode($mode);
-            give(PayPalClient::class)->setMode($mode);
+
+            $this->setModeForServices($mode);
         }
+    }
+
+    /**
+     * Set mode for services.
+     *
+     * Use this function to manually set connection mode. Values can be 'live' or 'sandbox'.
+     * Services are classes which depends upon connection mode and used to interact with PayPal API or core logic.
+     *
+     * @since 3.0.0
+     *
+     * @return void
+     */
+    public function setModeForServices(string $mode)
+    {
+        $this->webhooksRepository->setMode($mode);
+        $this->merchantRepository->setMode($mode);
+        give(PayPalClient::class)->setMode($mode);
     }
 
     /**
@@ -114,6 +130,8 @@ class onBoardingRedirectHandler
     /**
      * Save PayPal merchant details
      *
+     * @since 3.19.1 fix parsing email with special characters
+     * @since 2.32.0 Remove second argument from updateSellerAccessToken function.
      * @since 2.25.0 Handle exception.
      * @since 2.9.0
      *
@@ -121,7 +139,7 @@ class onBoardingRedirectHandler
      */
     private function savePayPalMerchantDetails()
     {
-        $paypalGetData = wp_parse_args($_SERVER['QUERY_STRING']);
+        $paypalGetData = wp_parse_args(str_replace("+", rawurlencode("+"), $_SERVER['QUERY_STRING']));
         $partnerLinkInfo = $this->settings->getPartnerLinkDetails();
         $tokenInfo = $this->settings->getAccessToken();
 
@@ -187,10 +205,7 @@ class onBoardingRedirectHandler
 
         // Preserve the seller access token.
         // This is required to get the merchant rest api credentials.
-        $this->settings->updateSellerAccessToken(
-            $this->settings->getAccessToken(),
-            $this->merchantRepository->getMode()
-        );
+        $this->settings->updateSellerAccessToken($this->settings->getAccessToken());
 
         $this->deleteTempOptions();
 
@@ -226,6 +241,7 @@ class onBoardingRedirectHandler
     /**
      * Sets up the webhook for the connected account
      *
+     * @since 2.32.0 Remove second argument from createWebhook function.
      * @since 2.9.0
      *
      * @param MerchantDetail $merchant_details
@@ -237,7 +253,7 @@ class onBoardingRedirectHandler
         }
 
         try {
-            $webhookConfig = $this->webhooksRepository->createWebhook($merchant_details->accessToken);
+            $webhookConfig = $this->webhooksRepository->createWebhook();
             $this->webhooksRepository->saveWebhookConfig($webhookConfig);
         } catch (Exception $ex) {
             $errors[] = esc_html__(
@@ -353,9 +369,10 @@ class onBoardingRedirectHandler
     /**
      * Handles the request for refreshing the account status
      *
+     * @since 3.0.0 Make function publicly accessible.
      * @since 2.9.0
      */
-    private function refreshAccountStatus()
+    public function refreshAccountStatus()
     {
         $merchantDetails = $this->merchantRepository->getDetails();
 

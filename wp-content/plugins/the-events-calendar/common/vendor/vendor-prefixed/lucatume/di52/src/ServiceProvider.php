@@ -3,8 +3,7 @@
  * The base service provider class.
  *
  * @license GPL-3.0
- * Modified by the-events-calendar on 13-July-2023 using Strauss.
- * @see https://github.com/BrianHenryIE/strauss
+ * Modified using {@see https://github.com/BrianHenryIE/strauss}.
  */
 
 namespace TEC\Common\lucatume\DI52;

@@ -7,8 +7,7 @@
  * @package StellarWP\Telemetry
  *
  * @license GPL-2.0-or-later
- * Modified by the-events-calendar on 13-July-2023 using Strauss.
- * @see https://github.com/BrianHenryIE/strauss
+ * Modified using {@see https://github.com/BrianHenryIE/strauss}.
  */
 
 namespace TEC\Common\StellarWP\Telemetry\Admin;
@@ -134,5 +133,4 @@ class Resources {
 	public static function get_asset_path(): string {
 		return plugin_dir_url( dirname( __DIR__ ) );
 	}
-
 }

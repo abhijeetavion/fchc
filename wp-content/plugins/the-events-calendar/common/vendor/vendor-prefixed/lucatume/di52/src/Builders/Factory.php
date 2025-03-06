@@ -5,8 +5,7 @@
  * @package lucatume\DI52
  *
  * @license GPL-3.0
- * Modified by the-events-calendar on 13-July-2023 using Strauss.
- * @see https://github.com/BrianHenryIE/strauss
+ * Modified using {@see https://github.com/BrianHenryIE/strauss}.
  */
 
 namespace TEC\Common\lucatume\DI52\Builders;
@@ -49,13 +48,12 @@ class Factory
     /**
      * Returns the correct builder for a value.
      *
-     * @param string|mixed       $id                 The string id to provide a builder for, or a value.
-     * @param mixed              $implementation     The implementation to build the builder for.
-     * @param array<string>|null $afterBuildMethods  A list of methods that should be called on the built instance
-     *                                               after
-     *                                               it's been built.
-     * @param mixed              ...$buildArgs       A set of arguments to pass that should be used to build the
-     *                                               instance, if any.
+     * @param  string|class-string|mixed  $id                 The string id to provide a builder for, or a value.
+     * @param  mixed                      $implementation     The implementation to build the builder for.
+     * @param  string[]|null              $afterBuildMethods  A list of methods that should be called on the built
+     *                                                        instance after it's been built.
+     * @param  mixed                      ...$buildArgs       A set of arguments to pass that should be used to build
+     *                                                        the instance, if any.
      *
      * @return BuilderInterface A builder instance.
      *
@@ -86,5 +84,33 @@ class Factory
         }
 
         return new ValueBuilder($implementation);
+    }
+
+    /**
+     * Sets the container the builder should use.
+     *
+     * @since TBD
+     *
+     * @param Container $container The container to bind.
+     *
+     * @return void
+     */
+    public function setContainer(Container $container)
+    {
+        $this->container = $container;
+    }
+
+    /**
+     * Sets the resolver the container should use.
+     *
+     * @since TBD
+     *
+     * @param Resolver $resolver The resolver the container should use.
+     *
+     * @return void
+     */
+    public function setResolver(Resolver $resolver)
+    {
+        $this->resolver = $resolver;
     }
 }

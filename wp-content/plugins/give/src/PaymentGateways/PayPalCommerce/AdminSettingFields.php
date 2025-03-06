@@ -2,6 +2,7 @@
 
 namespace Give\PaymentGateways\PayPalCommerce;
 
+use Give\PaymentGateways\PayPalCommerce\Banners\PayPalDonationsSettingPageBanner;
 use Give\PaymentGateways\PayPalCommerce\Models\MerchantDetail;
 use Give\PaymentGateways\PayPalCommerce\Repositories\MerchantDetails;
 use Give\PaymentGateways\PayPalCommerce\Repositories\Settings;
@@ -12,6 +13,7 @@ use Give_License;
  * Class AdminSettingFields
  * @package Give\PaymentGateways\PayPalCommerce
  *
+ * @since 3.16.0 added nonce to disconnect button
  * @since 2.9.0
  */
 class AdminSettingFields
@@ -104,8 +106,9 @@ class AdminSettingFields
     }
 
     /**
-     * Paypal Checkout account manager custom field
+     * PayPal Checkout account manager custom field
      *
+     * @since 3.0.0 Update PayPal sandbox connection button description.
      * @since 2.9.0
      */
     public function payPalCommerceAccountManagerField()
@@ -127,12 +130,18 @@ class AdminSettingFields
         $paypalSandboxSetting->label = esc_html__('PayPal Sandbox Connection', 'give');
         $paypalSandboxSetting->mode = 'sandbox';
         $paypalSandboxSetting->connectButtonLabel = esc_html__('Connect with PayPal Sandbox', 'give');
-        $paypalSandboxSetting->description = esc_html__(
-            'PayPal sandbox is currently NOT connected. This is a separate PayPal Sandbox account, used for testing. Live PayPal accounts will not work.',
-            'give'
+        $paypalSandboxSetting->description = sprintf(
+            '%1$s <a href="%2$s" target="_blank">%3$s</a> <strong>%4$s</strong>',
+            esc_html__('PayPal sandbox is currently NOT connected.', 'give'),
+            esc_url('https://docs.givewp.com/paypal-sandbox-setup'),
+            esc_html__('Set up a separate PayPal Sandbox account for testing.', 'give'),
+            esc_html__('Live PayPal accounts will not work.', 'give')
         );
         $paypalSandboxSetting->isRecurringAddonActive = $isRecurringAddonActive;
+
         echo $this->getPayPalConnectionSettingView($paypalSandboxSetting);
+
+        echo $this->getBanner();
     }
 
     /**
@@ -148,17 +157,20 @@ class AdminSettingFields
                 <div>
                     <h2><?php
                         esc_html_e('Accept Donations with PayPal Donations', 'give'); ?></h2>
-                    <p class="give-field-description"><?php
+                    <p class="give-field-description">
+                        <?php
                         esc_html_e(
                             'Allow your donors to give using Debit or Credit Cards directly on your website with no additional fees.',
                             'give'
-                        ); ?></p>
+                        );
+                        ?>
+                    </p>
                 </div>
                 <div class="paypal-logo">
-                    <img src="<?php
-                    echo GIVE_PLUGIN_URL . '/assets/dist/images/admin/paypal-logo.svg'; ?>" width="316" height="84"
-                         alt="<?php
-                         esc_attr_e('PayPal Logo Image', 'give'); ?>">
+                    <img src="<?php echo GIVE_PLUGIN_URL . '/assets/dist/images/admin/paypal-logo.png'; ?>"
+                         width="316"
+                         height="84"
+                         alt="<?php esc_attr_e('PayPal Logo Image', 'give'); ?>">
                 </div>
             </div>
             <div class="feature-list">
@@ -188,10 +200,8 @@ class AdminSettingFields
 
     /**
      * Return whether or not country is in North America
-     *
-     * @return boolean
      */
-    private function isCountryInNorthAmerica()
+    private function isCountryInNorthAmerica(): bool
     {
         // Countries list: https://en.wikipedia.org/wiki/List_of_North_American_countries_by_area#Countries
         $northAmericaCountryList = [
@@ -228,6 +238,7 @@ class AdminSettingFields
     /**
      * Return admin guidance notice to fix PayPal on boarding error.
      *
+     * @since 3.10.0 Updated phone number for contact
      * @since 2.9.6
      *
      * @param bool $completeMessage
@@ -239,7 +250,7 @@ class AdminSettingFields
         if ($this->isCountryInNorthAmerica()) {
             $telephone = sprintf(
                 '<a href="tel:%1$s">%1$s</a>',
-                '1-888-221-1161'
+                '1-888-350-2387'
             );
 
             $message = sprintf(
@@ -263,7 +274,7 @@ class AdminSettingFields
      *
      * @since 2.9.6
      */
-    private function printErrors( MerchantDetails $merchantDetailsRepository )
+    private function printErrors(MerchantDetails $merchantDetailsRepository)
     {
         $accountErrors = $merchantDetailsRepository->getAccountErrors();
 
@@ -272,7 +283,8 @@ class AdminSettingFields
             <div>
                 <p class="error-message"><?php esc_html_e('Warning, your account is not ready to accept donations.', 'give'); ?></p>
                 <p>
-                    <?php printf(
+                    <?php
+                    printf(
                         '%1$s %2$s',
                         esc_html__(
                             'There is an issue with your PayPal account that is preventing you from being able to accept donations.',
@@ -414,15 +426,13 @@ class AdminSettingFields
                                     <i class="fab fa-paypal"></i>&nbsp;&nbsp;
                                     <?php echo $paypalSetting->connectButtonLabel; ?>
                                 </button>
-                                <?php if ('live' === $paypalSetting->mode): ?>
+                                <?php if ('live' === $paypalSetting->mode) : ?>
                                     <span class="tooltip">
                                         <span class="left-arrow"></span>
                                         <?php esc_html_e('Click to get started!', 'give'); ?>
                                     </span>
                                     <?php // We are using one PayPal button to handle both sandbox and live mode connection.?>
-                                    <a class="give-hidden" target="PPFrame"
-                                       data-paypal-onboard-complete="givePayPalOnBoardedCallback" href="#"
-                                       data-paypal-button="true">
+                                    <a class="give-hidden" target="PPFrame" data-paypal-button="true">
                                         <?php esc_html_e('Sign up for PayPal', 'give'); ?>
                                     </a>
                                 <?php endif; ?>
@@ -443,9 +453,17 @@ class AdminSettingFields
                                 <span class="give-field-description">
                                     <i class="fa fa-check"></i>
                                     <?php
+                                    if ($merchantDetail->accountIsReady) {
+                                        $connectedAccountTypeMessage = $merchantDetail->supportsCustomPayments
+                                            ? esc_html__('Connected as Advanced for payments as', 'give')
+                                            : esc_html__('Connected as Standard for payments as', 'give');
+                                    } else {
+                                        $connectedAccountTypeMessage = esc_html__('Connected for payments as', 'give');
+                                    }
+
                                     printf(
                                         '%1$s <span class="paypal-account-email">%2$s</span>',
-                                        esc_html__('Connected for payments as', 'give'),
+                                        $connectedAccountTypeMessage,
                                         $merchantDetail->merchantId
                                     );
                                     ?>
@@ -453,25 +471,42 @@ class AdminSettingFields
                                 <span class="actions">
                                     <button
                                         class="js-give-paypal-disconnect-paypal-account"
-                                        data-mode="<?php echo $paypalSetting->mode; ?>">
+                                        data-mode="<?php echo $paypalSetting->mode; ?>"
+                                        data-nonce="<?php echo esc_attr(wp_create_nonce('give_paypal_commerce_disconnect_account')); ?>"
+                                    >
                                         <?php esc_html_e('Disconnect', 'give'); ?>
                                     </button>
                                 </span>
-                            </div>
-                            <div class="api-access-feature-list-wrap">
-                                <p><?php esc_html_e('APIs Connected:', 'give'); ?></p>
-                                <ul>
-                                    <li><?php esc_html_e('Payments', 'give'); ?></li>
-                                    <?php if ($paypalSetting->isRecurringAddonActive) : ?>
-                                        <li><?php esc_html_e('Subscriptions', 'give'); ?></li>
-                                    <?php endif; ?>
-                                    <li><?php esc_html_e('Refunds', 'give'); ?></li>
-                                </ul>
                             </div>
                         </div>
                         <?php $this->printErrors($mechantDetailsRepository); ?>
                     </div>
                 </div>
+            </td>
+        </tr>
+        <?php
+        return ob_get_clean();
+    }
+
+    /**
+     * @since 2.33.0
+     */
+    private function getBanner(): string
+    {
+        ob_start();
+
+        if (
+            give(MerchantDetail::class)->accountIsReady
+            && give_is_gateway_active(PayPalCommerce::id())
+        ) {
+            return '';
+        }
+        ?>
+        <tr>
+            <th scope="row" class="titledesc">
+            </th>
+            <td class="give-forminp">
+                <?php echo give(PayPalDonationsSettingPageBanner::class)->render(); ?>
             </td>
         </tr>
         <?php

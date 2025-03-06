@@ -1,10 +1,4 @@
 <?php
-/**
- * @license GPL-2.0-or-later
- *
- * Modified by impress-org on 22-July-2023 using Strauss.
- * @see https://github.com/BrianHenryIE/strauss
- */
 
 namespace Give\Vendors\StellarWP\ContainerContract;
 

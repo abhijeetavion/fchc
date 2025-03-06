@@ -7,8 +7,7 @@
  * @package StellarWP\Telemetry
  *
  * @license GPL-2.0-or-later
- * Modified by the-events-calendar on 13-July-2023 using Strauss.
- * @see https://github.com/BrianHenryIE/strauss
+ * Modified using {@see https://github.com/BrianHenryIE/strauss}.
  */
 
 namespace TEC\Common\StellarWP\Telemetry\Exit_Interview;
@@ -17,7 +16,6 @@ use TEC\Common\StellarWP\ContainerContract\ContainerInterface;
 use TEC\Common\StellarWP\Telemetry\Admin\Resources;
 use TEC\Common\StellarWP\Telemetry\Config;
 use TEC\Common\StellarWP\Telemetry\Contracts\Template_Interface;
-use TEC\Common\StellarWP\Telemetry\Core;
 
 /**
  * The primary class for rendering the "Exit Interview" modal on plugin deactivation.
@@ -133,17 +131,6 @@ class Template implements Template_Interface {
 	 */
 	public function render( string $stellar_slug ) {
 		load_template( dirname( dirname( __DIR__ ) ) . '/views/exit-interview.php', false, $this->get_args( $stellar_slug ) );
-	}
-
-	/**
-	 * @inheritDoc
-	 *
-	 * @since 1.0.0
-	 *
-	 * @return void
-	 */
-	public function enqueue() {
-		// TODO: Implement enqueue() method.
 	}
 
 	/**

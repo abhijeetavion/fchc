@@ -2,8 +2,7 @@
 /**
  * @license GPL-2.0-or-later
  *
- * Modified by the-events-calendar on 13-July-2023 using Strauss.
- * @see https://github.com/BrianHenryIE/strauss
+ * Modified using {@see https://github.com/BrianHenryIE/strauss}.
  */ declare( strict_types=1 );
 
 namespace TEC\Common\StellarWP\ContainerContract;
@@ -33,7 +32,8 @@ interface ContainerInterface {
 	 *
 	 * @param string|class-string<T> $id Identifier of the entry to look for.
 	 *
-	 * @return ($id is class-string<T> ? T : mixed) Entry.
+	 * @return T|mixed
+	 * @phpstan-return ($id is class-string ? T : mixed)
 	 */
 	public function get( string $id );
 

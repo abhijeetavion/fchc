@@ -97,6 +97,8 @@ class DonorRepository
     }
 
     /**
+     * @since 3.20.0 store meta using native WP functions
+     * @since 3.7.0 Add support to "phone" property
      * @since 2.24.0 add support for $donor->totalAmountDonated and $donor->totalNumberOfDonation
      * @since 2.21.0 add actions givewp_donor_creating and givewp_donor_created
      * @since 2.20.0 mutate model and return void
@@ -122,6 +124,10 @@ class DonorRepository
             'name' => $donor->name,
         ];
 
+        if (isset($donor->phone)) {
+            $args['phone'] = $donor->phone;
+        }
+
         if (isset($donor->totalAmountDonated)) {
             $args['purchase_value'] = $donor->totalAmountDonated->formatToDecimal();
         }
@@ -137,22 +143,12 @@ class DonorRepository
             $donorId = DB::last_insert_id();
 
             foreach ($this->getCoreDonorMeta($donor) as $metaKey => $metaValue) {
-                DB::table('give_donormeta')
-                    ->insert([
-                        'donor_id' => $donorId,
-                        'meta_key' => $metaKey,
-                        'meta_value' => $metaValue,
-                    ]);
+                give()->donor_meta->add_meta($donorId, $metaKey, $metaValue);
             }
 
             if (isset($donor->additionalEmails)) {
                 foreach ($donor->additionalEmails as $additionalEmail) {
-                    DB::table('give_donormeta')
-                        ->insert([
-                            'donor_id' => $donorId,
-                            'meta_key' => DonorMetaKeys::ADDITIONAL_EMAILS,
-                            'meta_value' => $additionalEmail,
-                        ]);
+                    give()->donor_meta->add_meta($donorId, DonorMetaKeys::ADDITIONAL_EMAILS, $additionalEmail);
                 }
             }
         } catch (Exception $exception) {
@@ -172,6 +168,7 @@ class DonorRepository
     }
 
     /**
+     * @since 3.7.0 Add support to "phone" property
      * @since 2.24.0 add support for $donor->totalAmountDonated and $donor->totalNumberOfDonation
      * @since 2.23.1 use give()->donor_meta to update meta so data is upserted
      * @since 2.21.0 add actions givewp_donor_updating and givewp_donor_updated
@@ -192,6 +189,7 @@ class DonorRepository
         $args = [
             'user_id' => $donor->userId,
             'email' => $donor->email,
+            'phone' => $donor->phone,
             'name' => $donor->name
         ];
 
@@ -367,6 +365,7 @@ class DonorRepository
     }
 
     /**
+     * @since 3.7.0 Add support to "phone" property
      * @since 2.24.0 replace ModelQueryBuilder with DonorModelQueryBuilder
      * @since 2.19.6
      *
@@ -381,6 +380,7 @@ class DonorRepository
                 'id',
                 ['user_id', 'userId'],
                 'email',
+                'phone',
                 'name',
                 ['purchase_value', 'totalAmountDonated'],
                 ['purchase_count', 'totalNumberOfDonations'],
@@ -402,6 +402,7 @@ class DonorRepository
      * Additional emails are assigned to the same additional_email meta key.
      * In order to update them we need to delete and re-insert.
      *
+     * @since 3.20.0 store meta using native WP functions
      * @since 2.19.6
      *
      * @return void
@@ -417,13 +418,7 @@ class DonorRepository
         }
 
         foreach ($donor->additionalEmails as $additionalEmail) {
-            DB::table('give_donormeta')
-                ->where('donor_id', $donor->id)
-                ->insert([
-                    'donor_id' => $donor->id,
-                    'meta_key' => DonorMetaKeys::ADDITIONAL_EMAILS,
-                    'meta_value' => $additionalEmail,
-                ]);
+            give()->donor_meta->add_meta($donor->id, DonorMetaKeys::ADDITIONAL_EMAILS, $additionalEmail);
         }
     }
 

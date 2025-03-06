@@ -10,7 +10,10 @@ use Give\Promotions\InPluginUpsells\Endpoints\ProductRecommendationsRoute;
 use Give\Promotions\InPluginUpsells\LegacyFormEditor;
 use Give\Promotions\InPluginUpsells\PaymentGateways;
 use Give\Promotions\InPluginUpsells\SaleBanners;
-use Give\Promotions\InPluginUpsells\SummerSalesBanner;
+use Give\Promotions\InPluginUpsells\StellarSaleBanners;
+use Give\Promotions\ReportsWidgetBanner\ReportsWidgetBanner;
+use Give\Promotions\WelcomeBanner\Endpoints\DismissWelcomeBannerRoute;
+use Give\Promotions\WelcomeBanner\WelcomeBanner;
 use Give\ServiceProviders\ServiceProvider as ServiceProviderContract;
 
 class ServiceProvider implements ServiceProviderContract
@@ -36,29 +39,26 @@ class ServiceProvider implements ServiceProviderContract
     }
 
     /**
+     * @since 3.13.0 add Stellar banner.
      * @since      2.27.1 Removed Recurring donations tab app.
+     * @since      2.19.0
      *
      * Boots the Plugin Upsell promotional page
      *
-     * @since      2.19.0
      */
     private function bootPluginUpsells()
     {
         Hooks::addAction('admin_menu', AddonsAdminPage::class, 'register', 70);
         Hooks::addAction('rest_api_init', HideSaleBannerRoute::class, 'registerRoute');
         Hooks::addAction('rest_api_init', ProductRecommendationsRoute::class, 'registerRoute');
+        Hooks::addAction('rest_api_init', DismissWelcomeBannerRoute::class, 'registerRoute');
 
         if (AddonsAdminPage::isShowing()) {
             Hooks::addAction('admin_enqueue_scripts', AddonsAdminPage::class, 'loadScripts');
         }
 
-        if (SaleBanners::isShowing()) {
-            Hooks::addAction('admin_notices', SaleBanners::class, 'render');
-            Hooks::addAction('admin_enqueue_scripts', SaleBanners::class, 'loadScripts');
-        }
-        if (SummerSalesBanner::isShowing()) {
-            Hooks::addAction('admin_notices', SummerSalesBanner::class, 'render');
-            Hooks::addAction('admin_enqueue_scripts', SummerSalesBanner::class, 'loadScripts');
+        if (ReportsWidgetBanner::isShowing()) {
+            Hooks::addAction('admin_enqueue_scripts', ReportsWidgetBanner::class, 'loadScripts');
         }
 
         if (PaymentGateways::isShowing()) {
@@ -77,6 +77,11 @@ class ServiceProvider implements ServiceProviderContract
                 LegacyFormEditor::class,
                 'renderDonationOptionsRecurringRecommendation'
             );
+        }
+
+        if (WelcomeBanner::isShowing()) {
+            Hooks::addAction('admin_notices', WelcomeBanner::class, 'render');
+            Hooks::addAction('admin_enqueue_scripts', WelcomeBanner::class, 'loadScripts');
         }
     }
 

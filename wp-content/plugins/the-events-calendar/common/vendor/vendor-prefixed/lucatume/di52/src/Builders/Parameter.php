@@ -5,8 +5,7 @@
  * @package TEC\Common\lucatume\DI52\Builders
  *
  * @license GPL-3.0
- * Modified by the-events-calendar on 13-July-2023 using Strauss.
- * @see https://github.com/BrianHenryIE/strauss
+ * Modified using {@see https://github.com/BrianHenryIE/strauss}.
  */
 
 namespace TEC\Common\lucatume\DI52\Builders;
@@ -210,7 +209,7 @@ class Parameter
         }
 
         try {
-            if (function_exists('enum_exists') && enum_exists($this->type)) {
+            if (function_exists('enum_exists') && enum_exists((string) $this->type)) {
                 return false;
             }
         } catch (ParseError $e) {

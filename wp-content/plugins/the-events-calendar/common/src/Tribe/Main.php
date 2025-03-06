@@ -1,15 +1,12 @@
 <?php
-/**
- * Main Tribe Common class.
- */
-
-// Don't load directly
 
 use TEC\Common\Libraries;
 use TEC\Common\Translations_Loader;
 use Tribe\Admin\Settings;
 use Tribe\DB_Lock;
+use TEC\Common\Asset;
 
+// Don't load directly.
 if ( ! defined( 'ABSPATH' ) ) {
 	die( '-1' );
 }
@@ -19,13 +16,11 @@ if ( class_exists( 'Tribe__Main', false ) ) {
 }
 
 class Tribe__Main {
-	const EVENTSERROROPT      = '_tribe_events_errors';
-	const OPTIONNAME          = 'tribe_events_calendar_options';
-	const OPTIONNAMENETWORK   = 'tribe_events_calendar_network_options';
-
-	const VERSION             = '5.1.3';
-
-	const FEED_URL            = 'https://theeventscalendar.com/feed/';
+	const EVENTSERROROPT    = '_tribe_events_errors';
+	const OPTIONNAME        = 'tribe_events_calendar_options';
+	const OPTIONNAMENETWORK = 'tribe_events_calendar_network_options';
+	const FEED_URL          = 'https://theeventscalendar.com/feed/';
+	const VERSION           = '6.5.0';
 
 	protected $plugin_context;
 	protected $plugin_context_class;
@@ -37,7 +32,7 @@ class Tribe__Main {
 	 *
 	 * @var string
 	 */
-	protected $parent_plugin_file ='';
+	protected $parent_plugin_file = '';
 
 	public static $tribe_url = 'http://tri.be/';
 	public static $tec_url   = 'https://theeventscalendar.com/';
@@ -227,19 +222,28 @@ class Tribe__Main {
 	 * Registers resources that can/should be enqueued
 	 */
 	public function load_assets() {
+		Asset::add(
+			'tribe-clipboard',
+			'vendor/clipboard.min.js',
+			self::VERSION
+		)
+		->prefix_asset_directory( false )
+		->use_asset_file( false )
+		->register();
+
 		// These ones are only registered
 		tribe_assets(
 			$this,
 			[
 				[ 'tribe-accessibility-css', 'accessibility.css' ],
 				[ 'tribe-query-string', 'utils/query-string.js' ],
-				[ 'tribe-clipboard', 'node_modules/clipboard/dist/clipboard.min.js' ],
 				[ 'datatables', 'vendor/datatables/datatables.js', [ 'jquery' ] ],
 				[ 'tribe-select2', 'vendor/tribe-selectWoo/dist/js/selectWoo.full.js', [ 'jquery' ] ],
 				[ 'tribe-select2-css', 'vendor/tribe-selectWoo/dist/css/selectWoo.css' ],
 				[ 'tribe-utils-camelcase', 'utils-camelcase.js', [ 'underscore' ] ],
-				[ 'tribe-moment', 'vendor/momentjs/moment.js' ],
-				[ 'tribe-moment-locales', 'vendor/momentjs/locale.min.js' ],
+				[ 'tec-dayjs', 'vendor/dayjs/dayjs.min.js' ],
+				[ 'tec-dayjs-isoweek', 'vendor/dayjs/plugin/isoWeek.min.js', [ 'tec-dayjs' ] ],
+				[ 'tec-dayjs-customparseformat', 'vendor/dayjs/plugin/customParseFormat.min.js', [ 'tec-dayjs' ] ],
 				[ 'tribe-tooltipster', 'vendor/tooltipster/tooltipster.bundle.js', [ 'jquery' ] ],
 				[ 'tribe-tooltipster-css', 'vendor/tooltipster/tooltipster.bundle.css' ],
 				[ 'datatables-css', 'datatables.css' ],
@@ -254,6 +258,27 @@ class Tribe__Main {
 				[ 'tribe-attrchange', 'vendor/attrchange/js/attrchange.js' ],
 				[ 'tec-ky-module', 'vendor/ky/ky.js', [], null, [ 'module' => true ] ],
 				[ 'tec-ky', 'vendor/ky/tec-ky.js', [ 'tec-ky-module' ], null, [ 'module' => true ] ],
+				[ 'tec-common-php-date-formatter', 'node_modules/php-date-formatter/js/php-date-formatter.js' ],
+			]
+		);
+
+		tribe_asset(
+			$this,
+			'tec-copy-to-clipboard',
+			'utils/tec-copy-to-clipboard.js',
+			'tribe-clipboard',
+			'admin_enqueue_scripts',
+			[
+				'localize' => [
+					'tribeCopyToClipboard',
+					[
+						'name' => 'tribeCopyToClipboard',
+						'data' => [
+							'clipboard_copied_text' => _x( 'Copied to Clipboard!', 'Copy to clipboard success message', 'tribe-common' ),
+							'clipboard_fail_text'   => _x( 'Failed to copy.', 'Copy to clipboard failed message', 'tribe-common' ),
+						],
+					],
+				],
 			]
 		);
 
@@ -274,13 +299,14 @@ class Tribe__Main {
 			[
 				[ 'tribe-ui', 'tribe-ui.css', [ 'tec-variables-full' ] ],
 				[ 'tribe-buttonset', 'buttonset.js', [ 'jquery', 'underscore' ] ],
-				[ 'tribe-common-admin', 'tribe-common-admin.css', [ 'tec-variables-skeleton', 'tec-variables-full', 'tribe-dependency-style', 'tribe-bumpdown-css', 'tribe-buttonset-style', 'tribe-select2-css' ] ],
-				[ 'tribe-validation', 'validation.js', [ 'jquery', 'underscore', 'tribe-common', 'tribe-utils-camelcase', 'tribe-tooltipster' ] ],
+				[ 'tribe-common-admin', 'tribe-common-admin.css', [ 'editor-buttons', 'tec-variables-skeleton', 'tec-variables-full', 'tribe-dependency-style', 'tribe-bumpdown-css', 'tribe-buttonset-style', 'tribe-select2-css' ] ],
+				[ 'tribe-validation', 'validation.js', [ 'jquery', 'underscore', 'tribe-common', 'tribe-utils-camelcase', 'tribe-tooltipster', 'tec-dayjs', 'tec-dayjs-customparseformat' ] ],
 				[ 'tribe-validation-style', 'validation.css', [ 'tec-variables-full', 'tribe-tooltipster-css' ] ],
 				[ 'tribe-dependency', 'dependency.js', [ 'jquery', 'underscore', 'tribe-common' ] ],
 				[ 'tribe-dependency-style', 'dependency.css', [ 'tribe-select2-css' ] ],
 				[ 'tribe-pue-notices', 'pue-notices.js', [ 'jquery' ] ],
 				[ 'tribe-datepicker', 'datepicker.css' ],
+				[ 'tec-nav-modal', 'admin/settings-nav-modals.js', [ 'jquery' ] ],
 			],
 			'admin_enqueue_scripts',
 			[
@@ -432,7 +458,7 @@ class Tribe__Main {
 				'monthNames'      => $datepicker_months,
 				'monthNamesShort' => $datepicker_months, // We deliberately use full month names here,
 				'monthNamesMin'   => array_values( Tribe__Date_Utils::get_localized_months_short() ),
- 				'nextText'        => esc_html__( 'Next', 'tribe-common' ),
+				'nextText'        => esc_html__( 'Next', 'tribe-common' ),
 				'prevText'        => esc_html__( 'Prev', 'tribe-common' ),
 				'currentText'     => esc_html__( 'Today', 'tribe-common' ),
 				'closeText'       => esc_html__( 'Done', 'tribe-common' ),
@@ -460,6 +486,18 @@ class Tribe__Main {
 
 		add_filter( 'body_class', [ $this, 'add_js_class' ] );
 		add_action( 'wp_footer', [ $this, 'toggle_js_class' ] );
+
+		add_action( 'init', [ $this, 'load_action_scheduler' ], - 99999 );
+	}
+
+	/**
+	 * Load the Action Scheduler library.
+	 *
+	 * @since TDB
+	 */
+	public function load_action_scheduler(): void {
+		// Load the Action Scheduler library.
+		require_once $this->plugin_path . 'vendor/woocommerce/action-scheduler/action-scheduler.php';
 	}
 
 	/**
@@ -702,7 +740,7 @@ class Tribe__Main {
 		tribe_singleton( 'settings.manager', 'Tribe__Settings_Manager' );
 		tribe_singleton( 'settings', 'Tribe__Settings', [ 'hook' ] );
 		tribe_singleton( 'ajax.dropdown', 'Tribe__Ajax__Dropdown', [ 'hook' ] );
-		tribe_singleton( 'assets', 'Tribe__Assets' );
+		tribe_singleton( 'assets', 'Tribe__Assets', [ 'hook' ] );
 		tribe_singleton( 'assets.pipeline', 'Tribe__Assets_Pipeline', [ 'hook' ] );
 		tribe_singleton( 'asset.data', 'Tribe__Asset__Data', [ 'hook' ] );
 		tribe_singleton( 'admin.helpers', 'Tribe__Admin__Helpers' );
@@ -742,13 +780,18 @@ class Tribe__Main {
 		tribe_register_provider( Tribe\Service_Providers\Widgets::class );
 		tribe_register_provider( Tribe\Service_Providers\Onboarding::class );
 		tribe_register_provider( Tribe\Admin\Notice\Service_Provider::class );
-		tribe_register_provider( Tribe\Admin\Conditional_Content\Service_Provider::class );
+		tribe_register_provider( \TEC\Common\Admin\Conditional_Content\Controller::class );
+		tribe_register_provider( \TEC\Common\Notifications\Controller::class );
 		tribe_register_provider( Libraries\Provider::class );
 
 		// Load the new third-party integration system.
 		tribe_register_provider( TEC\Common\Integrations\Provider::class );
+		// Load Site Health and Telemetry.
 		tribe_register_provider( TEC\Common\Site_Health\Provider::class );
 		tribe_register_provider( TEC\Common\Telemetry\Provider::class );
+
+		// Load Help Hub.
+		tribe_register_provider( TEC\Common\Admin\Help_Hub\Provider::class );
 	}
 
 	/**

@@ -14,11 +14,13 @@ use Tribe\Utils\Query;
 use Tribe__Context as Context;
 use Tribe__Date_Utils as Dates;
 use Tribe__Utils__Array as Arr;
+use Tribe\Events\Views\V2\Views\Traits\With_Noindex;
 
 use DateTime;
 
 class Month_View extends By_Day_View {
 	use With_Fast_Forward_Link;
+	use With_Noindex;
 
 	/**
 	 * The default number of events to show per-day.
@@ -196,6 +198,10 @@ class Month_View extends By_Day_View {
 
 		if ( isset( $this->memoized_dates[ $cache_key ] ) ) {
 			return $this->memoized_dates[ $cache_key ];
+		}
+
+		if ( isset( $args['past'] ) && tribe_is_truthy( $args['past'] ) ) {
+			return false;
 		}
 
 		// For the next event date we only care about 1 item.

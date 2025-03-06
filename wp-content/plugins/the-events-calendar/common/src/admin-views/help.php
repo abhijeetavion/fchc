@@ -5,13 +5,21 @@
 
 $main = Tribe__Main::instance();
 
-// Fetch the Help page Instance
+// Fetch the Help page Instance.
 $help = tribe( Tribe__Admin__Help_Page::class );
 
-// get the products list
+// get the products list.
 $products = tribe( 'plugins.api' )->get_products();
 
-use \Tribe\Admin\Troubleshooting;
+$events_tab_classes = [
+	'selected' => $help->is_tec_events_help_page(),
+];
+
+$tickets_tab_classes = [
+	'selected' => $help->is_tec_tickets_help_page(),
+];
+
+use Tribe\Admin\Troubleshooting;
 
 ?>
 
@@ -31,8 +39,18 @@ use \Tribe\Admin\Troubleshooting;
 		<p class="tribe-events-admin-header__description"><?php esc_html_e( 'We\'re committed to helping make your calendar spectacular and have a wealth of resources available.', 'tribe-common' ); ?></p>
 
 		<ul class="tribe-events-admin-tab-nav">
-			<li class="selected" data-tab="tribe-calendar"><?php esc_html_e( 'Calendar', 'tribe-common' ); ?></li>
-			<li data-tab="tribe-ticketing"><?php esc_html_e( 'Ticketing & RSVP', 'tribe-common' ); ?></li>
+			<li
+				<?php tribe_classes( $events_tab_classes ); ?>
+				data-tab="tribe-calendar"
+			>
+				<?php esc_html_e( 'Calendar', 'tribe-common' ); ?>
+			</li>
+			<li
+				<?php tribe_classes( $tickets_tab_classes ); ?>
+				data-tab="tribe-ticketing"
+			>
+				<?php esc_html_e( 'Ticketing & RSVP', 'tribe-common' ); ?>
+			</li>
 			<li data-tab="tribe-community"><?php esc_html_e( 'Community', 'tribe-common' ); ?></li>
 		</ul>
 	</div>
@@ -45,21 +63,21 @@ use \Tribe\Admin\Troubleshooting;
 <div class="tribe-events-admin-content-wrapper tribe-events-admin-container">
 
 	<?php
-		// Calendar Tab
-		include_once Tribe__Main::instance()->plugin_path . 'src/admin-views/help-calendar.php';
+		// Calendar Tab.
+		require_once Tribe__Main::instance()->plugin_path . 'src/admin-views/help-calendar.php';
 
-		// Ticketing & RSVP Tab
-		include_once Tribe__Main::instance()->plugin_path . 'src/admin-views/help-ticketing.php';
+		// Ticketing & RSVP Tab.
+		require_once Tribe__Main::instance()->plugin_path . 'src/admin-views/help-ticketing.php';
 
-		// Community Tab
-		include_once Tribe__Main::instance()->plugin_path . 'src/admin-views/help-community.php';
+		// Community Tab.
+		require_once Tribe__Main::instance()->plugin_path . 'src/admin-views/help-community.php';
 
 		$troubleshooting_link = class_exists( 'Tribe__Events__Main' )
 			? admin_url( 'edit.php?post_type=tribe_events&page=tec-troubleshooting' )
 			: admin_url( 'admin.php?page=tec-tickets-troubleshooting' );
 	?>
 
-	<?php // shared footer area ?>
+	<?php // shared footer area. ?>
 	<footer class="tribe-events-admin-cta">
 		<img
 			class="tribe-events-admin-cta__image"
@@ -87,7 +105,7 @@ use \Tribe\Admin\Troubleshooting;
 	/>
 </div>
 
-<?php // this is inline jQuery / javascript for extra simplicity */ ?>
+<?php /* this is inline jQuery / javascript for extra simplicity */ ?>
 <script>
 	jQuery( document ).ready( function($) {
 		var current_tab = '#tribe-calendar';

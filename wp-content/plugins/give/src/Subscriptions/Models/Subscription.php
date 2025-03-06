@@ -164,12 +164,53 @@ class Subscription extends Model implements ModelCrud, ModelHasFactory
      *
      * @throws Exception
      */
-    public static function create(array $attributes)
+    public static function create(array $attributes): Subscription
     {
         $subscription = new static($attributes);
         $subscription->save();
 
         return $subscription;
+    }
+
+    /**
+     * @since 3.20.0
+     * @throws Exception
+     */
+    public function createRenewal(array $attributes = []): Donation
+    {
+        return give()->subscriptions->createRenewal($this, $attributes);
+    }
+
+    /**
+     * @since 3.20.0
+     */
+    public function shouldCreateRenewal(): bool
+    {
+        if (!$this->status->isActive()) {
+            return false;
+        }
+
+        return $this->isIndefinite() || $this->totalDonations() < $this->installments;
+    }
+
+    /**
+     * @since 3.20.0
+     */
+    public function totalDonations(): int
+    {
+        return $this->donations()->count();
+    }
+
+    /**
+     * @since 3.20.0
+     */
+    public function shouldEndSubscription(): bool
+    {
+        if ($this->isIndefinite()) {
+            return false;
+        }
+
+        return $this->totalDonations() >= $this->installments;
     }
 
     /**
